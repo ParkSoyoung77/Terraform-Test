@@ -13,10 +13,10 @@ resource "aws_vpc" "std17_vpc" {
 
 # public subnets
 resource "aws_subnet" "std17_public_subnets" {
-    count = 2
+    count = 3
     vpc_id = aws_vpc.std17_vpc.id
     cidr_block = "10.0.${count.index + 1}.0/24"
-    availability_zone = ["us-east-2a", "us-east-2b"][count.index]
+    availability_zone = ["us-east-2a", "us-east-2b", "us-east-2c"][count.index]
 
     map_public_ip_on_launch                     = true
     enable_resource_name_dns_a_record_on_launch = true
@@ -50,7 +50,7 @@ resource "aws_route_table" "std17_vpc_public_rt"{
 }
 
 resource "aws_route_table_association" "std17_vpc_public_rt_assoc"{
-    count = 2
+    count = 3
     route_table_id = aws_route_table.std17_vpc_public_rt.id
     subnet_id = aws_subnet.std17_public_subnets[count.index].id
 }
@@ -59,10 +59,10 @@ resource "aws_route_table_association" "std17_vpc_public_rt_assoc"{
 
 # private subnets
 resource "aws_subnet" "std17_private_subnets" {
-    count = 1
+    count = 3
     vpc_id = aws_vpc.std17_vpc.id
     cidr_block= "10.0.${count.index + 11}.0/24"
-    availability_zone = ["us-east-2a"][count.index]
+    availability_zone = ["us-east-2a", "us-east-2b", "us-east-2c"][count.index]
 
     tags = { Name = "std17-private${count.index +1}-subnet"}
 }
@@ -95,7 +95,7 @@ resource "aws_route_table" "std17_vpc_private_rt" {
 }
 
 resource "aws_route_table_association" "std17_vpc_private_rt_assoc" {
-    count = 1
+    count = 3
     route_table_id = aws_route_table.std17_vpc_private_rt.id
     subnet_id = aws_subnet.std17_private_subnets[count.index].id
 }

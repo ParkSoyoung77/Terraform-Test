@@ -11,14 +11,18 @@ output "public_subnets_id" {
     value = aws_subnet.std17_public_subnets[*].id
 }
 
+output "private_subnets_id" {
+    value = aws_subnet.std17_private_subnets[*].id
+}
+
 output "igw_id" {
     value = aws_internet_gateway.std17_vpc_igw.id
 }
 
-output "http_test_id" {
+output "test_sg_id" {
     value=aws_security_group.std17_test_sg.id
 }
 
-# output "mysql_endpoint" {
-#   value = aws_db_instance.std17_mysql_rds.endpoint
-# }
+output "nat_id" {
+    value = aws_nat_gateway.std17_nat.id
+}
