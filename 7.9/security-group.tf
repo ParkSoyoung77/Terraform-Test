@@ -28,6 +28,7 @@ resource "aws_security_group" "std17_test_sg" {
      from_port   = 3306
      to_port     = 3306
      protocol    = "tcp"
+     self        = true
      cidr_blocks = ["0.0.0.0/0"]
      description = "MySQL/Aurora"
    }
