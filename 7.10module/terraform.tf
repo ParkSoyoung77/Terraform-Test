@@ -9,4 +9,10 @@ terraform {
             version = "~> 0.11"
         }
     }
+    cloud {
+        organization = "terraform_code_test"
+        workspaces {
+            name = "terraform-test"
+        }
+    }
 }
