@@ -5,7 +5,7 @@ variable "bucket_name" {
 }
 
 variable "index_html_path" {
-    description = "업로드할 index.html 로컬 경로"
+    description = "업로드할 index.html 경로"
     type        = string
-    default     = "/mnt/c/Users/student/Downloads/index.html"
+    default     = "${path.module}/files/index.html"
 }
