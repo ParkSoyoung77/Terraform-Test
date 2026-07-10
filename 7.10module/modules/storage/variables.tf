@@ -8,4 +8,5 @@ variable "index_html_path" {
     description = "업로드할 index.html 경로"
     type        = string
     default     = "${path.module}/files/index.html"
+    default     = ""
 }
