@@ -31,6 +31,7 @@ resource "aws_db_instance" "std17_mysql_rds" {
   tags = { Name = "std17-mysql-rds" }
 }
 
+# 읽기전형
 # resource "aws_db_instance" "std17_mysql_replica" {
 #   identifier          = "std17-mysql-read-1"
 #   replicate_source_db = aws_db_instance.std17_mysql_rds.identifier
