@@ -67,20 +67,20 @@ resource "aws_subnet" "std17_private_subnets" {
     tags = { Name = "std17-private${count.index + 1}-subnet" }
 }
 
-# EIP 할당
-resource "aws_eip" "std17_nat_eip" {
-    domain = "vpc"
-    tags   = { Name = "std17-nat-eip" }
-}
+# # EIP 할당
+# resource "aws_eip" "std17_nat_eip" {
+#     domain = "vpc"
+#     tags   = { Name = "std17-nat-eip" }
+# }
 
-# NAT 게이트웨이
-resource "aws_nat_gateway" "std17_nat" {
-    allocation_id = aws_eip.std17_nat_eip.id
-    subnet_id     = aws_subnet.std17_public_subnets[0].id
-    depends_on    = [aws_internet_gateway.std17_vpc_igw]
+# # NAT 게이트웨이
+# resource "aws_nat_gateway" "std17_nat" {
+#     allocation_id = aws_eip.std17_nat_eip.id
+#     subnet_id     = aws_subnet.std17_public_subnets[0].id
+#     depends_on    = [aws_internet_gateway.std17_vpc_igw]
 
-    tags = { Name = "std17-nat" }
-}
+#     tags = { Name = "std17-nat" }
+# }
 
 # 프라이빗 라우팅 테이블
 resource "aws_route_table" "std17_vpc_private_rt" {

@@ -14,9 +14,9 @@ output "igw_id" {
     value = aws_internet_gateway.std17_vpc_igw.id
 }
 
-output "nat_id" {
-    value = aws_nat_gateway.std17_nat.id
-}
+# output "nat_id" {
+#     value = aws_nat_gateway.std17_nat.id
+# }
 
 output "public_rt_id" {
     value = aws_route_table.std17_vpc_public_rt.id
