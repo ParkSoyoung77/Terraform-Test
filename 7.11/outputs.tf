@@ -30,13 +30,13 @@ output "test_sg_id" {
 }
 
 # ---------------- compute ----------------
-output "alb_dns_name" {
-    value = module.compute.alb_dns_name
-}
+# output "alb_dns_name" {
+#     value = module.compute.alb_dns_name
+# }
 
-output "asg_name" {
-    value = module.compute.asg_name
-}
+# output "asg_name" {
+#     value = module.compute.asg_name
+# }
 
 # ---------------- database ----------------
 output "db_endpoint" {
