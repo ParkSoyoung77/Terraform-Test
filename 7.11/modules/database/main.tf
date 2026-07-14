@@ -31,28 +31,28 @@ resource "aws_db_instance" "std17_mysql_rds" {
   tags = { Name = "std17-mysql-rds" }
 }
 
-resource "aws_db_instance" "std17_mysql_replica" {
-  identifier          = "std17-mysql-read-1"
-  replicate_source_db = aws_db_instance.std17_mysql_rds.identifier
+# resource "aws_db_instance" "std17_mysql_replica" {
+#   identifier          = "std17-mysql-read-1"
+#   replicate_source_db = aws_db_instance.std17_mysql_rds.identifier
 
-  instance_class = var.instance_class
+#   instance_class = var.instance_class
 
-  publicly_accessible = false
+#   publicly_accessible = false
 
-  skip_final_snapshot = true
+#   skip_final_snapshot = true
 
-  tags = { Name = "std17-mysql-read-1" }
-}
+#   tags = { Name = "std17-mysql-read-1" }
+# }
 
-resource "aws_db_instance" "std17_mysql_replica_2" {
-  identifier          = "std17-mysql-read-2"
-  replicate_source_db = aws_db_instance.std17_mysql_rds.identifier
+# resource "aws_db_instance" "std17_mysql_replica_2" {
+#   identifier          = "std17-mysql-read-2"
+#   replicate_source_db = aws_db_instance.std17_mysql_rds.identifier
 
-  instance_class = var.instance_class
+#   instance_class = var.instance_class
 
-  publicly_accessible = false
+#   publicly_accessible = false
 
-  skip_final_snapshot = true
+#   skip_final_snapshot = true
 
-  tags = { Name = "std17-mysql-read-2" }
-}
+#   tags = { Name = "std17-mysql-read-2" }
+# }
