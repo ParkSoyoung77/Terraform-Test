@@ -55,7 +55,10 @@ resource "aws_s3_bucket_policy" "std17_s3_bucket_policy" {
 
 # index.html 업로드
 locals {
-    index_html_path = var.index_html_path != "" ? var.index_html_path : "${path.module}/files/index.html"
+    index_html_path    = var.index_html_path != "" ? var.index_html_path : "${path.module}/files/index.html"
+    network_html_path  = var.network_html_path != "" ? var.network_html_path : "${path.module}/files/network.html"
+    compute_html_path  = var.compute_html_path != "" ? var.compute_html_path : "${path.module}/files/compute.html"
+    database_html_path = var.database_html_path != "" ? var.database_html_path : "${path.module}/files/database.html"
 }
 
 resource "aws_s3_object" "std17_index_html" {
@@ -63,6 +66,33 @@ resource "aws_s3_object" "std17_index_html" {
     key    = "index.html"
     source = local.index_html_path
     etag   = filemd5(local.index_html_path)
+
+    content_type = "text/html"
+}
+
+resource "aws_s3_object" "std17_network_html" {
+    bucket = aws_s3_bucket.std17_s3_bucket.id
+    key    = "network.html"
+    source = local.network_html_path
+    etag   = filemd5(local.network_html_path)
+
+    content_type = "text/html"
+}
+
+resource "aws_s3_object" "std17_compute_html" {
+    bucket = aws_s3_bucket.std17_s3_bucket.id
+    key    = "compute.html"
+    source = local.compute_html_path
+    etag   = filemd5(local.compute_html_path)
+
+    content_type = "text/html"
+}
+
+resource "aws_s3_object" "std17_database_html" {
+    bucket = aws_s3_bucket.std17_s3_bucket.id
+    key    = "database.html"
+    source = local.database_html_path
+    etag   = filemd5(local.database_html_path)
 
     content_type = "text/html"
 }
