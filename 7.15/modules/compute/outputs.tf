@@ -33,3 +33,7 @@ output "private_ec2_id" {
 output "eice_id" {
     value = aws_ec2_instance_connect_endpoint.std17_eice.id
 }
+
+output "nat_instance_id" {
+  value = aws_instance.std17_public_ec2.id
+}

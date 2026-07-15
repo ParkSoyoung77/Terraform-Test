@@ -1,7 +1,3 @@
-data "aws_secretsmanager_secret_version" "mysql_master" {
-  secret_id = var.db_secret_arn
-}
-
 resource "aws_db_subnet_group" "std17_db_private_subnet_group" {
   name       = "std17-db-private-subnet-group"
   subnet_ids = var.private_subnet_ids

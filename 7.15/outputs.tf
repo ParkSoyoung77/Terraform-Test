@@ -21,7 +21,7 @@ output "igw_id" {
 }
 
 output "nat_id" {
-    value = module.network.nat_id
+    value = module.compute.nat_instance_id
 }
 
 # ---------------- security ----------------
