@@ -60,3 +60,15 @@ module "database" {
 module "storage" {
     source = "./modules/storage"
 }
+
+# ==================================================================
+# api: API G/W (독립적, 다른 모듈과 의존관계 없음)
+# ==================================================================
+module "api" {
+    source = "./modules/api"
+
+    s3_website_endpoint  = "http://std17-s3-bucket.s3-website-us-west-1.amazonaws.com"
+    lambda_function_arn  = "arn:aws:lambda:us-west-1:925047940866:function:test2"
+
+    depends_on = [module.storage]
+}
