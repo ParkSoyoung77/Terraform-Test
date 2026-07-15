@@ -86,10 +86,6 @@ resource "aws_subnet" "std17_private_subnets" {
 resource "aws_route_table" "std17_vpc_private_rt" {
     vpc_id = aws_vpc.std17_vpc.id
 
-    route {
-        cidr_block     = "0.0.0.0/0"
-    }
-
     tags = { Name = "std17-vpc-private-rt" }
 }
 

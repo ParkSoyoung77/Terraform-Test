@@ -37,3 +37,7 @@ output "eice_id" {
 output "nat_instance_id" {
   value = aws_instance.std17_public_ec2.id
 }
+
+output "nat_network_interface_id" {
+  value = aws_instance.std17_public_ec2.primary_network_interface_id
+}

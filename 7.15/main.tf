@@ -33,6 +33,14 @@ module "compute" {
     depends_on = [module.network, module.security]
 }
 
+resource "aws_route" "std17_private_default_route" {
+    route_table_id         = module.network.private_rt_id
+    destination_cidr_block = "0.0.0.0/0"
+    network_interface_id   = module.compute.nat_network_interface_id
+
+    depends_on = [module.network, module.compute]
+}
+
 # ==================================================================
 # 4계층: database (network, security에 의존)
 # ==================================================================
