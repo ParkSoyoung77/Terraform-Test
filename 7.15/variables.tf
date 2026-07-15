@@ -15,10 +15,3 @@ variable "key_name" {
     type        = string
     default     = "std17-key"
 }
-
-variable "db_password" {
-    description = "RDS 관리자 비밀번호"
-    type        = string
-    sensitive   = true
-    default     = "12341234"
-}

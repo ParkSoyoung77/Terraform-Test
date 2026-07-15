@@ -35,3 +35,8 @@ variable "instance_type" {
     type        = string
     default     = "t3.micro"
 }
+
+variable "nat_sg_id" {
+  description = "NAT 인스턴스에 연결할 보안 그룹 ID"
+  type        = string
+}

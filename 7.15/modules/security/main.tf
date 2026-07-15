@@ -96,3 +96,25 @@ resource "aws_security_group" "std17_nat_sg" {
 
     tags = { Name  = "std17-nat-sg" }
 }
+
+# secret manager
+resource "random_password" "mysql_master_password" {
+  length           = 16
+  special          = true
+  override_special = "!#$%&*()-_=+[]{}<>:?"
+}
+
+resource "aws_secretsmanager_secret" "mysql_master" {
+  name        = "std17-mysql-rds-secret"
+  description = "std17-mysql-rds master credentials"
+
+  tags = { Name = "std17-mysql-rds-secret" }
+}
+
+resource "aws_secretsmanager_secret_version" "mysql_master" {
+  secret_id = aws_secretsmanager_secret.mysql_master.id
+  secret_string = jsonencode({
+    username = var.db_username
+    password = random_password.mysql_master_password.result
+  })
+}

@@ -20,14 +20,7 @@ variable "instance_class" {
     default     = "db.t4g.micro"
 }
 
-variable "db_username" {
-    description = "DB 관리자 계정명"
-    type        = string
-    default     = "admin"
-}
-
-variable "db_password" {
-    description = "DB 관리자 비밀번호"
-    type        = string
-    sensitive   = true
+variable "db_secret_arn" {
+  description = "RDS 마스터 계정 정보를 담은 Secrets Manager ARN"
+  type        = string
 }

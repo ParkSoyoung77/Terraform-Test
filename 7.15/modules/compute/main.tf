@@ -20,7 +20,7 @@ resource "aws_instance" "std17_public_ec2" {
 
   vpc_security_group_ids = [
     var.security_group_id,
-    aws_security_group.std17_nat_sg.id
+    var.nat_sg_id
   ]
 
   # 유저데이터

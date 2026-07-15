@@ -26,6 +26,7 @@ module "compute" {
     public_subnet_ids   = module.network.public_subnet_ids
     private_subnet_ids  = module.network.private_subnet_ids
     security_group_id   = module.security.test_sg_id
+    nat_sg_id           = module.security.nat_sg_id
     key_name            = var.key_name
 
     depends_on = [module.network, module.security]
@@ -39,7 +40,7 @@ module "database" {
 
     private_subnet_ids = module.network.private_subnet_ids
     security_group_id  = module.security.test_sg_id
-    db_password        = var.db_password
+    db_secret_arn = module.security.mysql_master_secret_arn
 
     depends_on = [module.network, module.security]
 }

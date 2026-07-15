@@ -8,6 +8,9 @@ terraform {
             source  = "hashicorp/time"
             version = "~> 0.11"
         }
+        random = { 
+            source = "hashicorp/random" 
+        }
     }
     cloud {
         organization = "terraform_code_test"
