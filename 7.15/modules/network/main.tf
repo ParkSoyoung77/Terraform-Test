@@ -88,7 +88,6 @@ resource "aws_route_table" "std17_vpc_private_rt" {
 
     route {
         cidr_block     = "0.0.0.0/0"
-        nat_gateway_id = aws_nat_gateway.std17_nat.id
     }
 
     tags = { Name = "std17-vpc-private-rt" }
