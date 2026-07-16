@@ -9,3 +9,8 @@ variable "index_html_path" {
     type        = string
     default     = ""
 }
+
+variable "s3_bucket_regional_domain_name" {
+  description = "CloudFront 원본으로 사용할 S3 버킷의 regional domain name"
+  type        = string
+}
