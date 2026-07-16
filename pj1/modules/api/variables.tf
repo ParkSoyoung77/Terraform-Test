@@ -3,11 +3,6 @@ variable "s3_website_endpoint" {
   type        = string
 }
 
-variable "lambda_function_arn" {
-  description = "연동할 Lambda 함수 ARN"
-  type        = string
-}
-
 variable "private_subnet_ids" {
   description = "Lambda가 위치할 프라이빗 서브넷 ID 리스트 (RDS와 통신 + NAT로 Secrets Manager 접근)"
   type        = list(string)
