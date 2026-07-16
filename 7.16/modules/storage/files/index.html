@@ -3,52 +3,210 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>std17 Static Website</title>
-<link rel="stylesheet" href="실습예제/default.css">
+<title>AWS 인프라 개념 노트 | Infra Reference</title>
 <style>
-    body {
-        margin: 0;
-        font-family: -apple-system, "Malgun Gothic", sans-serif;
-        background: linear-gradient(135deg, #1e3c72, #2a5298);
-        color: #fff;
-        min-height: 100vh;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .container {
-        text-align: center;
-        padding: 40px;
-        background: rgba(255, 255, 255, 0.08);
-        border-radius: 16px;
-        box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-    }
-    h1 {
-        font-size: 2.2rem;
-        margin-bottom: 10px;
-    }
-    p {
-        font-size: 1.1rem;
-        opacity: 0.85;
-        margin: 6px 0;
-    }
-    .badge {
-        display: inline-block;
-        margin-top: 20px;
-        padding: 6px 16px;
-        background: rgba(255,255,255,0.15);
-        border-radius: 20px;
-        font-size: 0.85rem;
-        letter-spacing: 0.5px;
-    }
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700;900&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+:root{
+  --bg:#0E1620; --bg-alt:#101C28; --surface:#16232F; --surface-hi:#1C2C3A;
+  --line:#26394A; --text:#E7EEF3; --text-dim:#93A7B8; --text-faint:#5D7285;
+  --signal:#4FD1C5; --signal-dim:#2E7D74; --amber:#F2B84B; --radius:3px;
+}
+*{ box-sizing:border-box; margin:0; padding:0; }
+html{ scroll-behavior:smooth; }
+body{ background:var(--bg); color:var(--text); font-family:'Noto Sans KR',sans-serif; font-size:16px; line-height:1.7; -webkit-font-smoothing:antialiased; }
+body::before{ content:''; position:fixed; inset:0; background-image:linear-gradient(var(--line) 1px, transparent 1px), linear-gradient(90deg, var(--line) 1px, transparent 1px); background-size:64px 64px; opacity:.07; pointer-events:none; z-index:0; }
+a{ color:inherit; text-decoration:none; }
+.wrap{ max-width:1080px; margin:0 auto; padding:0 32px; position:relative; z-index:1; }
+.mono{ font-family:'IBM Plex Mono',monospace; }
+header{ position:sticky; top:0; z-index:50; background:rgba(14,22,32,.85); backdrop-filter:blur(10px); border-bottom:1px solid var(--line); }
+.nav{ display:flex; align-items:center; justify-content:space-between; padding:20px 32px; max-width:1080px; margin:0 auto; }
+.brand{ display:flex; align-items:center; gap:10px; font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:16px; }
+.brand-dot{ width:8px; height:8px; border-radius:50%; background:var(--signal); box-shadow:0 0 10px var(--signal); }
+.brand small{ display:block; font-family:'IBM Plex Mono',monospace; font-weight:400; font-size:10px; color:var(--text-faint); letter-spacing:.08em; margin-top:2px; }
+.navlinks{ display:flex; gap:8px; }
+.navlinks a{ font-size:13px; color:var(--text-dim); padding:8px 14px; border-radius:var(--radius); border:1px solid transparent; transition:.15s; font-family:'IBM Plex Mono',monospace; }
+.navlinks a:hover, .navlinks a.active{ color:var(--signal); border-color:var(--signal-dim); background:rgba(79,209,197,.06); }
+footer{ border-top:1px solid var(--line); padding:40px 0 56px; margin-top:100px; position:relative; z-index:1; }
+.foot-inner{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+.foot-inner p{ color:var(--text-faint); font-size:13px; font-family:'IBM Plex Mono',monospace; }
+.eyebrow{ display:inline-flex; align-items:center; gap:8px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.1em; color:var(--signal); text-transform:uppercase; margin-bottom:18px; }
+.eyebrow::before{ content:''; width:20px; height:1px; background:var(--signal); }
+.btn{ display:inline-flex; align-items:center; gap:10px; font-family:'IBM Plex Mono',monospace; font-size:13px; padding:12px 20px; border-radius:var(--radius); border:1px solid var(--signal-dim); color:var(--signal); transition:.18s; }
+.btn:hover{ background:var(--signal); color:#08131A; border-color:var(--signal); }
+.btn-arrow{ transition:.18s; }
+.btn:hover .btn-arrow{ transform:translateX(3px); }
+
+/* ---- hero ---- */
+.hero{ padding:88px 0 64px; }
+.hero h1{ font-family:'Noto Sans KR',sans-serif; font-weight:900; font-size:clamp(32px,5vw,52px); line-height:1.25; letter-spacing:-.01em; max-width:820px; }
+.hero h1 em{ font-style:normal; color:var(--signal); }
+.hero p{ margin-top:22px; max-width:560px; color:var(--text-dim); font-size:16px; }
+
+/* ---- topology diagram ---- */
+.topology{ margin:64px 0 88px; position:relative; }
+.topo-svg{ width:100%; height:auto; display:block; }
+.topo-node-label{ font-family:'IBM Plex Mono',monospace; font-size:12px; fill:var(--text-dim); }
+.topo-node-title{ font-family:'Noto Sans KR',sans-serif; font-weight:700; font-size:15px; fill:var(--text); }
+
+/* ---- cards ---- */
+.section-head{ display:flex; align-items:baseline; justify-content:space-between; margin-bottom:32px; flex-wrap:wrap; gap:12px; }
+.section-head h2{ font-family:'Space Grotesk',sans-serif; font-size:22px; font-weight:600; }
+.section-head span{ color:var(--text-faint); font-size:13px; font-family:'IBM Plex Mono',monospace; }
+
+.cards{ display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.card{
+  background:var(--surface); border:1px solid var(--line); border-radius:6px;
+  padding:32px 28px; display:flex; flex-direction:column; gap:16px;
+  transition:.2s; position:relative; overflow:hidden;
+}
+.card::before{ content:''; position:absolute; top:0; left:0; right:0; height:2px; background:var(--line); transition:.2s; }
+.card:hover{ border-color:var(--signal-dim); transform:translateY(-3px); background:var(--surface-hi); }
+.card:hover::before{ background:var(--signal); }
+.card-num{ font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--text-faint); }
+.card-icon{ width:38px; height:38px; }
+.card h3{ font-family:'Space Grotesk',sans-serif; font-size:19px; font-weight:600; margin-top:4px; }
+.card p{ color:var(--text-dim); font-size:14px; flex:1; }
+.card-tags{ display:flex; flex-wrap:wrap; gap:6px; margin-top:4px; }
+.card-tags span{ font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--text-faint); border:1px solid var(--line); padding:3px 8px; border-radius:20px; }
+.card-cta{ display:flex; align-items:center; gap:8px; color:var(--signal); font-family:'IBM Plex Mono',monospace; font-size:13px; margin-top:8px; }
+.card:hover .card-cta{ gap:12px; }
+
+.intro-strip{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:0; border:1px solid var(--line); border-radius:6px; margin-top:88px; overflow:hidden; }
+.intro-strip div{ padding:26px 24px; border-left:1px solid var(--line); }
+.intro-strip div:first-child{ border-left:none; }
+.intro-strip .num{ font-family:'IBM Plex Mono',monospace; color:var(--signal); font-size:13px; margin-bottom:8px; }
+.intro-strip .label{ font-weight:700; font-size:15px; margin-bottom:6px; }
+.intro-strip .desc{ font-size:13px; color:var(--text-faint); }
+
+@media (max-width:820px){
+  .cards{ grid-template-columns:1fr; }
+  .intro-strip{ grid-template-columns:1fr; }
+  .intro-strip div{ border-left:none; border-top:1px solid var(--line); }
+  .intro-strip div:first-child{ border-top:none; }
+  .nav{ padding:16px 20px; }
+  .navlinks{ display:none; }
+  .wrap{ padding:0 20px; }
+}
 </style>
 </head>
 <body>
-    <div class="container">
-        <h1>std17-s3-bucket</h1>
-        <p>AWS S3 정적 웹사이트 호스팅 테스트 페이지</p>
-        <p>Terraform으로 배포됨</p>
-        <div class="badge">Owner: std17 &nbsp;|&nbsp; Class: bipa17</div>
+
+<header>
+  <div class="nav">
+    <a href="index.html" class="brand">
+      <span class="brand-dot"></span>
+      <span>인프라 노트<small>AWS CONCEPT REFERENCE</small></span>
+    </a>
+    <nav class="navlinks">
+      <a href="index.html" class="active">개요</a>
+      <a href="network.html">네트워크</a>
+      <a href="compute.html">컴퓨팅</a>
+      <a href="database.html">데이터베이스</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <section class="hero">
+    <div class="eyebrow">AWS Infrastructure · 3 Layers</div>
+    <h1>요청 하나가 인프라를 통과하는<br>경로를 <em>세 개의 층</em>으로 정리했습니다.</h1>
+    <p>네트워크가 경로를 만들고, 컴퓨팅이 요청을 처리하고, 데이터베이스가 상태를 지킵니다. 각 페이지는 해당 계층의 핵심 개념과 구성 요소를 사무 문서 형식으로 정리한 레퍼런스입니다.</p>
+  </section>
+
+  <section class="topology">
+    <svg class="topo-svg" viewBox="0 0 1016 220" xmlns="http://www.w3.org/2000/svg">
+      <!-- connecting lines -->
+      <line x1="140" y1="110" x2="450" y2="110" stroke="#26394A" stroke-width="1.5"/>
+      <line x1="566" y1="110" x2="876" y2="110" stroke="#26394A" stroke-width="1.5"/>
+      <circle cx="295" cy="110" r="3" fill="#4FD1C5"/>
+      <circle cx="721" cy="110" r="3" fill="#4FD1C5"/>
+
+      <!-- node 1: network -->
+      <rect x="20" y="65" width="120" height="90" rx="4" fill="#16232F" stroke="#26394A"/>
+      <rect x="20" y="65" width="120" height="3" fill="#4FD1C5"/>
+      <text x="40" y="100" class="topo-node-label">01</text>
+      <text x="40" y="122" class="topo-node-title">네트워크</text>
+      <text x="40" y="142" class="topo-node-label">VPC · Subnet</text>
+
+      <!-- node 2: compute -->
+      <rect x="446" y="65" width="120" height="90" rx="4" fill="#16232F" stroke="#26394A"/>
+      <rect x="446" y="65" width="120" height="3" fill="#4FD1C5"/>
+      <text x="466" y="100" class="topo-node-label">02</text>
+      <text x="466" y="122" class="topo-node-title">컴퓨팅</text>
+      <text x="466" y="142" class="topo-node-label">EC2 · ALB · ASG</text>
+
+      <!-- node 3: database -->
+      <rect x="872" y="65" width="120" height="90" rx="4" fill="#16232F" stroke="#26394A"/>
+      <rect x="872" y="65" width="120" height="3" fill="#4FD1C5"/>
+      <text x="892" y="100" class="topo-node-label">03</text>
+      <text x="892" y="122" class="topo-node-title">데이터베이스</text>
+      <text x="892" y="142" class="topo-node-label">RDS · Multi-AZ</text>
+    </svg>
+  </section>
+
+  <section id="concepts">
+    <div class="section-head">
+      <h2>세 가지 개념 영역</h2>
+      <span>// 각 카드에서 상세 페이지로 이동합니다</span>
     </div>
+
+    <div class="cards">
+
+      <a href="network.html" class="card">
+        <span class="card-num">01 / NETWORK</span>
+        <h3>네트워크</h3>
+        <p>VPC 안에서 트래픽이 어디로 흘러야 하는지 정의합니다. 서브넷 구분, 라우팅, 인터넷/NAT 경로가 핵심입니다.</p>
+        <div class="card-tags"><span>VPC</span><span>Subnet</span><span>Route Table</span><span>NAT</span></div>
+        <div class="card-cta">자세히 보기 <span class="btn-arrow">→</span></div>
+      </a>
+
+      <a href="compute.html" class="card">
+        <span class="card-num">02 / COMPUTE</span>
+        <h3>컴퓨팅</h3>
+        <p>실제 요청을 처리하는 연산 계층입니다. 트래픽 분산과 자동 확장으로 부하 변화에 대응합니다.</p>
+        <div class="card-tags"><span>EC2</span><span>ALB</span><span>Auto Scaling</span></div>
+        <div class="card-cta">자세히 보기 <span class="btn-arrow">→</span></div>
+      </a>
+
+      <a href="database.html" class="card">
+        <span class="card-num">03 / DATABASE</span>
+        <h3>데이터베이스</h3>
+        <p>서비스의 상태와 데이터를 보관합니다. 가용성과 읽기 성능 확보 방법을 함께 정리했습니다.</p>
+        <div class="card-tags"><span>RDS</span><span>Multi-AZ</span><span>Read Replica</span></div>
+        <div class="card-cta">자세히 보기 <span class="btn-arrow">→</span></div>
+      </a>
+
+    </div>
+  </section>
+
+  <section class="intro-strip">
+    <div>
+      <div class="num">WHY</div>
+      <div class="label">계층으로 나눈 이유</div>
+      <div class="desc">문제가 생겼을 때 어느 계층인지부터 좁히면 원인 파악이 빨라집니다.</div>
+    </div>
+    <div>
+      <div class="num">HOW</div>
+      <div class="label">문서 구성 방식</div>
+      <div class="desc">개념 정의 → 핵심 구성요소 → 실무에서 흔한 판단 기준 순으로 정리했습니다.</div>
+    </div>
+    <div>
+      <div class="num">SCOPE</div>
+      <div class="label">다루는 범위</div>
+      <div class="desc">입문자도 읽을 수 있도록 실제 서비스 흐름 예시를 함께 담았습니다.</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap foot-inner">
+    <p>AWS INFRA REFERENCE — INTERNAL DOCUMENT</p>
+    <p>NETWORK · COMPUTE · DATABASE</p>
+  </div>
+</footer>
+
 </body>
 </html>
