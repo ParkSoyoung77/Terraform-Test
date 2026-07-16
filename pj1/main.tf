@@ -13,7 +13,8 @@ module "network" {
 module "security" {
     source = "./modules/security"
 
-    vpc_id = module.network.vpc_id
+    vpc_id      = module.network.vpc_id
+    db_username = var.db_username
 }
 
 # ==================================================================
