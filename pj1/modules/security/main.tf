@@ -80,6 +80,7 @@ resource "random_password" "mysql_master_password" {
 resource "aws_secretsmanager_secret" "mysql_master" {
   name        = "std17-mysql-rds-secret"
   description = "std17-mysql-rds master credentials"
+  recovery_window_in_days = 0
 
   tags = { Name = "std17-mysql-rds-secret" }
 }

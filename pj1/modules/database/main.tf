@@ -5,8 +5,8 @@ resource "aws_db_subnet_group" "std17_db_private_subnet_group" {
   tags = { Name = "std17-db-private-subnet-group" }
 }
 
-resource "aws_db_instance" "std17_mysql" {
-  identifier     = "std17-mysql"
+resource "aws_db_instance" "std17_mysql_rds" {
+  identifier     = "std17-mysql-rds"
   engine         = "mysql"
   engine_version = var.engine_version
 
@@ -29,5 +29,5 @@ resource "aws_db_instance" "std17_mysql" {
 
   skip_final_snapshot = true
 
-  tags = { Name = "std17-mysql" }
+  tags = { Name = "std17-mysql-rds" }
 }
