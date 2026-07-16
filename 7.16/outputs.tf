@@ -44,6 +44,6 @@ output "db_endpoint" {
 }
 
 # ---------------- storage ----------------
-output "s3_website_endpoint" {
-    value = module.storage.website_endpoint
-}
+# output "s3_website_endpoint" {
+#     value = module.storage.website_endpoint
+# }
