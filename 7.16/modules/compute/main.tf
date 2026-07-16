@@ -9,7 +9,6 @@ resource "aws_instance" "std17_public_ec2" {
 
   subnet_id                   = var.public_subnet_ids[0]
   associate_public_ip_address = true
-  source_dest_check           = false
 
   root_block_device {
     volume_size           = 10
@@ -20,26 +19,17 @@ resource "aws_instance" "std17_public_ec2" {
   key_name = var.key_name
 
   vpc_security_group_ids = [
-    var.security_group_id,
-    var.nat_sg_id
+    var.security_group_id
   ]
 
   # 유저데이터
   user_data = <<-EOF
     #!/bin/bash
-    export DEBIAN_FRONTEND=noninteractive
     apt update -y
-    apt install -y nginx mysql-client iptables-persistent mariadb-client curl
+    apt install -y nginx mysql-client
 
     systemctl enable nginx
     systemctl start nginx
-
-    echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
-    sysctl -p
-    iptables -t nat -A POSTROUTING -o ens5 -j MASQUERADE
-    iptables -A FORWARD -i ens5 -o ens5 -j ACCEPT
-    netfilter-persistent save
-    systemctl enable netfilter-persistent
   EOF
 
   tags = { Name = "std17-public-ec2" }
