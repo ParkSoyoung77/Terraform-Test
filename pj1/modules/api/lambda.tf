@@ -109,3 +109,24 @@ resource "aws_lambda_function" "std17_db_check" {
 
   tags = { Name = "std17-db-check" }
 }
+
+# # ==================================================================
+# # Layer
+# # ==================================================================
+# data "archive_file" "pymysql_layer_zip" {
+#   type        = "zip"
+#   source_dir  = "${path.module}/layer"   # 이 안에 python/pymysql/ ... 구조
+#   output_path = "${path.module}/build/pymysql_layer.zip"
+# }
+
+# resource "aws_lambda_layer_version" "pymysql_layer" {
+#   layer_name          = "std17-pymysql-layer"
+#   filename            = data.archive_file.pymysql_layer_zip.output_path
+#   compatible_runtimes = ["python3.14"]
+# }
+
+# resource "aws_lambda_function" "std17_db_check" {
+#   # ...
+#   filename = data.archive_file.code_only_zip.output_path   # 이땐 db_check.py만 담긴 zip
+#   layers   = [aws_lambda_layer_version.pymysql_layer.arn]
+# }

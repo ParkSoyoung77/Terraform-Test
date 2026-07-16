@@ -64,7 +64,7 @@ resource "aws_apigatewayv2_stage" "std17_default_stage" {
 resource "aws_lambda_permission" "std17_apigw_lambda" {
     statement_id  = "AllowAPIGatewayInvoke"
     action        = "lambda:InvokeFunction"
-    function_name = aws_lambda_function.std17_db_check.function_name        # ← 여기
+    function_name = aws_lambda_function.std17_db_check.function_name   # var.lambda_function_arn 아님
     principal     = "apigateway.amazonaws.com"
     source_arn    = "${aws_apigatewayv2_api.std17_http_api.execution_arn}/*/*"
 }
