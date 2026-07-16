@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아키텍처 - CloudTrip</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', 'Malgun Gothic', sans-serif;
+    background: linear-gradient(135deg, #232f3e 0%, #131a22 100%);
+    color: #ffffff;
+    min-height: 100vh;
+  }
+  header {
+    padding: 24px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .logo { font-size: 22px; font-weight: 700; color: #ff9900; }
+  nav a {
+    color: #ffffff;
+    text-decoration: none;
+    margin-left: 28px;
+    font-size: 15px;
+  }
+  nav a:hover { color: #ff9900; }
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 70px 24px;
+  }
+  h1 { font-size: 34px; margin-bottom: 12px; }
+  h1 span { color: #ff9900; }
+  > p, .lead { color: #9fa6b2; margin-bottom: 40px; }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+  }
+  .svc {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 22px;
+  }
+  .svc .tag {
+    display: inline-block;
+    background: #ff9900;
+    color: #131a22;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 12px;
+  }
+  .svc h3 { font-size: 17px; margin-bottom: 8px; }
+  .svc p { color: #9fa6b2; font-size: 14px; line-height: 1.6; }
+  .status-box {
+    margin-top: 50px;
+    background: rgba(255,153,0,0.08);
+    border: 1px solid rgba(255,153,0,0.3);
+    border-radius: 10px;
+    padding: 24px;
+    text-align: center;
+  }
+  .status-box h3 { color: #ff9900; margin-bottom: 8px; }
+  .status-box p { color: #c9d1d9; font-size: 14px; }
+  footer {
+    text-align: center;
+    padding: 24px;
+    color: #6b7280;
+    font-size: 13px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+    margin-top: 60px;
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="logo">☁️ CloudTrip</div>
+    <nav>
+      <a href="index.html">홈</a>
+      <a href="about.html">소개</a>
+      <a href="services.html">아키텍처</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>사용된 <span>AWS 서비스</span></h1>
+    <p class="lead">네트워크부터 서버리스까지, 전체 스택 구성</p>
+
+    <div class="grid">
+      <div class="svc">
+        <span class="tag">Network</span>
+        <h3>VPC / Subnet</h3>
+        <p>2개 AZ × 퍼블릭·프라이빗·DB 서브넷 총 6개, IGW / NAT Gateway 연동</p>
+      </div>
+      <div class="svc">
+        <span class="tag">Compute</span>
+        <h3>EC2 Auto Scaling</h3>
+        <p>nginx 인스턴스, 최소 1 · 유지 2 · 최대 3대로 자동 확장/축소</p>
+      </div>
+      <div class="svc">
+        <span class="tag">Network</span>
+        <h3>ALB</h3>
+        <p>프라이빗 인스턴스에 대한 단일 진입점 및 부하분산 처리</p>
+      </div>
+      <div class="svc">
+        <span class="tag">Storage</span>
+        <h3>S3 + CloudFront</h3>
+        <p>3개 버킷의 정적 웹사이트를 CloudFront 엔드포인트로 전역 배포</p>
+      </div>
+      <div class="svc">
+        <span class="tag">Database</span>
+        <h3>RDS MySQL</h3>
+        <p>격리된 DB 전용 서브넷에 studydb 생성, 보안 암호 및 사용자 정의 서브넷 그룹 사용</p>
+      </div>
+      <div class="svc">
+        <span class="tag">Serverless</span>
+        <h3>Lambda + API Gateway</h3>
+        <p>VPC 연동 Lambda가 DB 연결을 시도하고 Success/Failure를 브라우저에 반환</p>
+      </div>
+    </div>
+
+    <div class="status-box">
+      <h3>DB 연결 상태 확인</h3>
+      <p>API Gateway 엔드포인트를 호출하면 Lambda가 studydb 연결을 시도한 결과를 반환합니다.</p>
+    </div>
+  </main>
+
+  <footer>
+    KDT Project · std17
+  </footer>
+</body>
+</html>

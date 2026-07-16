@@ -25,6 +25,7 @@ module "compute" {
     vpc_id              = module.network.vpc_id
     public_subnet_ids   = module.network.public_subnet_ids
     private_subnet_ids  = module.network.private_subnet_ids
+    db_private_subnet_ids = module.network.db_private_subnet_ids
     security_group_id   = module.security.test_sg_id
     key_name            = var.key_name
 
@@ -37,9 +38,9 @@ module "compute" {
 module "database" {
     source = "./modules/database"
 
-    private_subnet_ids = module.network.private_subnet_ids
+    db_private_subnet_ids = module.network.db_private_subnet_ids
     security_group_id  = module.security.test_sg_id
-    db_password        = var.db_password
+    db_secret_arn          = module.security.mysql_master_secret_arn
 
     depends_on = [module.network, module.security]
 }
@@ -57,8 +58,13 @@ module "storage" {
 module "api" {
     source = "./modules/api"
 
-    s3_website_endpoint  = "http://std17-s3-bucket.s3-website-us-west-1.amazonaws.com"
-    lambda_function_arn  = "arn:aws:lambda:us-west-1:925047940866:function:test2"
+    s3_website_endpoint = "http://std17-s3-bucket.s3-website-us-west-1.amazonaws.com"
 
-    depends_on = [module.storage]
+    private_subnet_ids = module.network.private_subnet_ids
+    security_group_id  = module.security.test_sg_id
+    db_secret_arn      = module.security.mysql_master_secret_arn
+    db_host            = module.database.db_address
+    db_name            = "studydb"
+
+    depends_on = [module.storage, module.database, module.network, module.security]
 }

@@ -21,7 +21,7 @@ output "igw_id" {
 }
 
 output "nat_id" {
-    value = module.compute.nat_instance_id
+    value = module.network.nat_id
 }
 
 # ---------------- security ----------------
@@ -44,6 +44,12 @@ output "db_endpoint" {
 }
 
 # ---------------- storage ----------------
-output "s3_website_endpoint" {
-    value = module.storage.website_endpoint
+output "cloudfront_domain_name" {
+    value = module.storage.cloudfront_domain_name
+}
+
+# ------------------ api ------------------
+output "lambda_db_check_endpoint" {
+    description = "브라우저에서 Success/Failure를 확인할 수 있는 API Gateway 엔드포인트"
+    value       = "${module.api.api_endpoint}/lambda"
 }

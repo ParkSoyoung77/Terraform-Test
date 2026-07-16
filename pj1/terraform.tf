@@ -11,6 +11,10 @@ terraform {
         random = { 
             source = "hashicorp/random" 
         }
+        archive = {
+            source  = "hashicorp/archive"
+            version = "~> 2.4"
+        }
     }
     cloud {
         organization = "terraform_code_test"
