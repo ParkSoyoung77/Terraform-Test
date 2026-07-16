@@ -49,4 +49,20 @@ module "database" {
 # ==================================================================
 module "storage" {
     source = "./modules/storage"
+
+  # ... 기존 인자들
+#   api_invoke_url = module.compute.api_invoke_url   # 실제 모듈 이름으로 수정
+#   api_stage_name = module.compute.api_stage_name
+}
+
+# ==================================================================
+# api: API G/W (독립적, 다른 모듈과 의존관계 없음)
+# ==================================================================
+module "api" {
+    source = "./modules/api"
+
+    s3_website_endpoint  = "http://std17-s3-bucket.s3-website-us-west-1.amazonaws.com"
+    lambda_function_arn  = "arn:aws:lambda:us-west-1:925047940866:function:test2"
+
+    depends_on = [module.storage]
 }

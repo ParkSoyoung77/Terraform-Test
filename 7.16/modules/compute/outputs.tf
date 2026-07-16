@@ -33,3 +33,11 @@ output "private_ec2_id" {
 output "eice_id" {
     value = aws_ec2_instance_connect_endpoint.std17_eice.id
 }
+
+# output "api_invoke_url" {
+#   value = aws_api_gateway_stage.std17_api_stage.invoke_url
+# }
+
+# output "api_stage_name" {
+#   value = aws_api_gateway_stage.std17_api_stage.stage_name
+# }

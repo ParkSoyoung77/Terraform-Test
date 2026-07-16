@@ -9,3 +9,13 @@ variable "index_html_path" {
     type        = string
     default     = ""
 }
+
+# variable "api_invoke_url" {
+#   description = "API Gateway invoke URL"
+#   type        = string
+# }
+
+# variable "api_stage_name" {
+#   description = "API Gateway stage name"
+#   type        = string
+# }
