@@ -269,3 +269,60 @@ resource "aws_cloudfront_distribution" "std17_cdn" {
 
   tags = { Name = "std17-cloudfront" }
 }
+
+resource "aws_s3_bucket_policy" "std17_s3_bucket_policy" {
+  bucket = module.storage.bucket_id   # 기존 aws_s3_bucket.std17_s3_bucket.id 대신
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "cloudfront.amazonaws.com" }
+      Action    = "s3:GetObject"
+      Resource  = "${module.storage.bucket_arn}/*"   # 기존 aws_s3_bucket.std17_s3_bucket.arn 대신
+      Condition = {
+        StringEquals = {
+          "AWS:SourceArn" = aws_cloudfront_distribution.std17_cdn.arn   # 이제 같은 root라 바로 참조 가능
+        }
+      }
+    }]
+  })
+}
+
+resource "aws_s3_bucket_policy" "std17_s3_bucket2_policy" {
+  bucket = module.storage.bucket_id   # 기존 aws_s3_bucket.std17_s3_bucket.id 대신
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "cloudfront.amazonaws.com" }
+      Action    = "s3:GetObject"
+      Resource  = "${module.storage.bucket_arn}/*"   # 기존 aws_s3_bucket.std17_s3_bucket.arn 대신
+      Condition = {
+        StringEquals = {
+          "AWS:SourceArn" = aws_cloudfront_distribution.std17_cdn.arn   # 이제 같은 root라 바로 참조 가능
+        }
+      }
+    }]
+  })
+}
+
+resource "aws_s3_bucket_policy" "std17_s3_bucket3_policy" {
+  bucket = module.storage.bucket_id   # 기존 aws_s3_bucket.std17_s3_bucket.id 대신
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect    = "Allow"
+      Principal = { Service = "cloudfront.amazonaws.com" }
+      Action    = "s3:GetObject"
+      Resource  = "${module.storage.bucket_arn}/*"   # 기존 aws_s3_bucket.std17_s3_bucket.arn 대신
+      Condition = {
+        StringEquals = {
+          "AWS:SourceArn" = aws_cloudfront_distribution.std17_cdn.arn   # 이제 같은 root라 바로 참조 가능
+        }
+      }
+    }]
+  })
+}
