@@ -51,6 +51,7 @@ module "database" {
 # ==================================================================
 module "storage" {
     source = "./modules/storage"
+    api_endpoint = module.api.api_endpoint
 }
 
 # ==================================================================

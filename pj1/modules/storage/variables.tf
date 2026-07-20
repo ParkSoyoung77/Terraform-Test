@@ -33,3 +33,8 @@ variable "services_html_path" {
     type    = string
     default = ""
 }
+
+variable "api_endpoint" {
+  description = "API Gateway endpoint URL for CloudFront origin"
+  type        = string
+}

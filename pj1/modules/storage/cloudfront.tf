@@ -223,7 +223,7 @@ resource "aws_cloudfront_distribution" "std17_cdn" {
 
 # 4번 오리진 (API Gateway → Lambda DB Check)
   origin {
-    domain_name = replace(aws_apigatewayv2_api.std17_http_api.api_endpoint, "https://", "")
+    domain_name = replace(var.api_endpoint, "https://", "")
     origin_id   = "std17-apigw-origin"
 
     custom_origin_config {
