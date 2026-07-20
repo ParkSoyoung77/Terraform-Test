@@ -51,7 +51,7 @@ module "database" {
 # ==================================================================
 module "storage" {
     source = "./modules/storage"
-    api_endpoint = module.api.api_endpoint
+    oac_id = aws_cloudfront_origin_access_control.std17_s3_oac.id
 }
 
 # ==================================================================

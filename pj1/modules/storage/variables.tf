@@ -34,7 +34,8 @@ variable "services_html_path" {
     default = ""
 }
 
-variable "api_endpoint" {
-  description = "API Gateway endpoint URL for CloudFront origin"
+# modules/storage/variables.tf 에 추가
+variable "oac_id" {
+  description = "CloudFront Origin Access Control ID (root에서 전달받음)"
   type        = string
 }
