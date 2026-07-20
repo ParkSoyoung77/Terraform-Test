@@ -21,3 +21,15 @@ output "bucket3_id" {
 output "bucket3_arn" {
     value = aws_s3_bucket.std17_s3_bucket3.arn
 }
+
+output "bucket_regional_domain_name" {
+    value = aws_s3_bucket.std17_s3_bucket.bucket_regional_domain_name
+}
+
+output "bucket2_regional_domain_name" {
+    value = aws_s3_bucket.std17_s3_bucket2.bucket_regional_domain_name
+}
+
+output "bucket3_regional_domain_name" {
+    value = aws_s3_bucket.std17_s3_bucket3.bucket_regional_domain_name
+}
