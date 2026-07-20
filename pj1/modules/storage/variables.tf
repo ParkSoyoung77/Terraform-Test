@@ -33,9 +33,3 @@ variable "services_html_path" {
     type    = string
     default = ""
 }
-
-# modules/storage/variables.tf 에 추가
-variable "oac_id" {
-  description = "CloudFront Origin Access Control ID (root에서 전달받음)"
-  type        = string
-}
