@@ -26,25 +26,17 @@ resource "aws_s3_bucket_policy" "std17_s3_bucket_policy" {
     bucket = aws_s3_bucket.std17_s3_bucket.id
 
     policy = jsonencode({
-    "Version": "2012-10-17",
-    "Id": "PolicyForCloudFrontPrivateContent",
-    "Statement": [
-        {
-            "Sid": "AllowCloudFrontServicePrincipal",
-            "Effect": "Allow",
-            "Principal": {
-                "Service": "cloudfront.amazonaws.com"
-            },
-            "Action": "s3:GetObject",
-            "Resource": "${aws_s3_bucket.std17_s3_bucket.arn}/*",
-            "Condition": {
-                "StringEquals": {
-                    "AWS:SourceArn": aws_cloudfront_distribution.std17_cdn.arn
-                }
+        "Version": "2012-10-17"
+        "Statement": [
+            {
+                Sid = "Statement1"
+                Effect = "Allow"
+                Principal = "*"
+                Action = "s3:GetObject"
+                Resource = "${aws_s3_bucket.std17_s3_bucket.arn}/*"
             }
-        }
-    ]
-  })
+        ]
+    })
 
     depends_on = [aws_s3_bucket_public_access_block.std17_s3_bucket-access]
 }
