@@ -88,4 +88,7 @@ module "tgw" {
 # ==================================================================
 module "storage" {
     source = "./modules/storage"
+
+    domain_name    = "www.sy99.cloud"
+    hosted_zone_id = data.aws_route53_zone.std17_zone.zone_id
 }

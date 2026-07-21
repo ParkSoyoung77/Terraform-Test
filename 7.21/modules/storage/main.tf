@@ -58,3 +58,20 @@ resource "aws_s3_object" "std17_index_html" {
 
     content_type = "text/html"
 }
+
+# ================================================================
+
+# route53 레코드 할당
+resource "aws_route53_record" "std17_www_alias" {
+    zone_id = var.hosted_zone_id
+    name    = var.domain_name
+    type    = "A"
+
+    alias {
+        name                   = "s3-website-${var.aws_region}.amazonaws.com"
+        zone_id                = var.s3_website_hosted_zone_id
+        evaluate_target_health = true
+    }
+
+    depends_on = [aws_s3_bucket_website_configuration.std17_s3_bucket_web_config]
+}
