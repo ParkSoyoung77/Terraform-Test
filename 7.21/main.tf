@@ -36,3 +36,18 @@ module "compute" {
 
     depends_on = [module.network, module.security]
 }
+
+# ==================================================================
+# VPC연결: tgw
+# ==================================================================
+module "tgw" {
+    source = "./modules/tgw"
+
+    vpc1_id         = module.network.vpc_id
+    vpc1_subnet_ids = module.network.private_subnet_ids
+
+    vpc2_id         = module.network2.vpc_id
+    vpc2_subnet_ids = module.network2.private_subnet_ids
+
+    depends_on = [module.network, module.network2]
+}
