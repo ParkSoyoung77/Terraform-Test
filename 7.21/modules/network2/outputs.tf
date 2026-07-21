@@ -2,6 +2,10 @@ output "vpc_id" {
     value = aws_vpc.std17_vpc2.id
 }
 
+output "vpc_cidr" {
+    value = aws_vpc.std17_vpc2.cidr_block
+}
+
 output "public_subnet_ids" {
     value = aws_subnet.std17_public_subnets2[*].id
 }

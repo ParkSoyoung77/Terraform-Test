@@ -45,9 +45,13 @@ module "tgw" {
 
     vpc1_id         = module.network.vpc_id
     vpc1_subnet_ids = module.network.private_subnet_ids
+    vpc1_route_table_id = module.network.private_rt_id
+    vpc1_cidr       = module.network.vpc_cidr
 
     vpc2_id         = module.network2.vpc_id
     vpc2_subnet_ids = module.network2.private_subnet_ids
+    vpc2_route_table_id = module.network2.private_rt_id
+    vpc2_cidr       = module.network2.vpc_cidr
 
     depends_on = [module.network, module.network2]
 }
