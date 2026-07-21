@@ -24,44 +24,28 @@ output "nat_id" {
     value = module.network.nat_id
 }
 
+# ---------------- network2 ----------------
+output "vpc_id" {
+    value = module.network.vpc2_id
+}
+
+output "public_subnets_id" {
+    value = module.network.public_subnet2_ids
+}
+
+output "private_subnets_id" {
+    value = module.network.private_subnet2_ids
+}
+
+output "igw_id" {
+    value = module.network.igw2_id
+}
+
+output "nat_id" {
+    value = module.network.nat2_id
+}
+
 # ---------------- security ----------------
 output "test_sg_id" {
     value = module.security.test_sg_id
 }
-
-# ---------------- compute ----------------
-# output "alb_dns_name" {
-#     value = module.compute.alb_dns_name
-# }
-
-# output "asg_name" {
-#     value = module.compute.asg_name
-# }
-
-# ---------------- database ----------------
-output "db_endpoint" {
-    value = module.database.db_endpoint
-}
-
-# ---------------- storage ----------------
-# output "cloudfront_domain_name" {
-#     value = aws_cloudfront_distribution.std17_cdn.domain_name
-# }
-
-# ------------------ api ------------------
-# output "lambda_db_check_endpoint" {
-#     description = "브라우저에서 Success/Failure를 확인할 수 있는 API Gateway 엔드포인트"
-#     value       = "${module.api.api_endpoint}/lambda"
-# }
-
-# output "bucket_regional_domain_name" {
-#     value = module.storage.bucket_regional_domain_name
-# }
-
-# output "bucket2_regional_domain_name" {
-#     value = module.storage.bucket2_regional_domain_name
-# }
-
-# output "bucket3_regional_domain_name" {
-#     value = module.storage.bucket3_regional_domain_name
-# }
