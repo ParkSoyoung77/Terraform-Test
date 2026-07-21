@@ -103,6 +103,7 @@ module "compute" {
     acm_certificate_arn = data.aws_acm_certificate.std17_alb_cert.arn
     domain_name          = var.domain_name
     hosted_zone_id       = data.aws_route53_zone.std17_zone.zone_id
+    aws_region            = var.aws_region
 
     s3_website_endpoint = module.storage.website_endpoint
     api_gateway_domain   = local.api_gateway_domain

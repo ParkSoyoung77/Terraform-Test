@@ -14,12 +14,12 @@ variable "security_group_id" {
 }
 
 variable "acm_certificate_arn" {
-    description = "ALB HTTPS 리스너용 ACM 인증서 ARN (ALB와 같은 리전)"
+    description = "ALB HTTPS 리스너용 ACM 인증서 ARN"
     type        = string
 }
 
 variable "domain_name" {
-    description = "www.sy99.cloud"
+    description = "www.sy99.cloud (Route53 alias 이름이자 S3 버킷명)"
     type        = string
 }
 
@@ -29,7 +29,13 @@ variable "hosted_zone_id" {
 }
 
 variable "s3_website_endpoint" {
-    description = "S3 정적 웹사이트 엔드포인트 (redirect 대상, 요구사항 4)"
+    description = "미사용 (S3 REST path-style로 대체)"
+    type        = string
+    default     = ""
+}
+
+variable "aws_region" {
+    description = "S3 REST 엔드포인트 구성을 위한 리전"
     type        = string
 }
 

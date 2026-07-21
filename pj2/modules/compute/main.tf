@@ -64,7 +64,7 @@ resource "aws_lb_listener" "std17_alb_443_listener" {
     }
 }
 
-# /index.html -> S3 정적 웹사이트로 302 리다이렉트 (요구사항 4)
+# /index.html -> S3 REST 엔드포인트(path-style, HTTPS)로 302 리다이렉트 (요구사항 4)
 resource "aws_lb_listener_rule" "std17_index_html_redirect" {
     listener_arn = aws_lb_listener.std17_alb_443_listener.arn
     priority     = 10
@@ -73,9 +73,9 @@ resource "aws_lb_listener_rule" "std17_index_html_redirect" {
         type = "redirect"
 
         redirect {
-            host        = var.s3_website_endpoint
-            path        = "/index.html"
-            protocol    = "HTTP"
+            host        = "s3.${var.aws_region}.amazonaws.com"
+            path        = "/${var.domain_name}/index.html"
+            protocol    = "HTTPS"
             status_code = "HTTP_302"
         }
     }
