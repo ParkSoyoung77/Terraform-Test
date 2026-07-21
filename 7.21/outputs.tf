@@ -45,6 +45,27 @@ output "nat2_id" {
     value = module.network2.nat_id
 }
 
+# ---------------- network3 ----------------
+output "vpc3_id" {
+    value = module.network3.vpc_id
+}
+
+output "public_subnets3_id" {
+    value = module.network3.public_subnet_ids
+}
+
+output "private_subnets3_id" {
+    value = module.network3.private_subnet_ids
+}
+
+output "igw3_id" {
+    value = module.network3.igw_id
+}
+
+output "nat3_id" {
+    value = module.network3.nat_id
+}
+
 # ---------------- security ----------------
 output "test_sg_id" {
     value = module.security.test_sg_id

@@ -1,7 +1,7 @@
 variable "vpc_cidr" {
-    description = "VPC2 CIDR 블록"
+    description = "VPC3 CIDR 블록"
     type        = string
-    default     = "10.10.0.0/16"
+    default     = "10.20.0.0/16"
 }
 
 variable "azs" {
