@@ -80,16 +80,9 @@ resource "aws_api_gateway_stage" "std17_stage" {
 # ==================================================================
 # 커스텀 도메인 (콘솔에서 발급한 기존 ACM 인증서 참조)
 # ==================================================================
-data "aws_acm_certificate" "std17_apigw_cert" {
-    domain      = var.acm_domain_name
-    statuses    = ["ISSUED"]
-    types       = ["AMAZON_ISSUED", "IMPORTED"]
-    most_recent = true
-}
-
 resource "aws_api_gateway_domain_name" "std17_apigw_domain" {
     domain_name              = var.custom_domain_name
-    regional_certificate_arn = data.aws_acm_certificate.std17_apigw_cert.arn
+    regional_certificate_arn = var.acm_certificate_arn   # data 참조 → 변수로 직접 받기
 
     endpoint_configuration {
         types           = ["REGIONAL"]

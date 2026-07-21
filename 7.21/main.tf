@@ -101,3 +101,17 @@ module "api" {
 
     hosted_zone_id = data.aws_route53_zone.std17_zone.zone_id
 }
+
+# ==================================================================
+# CDN (cloudfront)
+# ==================================================================
+module "cdn" {
+    source = "./modules/cdn"
+
+    domain_name                = "sy99.cloud"
+    s3_bucket_website_endpoint = module.storage.website_endpoint
+    hosted_zone_id             = data.aws_route53_zone.std17_zone.zone_id
+    acm_certificate_arn        = "arn:aws:acm:us-east-1:925047940866:certificate/여기에_새로_발급받은_ARN"
+
+    depends_on = [module.storage]
+}
