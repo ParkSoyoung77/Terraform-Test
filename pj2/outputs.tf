@@ -4,85 +4,35 @@ output "availability_zone" {
 }
 
 # ---------------- network (VPC1) ----------------
-output "vpc_id" {
-    value = module.network.vpc_id
-}
-
-output "public_subnets_id" {
-    value = module.network.public_subnet_ids
-}
-
-output "private_subnets_id" {
-    value = module.network.private_subnet_ids
-}
-
-output "igw_id" {
-    value = module.network.igw_id
-}
-
-output "nat_id" {
-    value = module.network.nat_id
-}
+output "vpc_id"             { value = module.network.vpc_id }
+output "public_subnets_id"  { value = module.network.public_subnet_ids }
+output "private_subnets_id" { value = module.network.private_subnet_ids }
+output "igw_id"              { value = module.network.igw_id }
+output "nat_id"               { value = module.network.nat_id }
 
 # ---------------- network2 (VPC2) ----------------
-output "vpc2_id" {
-    value = module.network2.vpc_id
-}
-
-output "public_subnets2_id" {
-    value = module.network2.public_subnet_ids
-}
-
-output "private_subnets2_id" {
-    value = module.network2.private_subnet_ids
-}
-
-output "igw2_id" {
-    value = module.network2.igw_id
-}
-
-output "nat2_id" {
-    value = module.network2.nat_id
-}
+output "vpc2_id"             { value = module.network2.vpc_id }
+output "public_subnets2_id"  { value = module.network2.public_subnet_ids }
+output "private_subnets2_id" { value = module.network2.private_subnet_ids }
+output "igw2_id"              { value = module.network2.igw_id }
+output "nat2_id"               { value = module.network2.nat_id }
 
 # ---------------- security ----------------
-output "test_sg_id" {
-    value = module.security.test_sg_id
-}
-
-output "db_sg_id" {
-    value = module.security2.db_sg_id
-}
+output "test_sg_id" { value = module.security.test_sg_id }
+output "db_sg_id"     { value = module.security2.db_sg_id }
 
 # ---------------- compute ----------------
-output "alb_dns_name" {
-    value = module.compute.alb_dns_name
-}
+output "alb_dns_name" { value = module.compute.alb_dns_name }
 
 # ---------------- database ----------------
-output "db_endpoint" {
-    value = module.database.db_endpoint
-}
-
-output "db_master_secret_arn" {
-    value = module.database.master_user_secret_arn
-}
+output "db_endpoint"           { value = module.database.db_endpoint }
+output "db_master_secret_arn" { value = module.database.master_user_secret_arn }
 
 # ---------------- storage ----------------
-output "s3_bucket_id" {
-    value = module.storage.bucket_id
-}
+output "s3_website_endpoint" { value = module.storage.website_endpoint }
 
 # ---------------- api ----------------
-output "api_endpoint" {
-    value = module.api.api_endpoint
-}
+output "api_endpoint" { value = module.api.api_endpoint }
 
-# ---------------- cdn ----------------
-output "site_url" {
-    value = "https://${var.domain_name}"
-}
-
-output "cdn_domain_name" {
-    value = module.cdn.cdn_domain_name
-}
+# ---------------- 진입점 ----------------
+output "site_url" { value = "https://${var.domain_name}" }

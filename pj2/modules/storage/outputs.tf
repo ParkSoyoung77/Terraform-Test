@@ -6,7 +6,6 @@ output "bucket_arn" {
     value = aws_s3_bucket.std17_s3_bucket.arn
 }
 
-output "bucket_regional_domain_name" {
-    description = "CloudFront OAC origin용 REST 엔드포인트 도메인"
-    value       = aws_s3_bucket.std17_s3_bucket.bucket_regional_domain_name
+output "website_endpoint" {
+    value = aws_s3_bucket_website_configuration.std17_s3_bucket_web_config.website_endpoint
 }
