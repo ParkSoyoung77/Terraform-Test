@@ -147,9 +147,9 @@ resource "aws_lb_listener" "std17_alb_80_listener" {
 resource "aws_autoscaling_group" "std17_asg" {
     name = "std17-asg"
 
-    desired_capacity = 3
+    desired_capacity = 2
     min_size         = 1
-    max_size         = 5
+    max_size         = 3
 
     launch_template {
         id      = aws_launch_template.std17_lt.id

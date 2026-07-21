@@ -82,3 +82,10 @@ module "tgw" {
 
     depends_on = [module.network, module.network2, module.network3]
 }
+
+# ==================================================================
+# storage: S3 (독립적, 다른 모듈과 의존관계 없음)
+# ==================================================================
+module "storage" {
+    source = "./modules/storage"
+}

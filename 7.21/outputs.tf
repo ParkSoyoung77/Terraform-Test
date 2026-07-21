@@ -68,3 +68,8 @@ output "nat3_id" {
 output "test_sg_id" {
     value = module.security.test_sg_id
 }
+
+# ---------------- storage ----------------
+output "s3_website_endpoint" {
+    value = module.storage.website_endpoint
+}
