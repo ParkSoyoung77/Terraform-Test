@@ -25,3 +25,11 @@ output "public_rt_id" {
 output "private_rt_id" {
     value = aws_route_table.std17_vpc_private_rt3.id
 }
+
+output "igw_id" {
+    value = aws_internet_gateway.std17_vpc3_igw.id
+}
+
+output "nat_id" {
+    value = aws_nat_gateway.std17_nat3.id
+}

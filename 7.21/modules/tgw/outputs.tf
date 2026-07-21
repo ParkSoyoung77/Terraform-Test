@@ -9,3 +9,7 @@ output "tgw_attach_vpc1_id" {
 output "tgw_attach_vpc2_id" {
     value = aws_ec2_transit_gateway_vpc_attachment.std17_tga_vpc2.id
 }
+
+output "tgw_attach_vpc3_id" {
+    value = aws_ec2_transit_gateway_vpc_attachment.std17_tga_vpc3.id
+}

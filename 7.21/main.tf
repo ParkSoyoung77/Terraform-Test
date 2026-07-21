@@ -36,11 +36,21 @@ module "compute" {
 
     vpc_id              = module.network.vpc_id
     public_subnet_ids   = module.network.public_subnet_ids
-    private_subnet_ids  = module.network.private_subnet_ids
     security_group_id   = module.security.test_sg_id
     key_name            = var.key_name
 
     depends_on = [module.network, module.security]
+}
+
+module "compute2" {
+    source = "./modules/compute2"
+
+    vpc_id              = module.network.vpc_id
+    private_subnet_ids  = module.network.private_subnet_ids
+    security_group_id   = module.security.test_sg_id
+    key_name            = var.key_name
+
+    depends_on = [module.network, module.security, module.compute]
 }
 
 # ==================================================================
@@ -63,5 +73,12 @@ module "tgw" {
     vpc2_default_route_table_id  = module.network2.default_rt_id
     vpc2_cidr                    = module.network2.vpc_cidr
 
-    depends_on = [module.network, module.network2]
+    vpc3_id                      = module.network3.vpc_id
+    vpc3_subnet_ids              = module.network3.private_subnet_ids
+    vpc3_route_table_id          = module.network3.private_rt_id
+    vpc3_public_route_table_id   = module.network3.public_rt_id
+    vpc3_default_route_table_id  = module.network3.default_rt_id
+    vpc3_cidr                    = module.network3.vpc_cidr
+
+    depends_on = [module.network, module.network2, module.network3]
 }

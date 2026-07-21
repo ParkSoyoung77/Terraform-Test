@@ -1,5 +1,5 @@
-output "public_ec2_id" {
-    value = aws_instance.std17_public_ec2.id
+output "private_ec2_id" {
+    value = aws_instance.std17_private_ec2.id
 }
 
 output "target_group_arn" {

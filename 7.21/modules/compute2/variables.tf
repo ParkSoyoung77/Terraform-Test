@@ -3,8 +3,8 @@ variable "vpc_id" {
     type        = string
 }
 
-variable "public_subnet_ids" {
-    description = "퍼블릭 서브넷 ID 리스트 (EC2, ALB용)"
+variable "private_subnet_ids" {
+    description = "프라이빗 서브넷 ID 리스트 (ASG, 내부 ALB용)"
     type        = list(string)
 }
 
