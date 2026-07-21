@@ -37,14 +37,6 @@ output "private_subnets2_id" {
     value = module.network2.private_subnet_ids
 }
 
-output "igw2_id" {
-    value = module.network2.igw_id
-}
-
-output "nat2_id" {
-    value = module.network2.nat_id
-}
-
 # ---------------- network3 ----------------
 output "vpc3_id" {
     value = module.network3.vpc_id
@@ -56,14 +48,6 @@ output "public_subnets3_id" {
 
 output "private_subnets3_id" {
     value = module.network3.private_subnet_ids
-}
-
-output "igw3_id" {
-    value = module.network3.igw_id
-}
-
-output "nat3_id" {
-    value = module.network3.nat_id
 }
 
 # ---------------- security ----------------

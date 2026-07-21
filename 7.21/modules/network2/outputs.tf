@@ -18,14 +18,6 @@ output "private_subnet_ids" {
     value = aws_subnet.std17_private_subnets2[*].id
 }
 
-output "igw_id" {
-    value = aws_internet_gateway.std17_vpc2_igw.id    
-}
-
-output "nat_id" {
-    value = aws_nat_gateway.std17_nat2.id
-}
-
 output "public_rt_id" {
     value = aws_route_table.std17_vpc2_public_rt2.id    
 }

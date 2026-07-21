@@ -35,22 +35,9 @@ resource "aws_subnet" "std17_public_subnets3" {
     }
 }
 
-# IGW
-resource "aws_internet_gateway" "std17_vpc3_igw" {
-    vpc_id = aws_vpc.std17_vpc3.id
-    tags = {
-        Name = "std17-vpc3-igw"
-    }
-}
-
 # public rt
 resource "aws_route_table" "std17_vpc3_public_rt3" {
     vpc_id = aws_vpc.std17_vpc3.id
-
-    route {
-        cidr_block = "0.0.0.0/0"
-        gateway_id = aws_internet_gateway.std17_vpc3_igw.id
-    }
 
     tags = {
         Name = "std17-vpc3-public-rt"
@@ -75,29 +62,9 @@ resource "aws_subnet" "std17_private_subnets3" {
     tags = { Name = "std17-private${count.index + 1}-subnet3" }
 }
 
-# EIP 할당
-resource "aws_eip" "std17_nat_eip3" {
-    domain = "vpc"
-    tags   = { Name = "std17-nat-eip3" }
-}
-
-# NAT 게이트웨이
-resource "aws_nat_gateway" "std17_nat3" {
-    allocation_id = aws_eip.std17_nat_eip3.id
-    subnet_id     = aws_subnet.std17_public_subnets3[0].id
-    depends_on    = [aws_internet_gateway.std17_vpc3_igw]
-
-    tags = { Name = "std17-nat3" }
-}
-
 # 프라이빗 라우팅 테이블
 resource "aws_route_table" "std17_vpc_private_rt3" {
     vpc_id = aws_vpc.std17_vpc3.id
-    
-    route {
-        cidr_block     = "0.0.0.0/0"
-        nat_gateway_id = aws_nat_gateway.std17_nat3.id
-    }
 
     tags = { Name = "std17-vpc-private-rt3" }
 }

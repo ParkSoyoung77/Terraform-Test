@@ -2,10 +2,12 @@
 resource "aws_ec2_transit_gateway" "std17_tgw" {
     description                     = "std17-tgw"
     amazon_side_asn                 = 64512 # IANA가 "사설/내부용(Private Use)"으로 예약해둔 구간
-    dns_support                     = "enable"
-    vpn_ecmp_support                 = "enable"
-    default_route_table_association = "enable"
-    default_route_table_propagation = "enable"
+    dns_support                        = "enable"
+    vpn_ecmp_support                   = "enable"
+    default_route_table_association    = "enable"
+    default_route_table_propagation    = "enable"
+    security_group_referencing_support = "enable"
+    encryption_support                 = "enable"
 
     tags = {
         Name = "std17-tgw"
