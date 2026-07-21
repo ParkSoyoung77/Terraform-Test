@@ -13,12 +13,6 @@ module "network2" {
     azs = var.azs
 }
 
-module "network3" {
-    source = "./modules/network3"
-
-    azs = var.azs
-}
-
 # ==================================================================
 # 2계층: security (network에 의존)
 # ==================================================================
@@ -72,13 +66,6 @@ module "tgw" {
     vpc2_public_route_table_id   = module.network2.public_rt_id
     vpc2_default_route_table_id  = module.network2.default_rt_id
     vpc2_cidr                    = module.network2.vpc_cidr
-
-    vpc3_id                      = module.network3.vpc_id
-    vpc3_subnet_ids              = module.network3.private_subnet_ids
-    vpc3_route_table_id          = module.network3.private_rt_id
-    vpc3_public_route_table_id   = module.network3.public_rt_id
-    vpc3_default_route_table_id  = module.network3.default_rt_id
-    vpc3_cidr                    = module.network3.vpc_cidr
 
     depends_on = [module.network, module.network2, module.network3]
 }
