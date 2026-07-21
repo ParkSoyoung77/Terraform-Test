@@ -26,6 +26,7 @@ module "compute" {
     vpc_id              = module.network.vpc_id
     public_subnet_ids   = module.network.public_subnet_ids
     private_subnet_ids  = module.network.private_subnet_ids
+    db_private_subnet_ids = module.network.db_private_subnet_ids
     security_group_id   = module.security.test_sg_id
     key_name            = var.key_name
 
