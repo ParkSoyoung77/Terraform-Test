@@ -21,7 +21,7 @@ resource "aws_default_route_table" "std17_vpc2_default_rt" {
 
 # public subnets
 resource "aws_subnet" "std17_public_subnets2" {
-    count                                        = 1
+    count                                        = 2
     vpc_id                                       = aws_vpc.std17_vpc2.id
     cidr_block                                   = "10.10.${count.index + 1}.0/24"
     availability_zone                            = var.azs[count.index]
@@ -52,14 +52,13 @@ resource "aws_route_table" "std17_vpc2_public_rt2" {
         gateway_id = aws_internet_gateway.std17_vpc2_igw.id
     }
 
-
     tags = {
         Name = "std17-vpc2-public-rt"
     }
 }
 
 resource "aws_route_table_association" "std17_vpc2_public_rt_assoc2" {
-    count          = 1
+    count          = 2
     route_table_id = aws_route_table.std17_vpc2_public_rt2.id
     subnet_id      = aws_subnet.std17_public_subnets2[count.index].id
 }
@@ -68,7 +67,7 @@ resource "aws_route_table_association" "std17_vpc2_public_rt_assoc2" {
 
 # private subnets
 resource "aws_subnet" "std17_private_subnets2" {
-    count             = 1
+    count             = 2
     vpc_id            = aws_vpc.std17_vpc2.id
     cidr_block        = "10.10.${count.index + 11}.0/24"
     availability_zone = var.azs[count.index]
@@ -100,11 +99,11 @@ resource "aws_route_table" "std17_vpc_private_rt2" {
         nat_gateway_id = aws_nat_gateway.std17_nat2.id
     }
 
-    tags = { Name = "std17-vpc-private-rt" }
+    tags = { Name = "std17-vpc-private-rt2" }
 }
 
 resource "aws_route_table_association" "std17_vpc_private_rt_assoc2" {
-    count          = 1
+    count          = 2
     route_table_id = aws_route_table.std17_vpc_private_rt2.id
     subnet_id      = aws_subnet.std17_private_subnets2[count.index].id
 }

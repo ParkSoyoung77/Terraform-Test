@@ -4,29 +4,11 @@ variable "vpc_id" {
 }
 
 variable "public_subnet_ids" {
-    description = "퍼블릭 서브넷 ID 리스트 (EC2, ALB용)"
+    description = "퍼블릭 서브넷 ID 리스트 (ALB용)"
     type        = list(string)
 }
 
 variable "security_group_id" {
-    description = "EC2/ALB/ASG에 적용할 보안그룹 ID"
+    description = "ALB에 적용할 보안그룹 ID"
     type        = string
-}
-
-variable "key_name" {
-    description = "EC2 키페어 이름"
-    type        = string
-    default     = "std17-key"
-}
-
-variable "instance_ami" {
-    description = "EC2 인스턴스 소스 AMI (Ubuntu)"
-    type        = string
-    default     = "ami-0fb110df4c5094d21"
-}
-
-variable "instance_type" {
-    description = "EC2 인스턴스 타입"
-    type        = string
-    default     = "t3.micro"
 }

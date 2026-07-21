@@ -3,35 +3,61 @@
 # ==================================================================
 module "network" {
     source = "./modules/network"
-
-    azs = var.azs
+    azs    = var.azs
 }
 
 module "network2" {
     source = "./modules/network2"
-
-    azs = var.azs
+    azs    = var.azs
 }
 
 # ==================================================================
-# 2계층: security (network에 의존)
+# 2계층: security
 # ==================================================================
 module "security" {
     source = "./modules/security"
+    vpc_id = module.network.vpc_id
+}
 
-    vpc_id      = module.network.vpc_id
+module "security2" {
+    source = "./modules/security2"
+
+    vpc_id              = module.network2.vpc_id
+    allowed_cidr_blocks = [module.network.vpc_cidr]
 }
 
 # ==================================================================
-# 3계층: compute (network, security에 의존)
+# VPC 연결: tgw
+# ==================================================================
+module "tgw" {
+    source = "./modules/tgw"
+
+    vpc1_id                     = module.network.vpc_id
+    vpc1_subnet_ids             = module.network.private_subnet_ids
+    vpc1_route_table_id         = module.network.private_rt_id
+    vpc1_public_route_table_id  = module.network.public_rt_id
+    vpc1_default_route_table_id = module.network.default_rt_id
+    vpc1_cidr                   = module.network.vpc_cidr
+
+    vpc2_id                     = module.network2.vpc_id
+    vpc2_subnet_ids             = module.network2.private_subnet_ids
+    vpc2_route_table_id         = module.network2.private_rt_id
+    vpc2_public_route_table_id  = module.network2.public_rt_id
+    vpc2_default_route_table_id = module.network2.default_rt_id
+    vpc2_cidr                   = module.network2.vpc_cidr
+
+    depends_on = [module.network, module.network2]
+}
+
+# ==================================================================
+# 3계층: compute (공인 ALB) / compute2 (nginx ASG, private)
 # ==================================================================
 module "compute" {
     source = "./modules/compute"
 
-    vpc_id              = module.network.vpc_id
-    public_subnet_ids   = module.network.public_subnet_ids
-    security_group_id   = module.security.test_sg_id
-    key_name            = var.key_name
+    vpc_id             = module.network.vpc_id
+    public_subnet_ids  = module.network.public_subnet_ids
+    security_group_id  = module.security.test_sg_id
 
     depends_on = [module.network, module.security]
 }
@@ -39,66 +65,69 @@ module "compute" {
 module "compute2" {
     source = "./modules/compute2"
 
-    vpc_id              = module.network.vpc_id
-    private_subnet_ids  = module.network.private_subnet_ids
-    security_group_id   = module.security.test_sg_id
+    private_subnet_ids = module.network.private_subnet_ids
+    security_group_id  = module.security.test_sg_id
     key_name            = var.key_name
+    target_group_arn   = module.compute.target_group_arn
 
     depends_on = [module.network, module.security, module.compute]
 }
 
 # ==================================================================
-# VPC연결: tgw
+# 4계층: database (VPC2)
 # ==================================================================
-module "tgw" {
-    source = "./modules/tgw"
+module "database" {
+    source = "./modules/database"
 
-    vpc1_id                      = module.network.vpc_id
-    vpc1_subnet_ids              = module.network.private_subnet_ids
-    vpc1_route_table_id          = module.network.private_rt_id
-    vpc1_public_route_table_id   = module.network.public_rt_id
-    vpc1_default_route_table_id  = module.network.default_rt_id
-    vpc1_cidr                    = module.network.vpc_cidr
+    db_private_subnet_ids = module.network2.private_subnet_ids
+    security_group_id     = module.security2.db_sg_id
+    db_name                = var.db_name
 
-    vpc2_id                      = module.network2.vpc_id
-    vpc2_subnet_ids              = module.network2.private_subnet_ids
-    vpc2_route_table_id          = module.network2.private_rt_id
-    vpc2_public_route_table_id   = module.network2.public_rt_id
-    vpc2_default_route_table_id  = module.network2.default_rt_id
-    vpc2_cidr                    = module.network2.vpc_cidr
-
-    depends_on = [module.network, module.network2, module.network3]
+    depends_on = [module.network2, module.security2, module.tgw]
 }
 
 # ==================================================================
-# storage: S3 (독립적, 다른 모듈과 의존관계 없음)
+# storage: S3
 # ==================================================================
 module "storage" {
     source = "./modules/storage"
 
-    domain_name    = "www.sy99.cloud"
-    hosted_zone_id = data.aws_route53_zone.std17_zone.zone_id
+    bucket_name = var.domain_name
 }
 
-# # ==================================================================
-# # API (Rest API)
-# # ==================================================================
-# module "api" {
-#     source = "./modules/api"
+# ==================================================================
+# api: Lambda + API Gateway
+# ==================================================================
+module "api" {
+    source = "./modules/api"
 
-#     hosted_zone_id = data.aws_route53_zone.std17_zone.zone_id
-# }
+    private_subnet_ids = module.network.private_subnet_ids
+    security_group_id  = module.security.test_sg_id
+    db_secret_arn       = module.database.master_user_secret_arn
+    db_host             = module.database.db_address
+    db_name             = var.db_name
 
-# # ==================================================================
-# # CDN (cloudfront)
-# # ==================================================================
-# module "cdn" {
-#     source = "./modules/cdn"
+    depends_on = [module.network, module.security, module.database, module.tgw]
+}
 
-#     domain_name                = "sy99.cloud"
-#     s3_bucket_website_endpoint = module.storage.website_endpoint
-#     hosted_zone_id             = data.aws_route53_zone.std17_zone.zone_id
-#     acm_certificate_arn        = "arn:aws:acm:us-east-1:925047940866:certificate/여기에_새로_발급받은_ARN"
+# ==================================================================
+# cdn: CloudFront (www.sy99.cloud 단일 진입점)
+# ==================================================================
+module "cdn" {
+    source = "./modules/cdn"
 
-#     depends_on = [module.storage]
-# }
+    domain_name          = var.domain_name
+    hosted_zone_id       = data.aws_route53_zone.std17_zone.zone_id
+    acm_certificate_arn = data.aws_acm_certificate.std17_cdn_cert.arn
+
+    s3_bucket_id                   = module.storage.bucket_id
+    s3_bucket_arn                  = module.storage.bucket_arn
+    s3_bucket_regional_domain_name = module.storage.bucket_regional_domain_name
+
+    alb_dns_name = module.compute.alb_dns_name
+
+    api_id     = module.api.api_id
+    aws_region = var.aws_region
+
+    depends_on = [module.storage, module.compute, module.api]
+}

@@ -1,15 +1,15 @@
-variable "vpc_id" {
-    description = "ALB/타겟그룹이 속할 VPC ID"
-    type        = string
-}
-
 variable "private_subnet_ids" {
-    description = "프라이빗 서브넷 ID 리스트 (ASG, 내부 ALB용)"
+    description = "프라이빗 서브넷 ID 리스트 (ASG용)"
     type        = list(string)
 }
 
 variable "security_group_id" {
-    description = "EC2/ALB/ASG에 적용할 보안그룹 ID"
+    description = "EC2/ASG에 적용할 보안그룹 ID"
+    type        = string
+}
+
+variable "target_group_arn" {
+    description = "compute 모듈 ALB의 대상그룹 ARN"
     type        = string
 }
 

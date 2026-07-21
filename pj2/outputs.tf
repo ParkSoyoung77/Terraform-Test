@@ -3,7 +3,7 @@ output "availability_zone" {
     description = "사용 가능한 가용영역 정보"
 }
 
-# ---------------- network ----------------
+# ---------------- network (VPC1) ----------------
 output "vpc_id" {
     value = module.network.vpc_id
 }
@@ -24,7 +24,7 @@ output "nat_id" {
     value = module.network.nat_id
 }
 
-# ---------------- network2 ----------------
+# ---------------- network2 (VPC2) ----------------
 output "vpc2_id" {
     value = module.network2.vpc_id
 }
@@ -40,28 +40,9 @@ output "private_subnets2_id" {
 output "igw2_id" {
     value = module.network2.igw_id
 }
+
 output "nat2_id" {
     value = module.network2.nat_id
-}
-
-# ---------------- network3 ----------------
-output "vpc3_id" {
-    value = module.network3.vpc_id
-}
-
-output "public_subnets3_id" {
-    value = module.network3.public_subnet_ids
-}
-
-output "private_subnets3_id" {
-    value = module.network3.private_subnet_ids
-}
-
-output "igw3_id" {
-    value = module.network3.igw_id
-}
-output "nat3_id" {
-    value = module.network3.nat_id
 }
 
 # ---------------- security ----------------
@@ -69,7 +50,39 @@ output "test_sg_id" {
     value = module.security.test_sg_id
 }
 
+output "db_sg_id" {
+    value = module.security2.db_sg_id
+}
+
+# ---------------- compute ----------------
+output "alb_dns_name" {
+    value = module.compute.alb_dns_name
+}
+
+# ---------------- database ----------------
+output "db_endpoint" {
+    value = module.database.db_endpoint
+}
+
+output "db_master_secret_arn" {
+    value = module.database.master_user_secret_arn
+}
+
 # ---------------- storage ----------------
-output "s3_website_endpoint" {
-    value = module.storage.website_endpoint
+output "s3_bucket_id" {
+    value = module.storage.bucket_id
+}
+
+# ---------------- api ----------------
+output "api_endpoint" {
+    value = module.api.api_endpoint
+}
+
+# ---------------- cdn ----------------
+output "site_url" {
+    value = "https://${var.domain_name}"
+}
+
+output "cdn_domain_name" {
+    value = module.cdn.cdn_domain_name
 }

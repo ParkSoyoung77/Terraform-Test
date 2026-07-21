@@ -1,5 +1,5 @@
 # ==================================================================
-# EC2 인스턴스
+# EC2 인스턴스 (커스텀 AMI 생성용 시드 인스턴스)
 # ==================================================================
 resource "aws_instance" "std17_private_ec2" {
 
@@ -21,7 +21,6 @@ resource "aws_instance" "std17_private_ec2" {
     var.security_group_id
   ]
 
-  # 유저데이터
   user_data = <<-EOF
 #!/bin/bash
 apt update -y
@@ -45,9 +44,8 @@ resource "time_sleep" "wait_for_userdata" {
 }
 
 # ==================================================================
-# AMI
+# AMI / Launch Template
 # ==================================================================
-
 resource "aws_ami_from_instance" "std17_ami" {
     name                = "std17-ami"
     source_instance_id  = aws_instance.std17_private_ec2.id
@@ -58,10 +56,6 @@ resource "aws_ami_from_instance" "std17_ami" {
 
     tags = { Name = "std17-ami" }
 }
-
-# ==================================================================
-# Launch Template
-# ==================================================================
 
 resource "aws_launch_template" "std17_lt" {
     image_id      = aws_ami_from_instance.std17_ami.id
@@ -83,67 +77,8 @@ resource "aws_launch_template" "std17_lt" {
 }
 
 # ==================================================================
-# ALB
+# ASG (nginx 2대) - compute 모듈의 공인 ALB 대상그룹에 직접 등록
 # ==================================================================
-
-# 1. 대상그룹
-resource "aws_lb_target_group" "std17_80_tg" {
-    name     = "std17-internal-80-tg"
-    port     = 80
-    protocol = "HTTP"
-    vpc_id   = var.vpc_id
-
-    slow_start           = 30
-    deregistration_delay = 30
-
-    health_check {
-        path                = "/"
-        protocol            = "HTTP"
-        interval            = 30
-        timeout             = 5
-        healthy_threshold   = 2
-        unhealthy_threshold = 3
-    }
-
-    tags = { Name = "std17-internal-80-tg" }
-}
-
-# 2. 대상 그룹 인스턴스 등록
-# ASG가 target_group_arns로 자동 등록하므로 별도 attachment 불필요
-# resource "aws_lb_target_group_attachment" "std17_80_tg_attachment" {
-#     target_group_arn = aws_lb_target_group.std17_80_tg.arn
-#     target_id = aws_instance.std17_ec2_2.id
-#     port = 80
-# }
-
-# 3. ALB 생성
-resource "aws_lb" "std17_alb_80" {
-  name               = "std17-internal-alb-80"
-  internal           = true
-  load_balancer_type = "application"
-  security_groups    = [var.security_group_id]
-  subnets            = var.private_subnet_ids
-
-  tags = { Name = "std17-internal-alb-80" }
-}
-
-# 4. ALB 리스너 생성
-resource "aws_lb_listener" "std17_alb_80_listener" {
-  load_balancer_arn = aws_lb.std17_alb_80.arn
-  port              = 80
-  protocol          = "HTTP"
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_lb_target_group.std17_80_tg.arn
-  }
-}
-
-# ==================================================================
-# ASG
-# ==================================================================
-
-# 1. 개수에 대한 지정
 resource "aws_autoscaling_group" "std17_asg" {
     name = "std17-asg"
 
@@ -162,7 +97,7 @@ resource "aws_autoscaling_group" "std17_asg" {
         ignore_changes = [desired_capacity]
     }
 
-    target_group_arns = [aws_lb_target_group.std17_80_tg.arn]
+    target_group_arns = [var.target_group_arn]
 
     health_check_type         = "ELB"
     health_check_grace_period = 300
@@ -176,7 +111,6 @@ resource "aws_autoscaling_group" "std17_asg" {
     }
 }
 
-# 2. 기준에 대한 지정
 resource "aws_autoscaling_policy" "std17_asg_policy" {
     name                   = "std17-asg-policy"
     autoscaling_group_name = aws_autoscaling_group.std17_asg.name
@@ -193,9 +127,8 @@ resource "aws_autoscaling_policy" "std17_asg_policy" {
 }
 
 # ==================================================================
-# EC2 Instance Connect Endpoint
+# EC2 Instance Connect Endpoint (private 인스턴스 SSH 접속용)
 # ==================================================================
-
 resource "aws_ec2_instance_connect_endpoint" "std17_eice" {
   subnet_id          = var.private_subnet_ids[0]
   security_group_ids = [var.security_group_id]
