@@ -7,7 +7,6 @@ resource "aws_ec2_transit_gateway" "std17_tgw" {
     default_route_table_association    = "enable"
     default_route_table_propagation    = "enable"
     security_group_referencing_support = "enable"
-    encryption_support                 = "enable"
 
     tags = {
         Name = "std17-tgw"
