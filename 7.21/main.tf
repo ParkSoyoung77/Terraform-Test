@@ -92,3 +92,12 @@ module "storage" {
     domain_name    = "www.sy99.cloud"
     hosted_zone_id = data.aws_route53_zone.std17_zone.zone_id
 }
+
+# ==================================================================
+# API (Rest API)
+# ==================================================================
+module "api" {
+    source = "./modules/api"
+
+    hosted_zone_id = data.aws_route53_zone.std17_zone.zone_id
+}
