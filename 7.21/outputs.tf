@@ -26,23 +26,23 @@ output "nat_id" {
 
 # ---------------- network2 ----------------
 output "vpc2_id" {
-    value = module.network.vpc2_id
+    value = module.network2.vpc_id
 }
 
 output "public_subnets2_id" {
-    value = module.network.public_subnet2_ids
+    value = module.network2.public_subnet_ids
 }
 
 output "private_subnets2_id" {
-    value = module.network.private_subnet2_ids
+    value = module.network2.private_subnet_ids
 }
 
 output "igw2_id" {
-    value = module.network.igw2_id
+    value = module.network2.igw_id
 }
 
 output "nat2_id" {
-    value = module.network.nat2_id
+    value = module.network2.nat_id
 }
 
 # ---------------- security ----------------
