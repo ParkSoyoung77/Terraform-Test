@@ -99,28 +99,3 @@ resource "aws_route_table_association" "std17_vpc_private_rt_assoc" {
     route_table_id = aws_route_table.std17_vpc_private_rt.id
     subnet_id      = aws_subnet.std17_private_subnets[count.index].id
 }
-
-# ==================================================================
-# DB 프라이빗 서브넷
-resource "aws_subnet" "std17_db_private_subnets" {
-    count = 2
-    vpc_id = aws_vpc.std17_vpc.id
-    cidr_block = "10.0.${count.index + 21}.0/24"
-    availability_zone = var.azs[count.index]
-
-    tags = { Name = "std17-db-private${count.index + 1}-subnet" }
-
-}
-
-# DB 프라이빗 라우팅 테이블
-resource "aws_route_table" "std17_vpc_db_private_rt"{
-    vpc_id = aws_vpc.std17_vpc.id
-
-    tags = {Name = "std17-vpc-db-private-rt"}
-}
-
-resource "aws_route_table_association" "std17_vpc_db_private_rt_assoc" {
-    count   = 2
-    route_table_id = aws_route_table.std17_vpc_db_private_rt.id
-    subnet_id = aws_subnet.std17_db_private_subnets[count.index].id
-}

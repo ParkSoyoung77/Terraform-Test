@@ -25,23 +25,23 @@ output "nat_id" {
 }
 
 # ---------------- network2 ----------------
-output "vpc_id" {
+output "vpc2_id" {
     value = module.network.vpc2_id
 }
 
-output "public_subnets_id" {
+output "public_subnets2_id" {
     value = module.network.public_subnet2_ids
 }
 
-output "private_subnets_id" {
+output "private_subnets2_id" {
     value = module.network.private_subnet2_ids
 }
 
-output "igw_id" {
+output "igw2_id" {
     value = module.network.igw2_id
 }
 
-output "nat_id" {
+output "nat2_id" {
     value = module.network.nat2_id
 }
 
