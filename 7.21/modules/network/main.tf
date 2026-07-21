@@ -9,6 +9,14 @@ resource "aws_vpc" "std17_vpc" {
     }
 }
 
+resource "aws_default_route_table" "std17_vpc_default_rt" {
+    default_route_table_id = aws_vpc.std17_vpc.default_route_table_id
+
+    tags = {
+        Name = "std17-vpc-default-rt"
+    }
+}
+
 # ==================================================================
 
 # public subnets
