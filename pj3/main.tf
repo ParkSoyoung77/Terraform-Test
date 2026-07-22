@@ -68,6 +68,8 @@ module "compute" {
     security_group_id   = module.security.test_sg_id
     key_name            = var.key_name
 
+    iam_instance_profile = module.iam.instance_profile_name
+
     target_group_arn = module.alb.nginx_target_group_arn
 
     route_table_ids = [
@@ -76,7 +78,7 @@ module "compute" {
         module.network.private_rt_id
     ]
 
-    depends_on = [module.network, module.security, module.storage, module.alb]
+    depends_on = [module.network, module.security, module.storage, module.alb, module.iam]
 }
 
 # ==================================================================
