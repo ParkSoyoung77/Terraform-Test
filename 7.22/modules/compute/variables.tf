@@ -24,14 +24,20 @@ variable "key_name" {
     default     = "std17-key"
 }
 
+variable "instance_type" {
+    description = "EC2 인스턴스 타입"
+    type        = string
+    default     = "t3.micro"
+}
+
 variable "instance_ami" {
     description = "EC2 인스턴스 소스 AMI (Ubuntu)"
     type        = string
     default     = "ami-0fb110df4c5094d21"
 }
 
-variable "instance_type" {
-    description = "EC2 인스턴스 타입"
+variable "amazon_ami" {
+    description = "EC2 인스턴스 소스 AMI (Amazon Linux)"
     type        = string
-    default     = "t3.micro"
+    default     = "ami-0258f6159529e6b5b"
 }

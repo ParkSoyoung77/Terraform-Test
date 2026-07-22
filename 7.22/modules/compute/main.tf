@@ -37,70 +37,37 @@ EOF
   tags = { Name = "std17-public-ec2" }
 }
 
-# # ==================================================================
-# # ALB
-# # ==================================================================
+resource "aws_instance" "std17_amazon_ec2" {
 
-# # 1. 대상그룹
-# resource "aws_lb_target_group" "std17_80_tg" {
-#     name     = "std17-80-tg"
-#     port     = 80
-#     protocol = "HTTP"
-#     vpc_id   = var.vpc_id
+  ami           = var.amazon_ami
+  instance_type = var.instance_type
 
-#     slow_start           = 30
-#     deregistration_delay = 30
+  subnet_id                   = var.public_subnet_ids[0]
+  associate_public_ip_address = true
 
-#     health_check {
-#         path                = "/"
-#         protocol            = "HTTP"
-#         interval            = 30
-#         timeout             = 5
-#         healthy_threshold   = 2
-#         unhealthy_threshold = 3
-#     }
+  root_block_device {
+    volume_size           = 10
+    volume_type            = "gp3"
+    delete_on_termination  = true
+  }
 
-#     tags = { Name = "std17-80-tg" }
-# }
+  key_name = var.key_name
 
-# # 2. 대상 그룹 인스턴스 등록
-# # ASG가 target_group_arns로 자동 등록하므로 별도 attachment 불필요
-# resource "aws_lb_target_group_attachment" "std17_80_tg_attachment" {
-#     target_group_arn = aws_lb_target_group.std17_80_tg.arn
-#     target_id = aws_instance.std17_public_ec2.id
-#     port = 80
-# }
+  vpc_security_group_ids = [
+    var.security_group_id
+  ]
 
-# # 3. ALB 생성
-# resource "aws_lb" "std17_alb_80" {
-#   name               = "std17-alb-80"
-#   internal           = false
-#   load_balancer_type = "application"
-#   security_groups    = [var.security_group_id]
-#   subnets            = var.public_subnet_ids
+  # 유저데이터
+  user_data = <<-EOF
+#!/bin/bash
+dnf update -y
+dnf install -y nginx mysql-client
 
-#   tags = { Name = "std17-alb-80" }
-# }
+systemctl enable nginx
+systemctl start nginx
+EOF
 
-# # 4. ALB 리스너 생성
-# resource "aws_lb_listener" "std17_alb_80_listener" {
-#   load_balancer_arn = aws_lb.std17_alb_80.arn
-#   port              = 80
-#   protocol          = "HTTP"
+  user_data_replace_on_change = true
 
-#   default_action {
-#     type             = "forward"
-#     target_group_arn = aws_lb_target_group.std17_80_tg.arn
-#   }
-# }
-
-# # ==================================================================
-# # EC2 Instance Connect Endpoint
-# # ==================================================================
-
-# resource "aws_ec2_instance_connect_endpoint" "std17_eice" {
-#   subnet_id          = var.private_subnet_ids[0]
-#   security_group_ids = [var.security_group_id]
-
-#   tags = { Name = "std17-eice" }
-# }
+  tags = { Name = "std17-amazon-ec2" }
+}
