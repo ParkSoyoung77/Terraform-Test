@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>S3 Static Website - /html1</title>
+<style>
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.25);
+    border-radius: 16px;
+    padding: 48px 56px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  }
+  h1 { font-size: 2rem; margin-bottom: 8px; }
+  .badge {
+    display: inline-block;
+    background: #e65100;
+    color: #fff;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+  .info {
+    text-align: left;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+  .info span { color: #ffe0b2; font-weight: bold; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">HTML #2 · S3 Static Website</div>
+    <h1>🪣 Origin: S3 Bucket (Website Hosting)</h1>
+    <p>이 페이지는 <b>S3 정적 웹사이트 호스팅</b> 오리진에서 서빙됩니다.</p>
+    <div class="info">
+      경로: <span>www.domain.cloud/html1</span><br>
+      버킷 유형: <span>S3 Static Website Hosting</span><br>
+      라우팅: <span>ALB path-based routing → S3</span><br>
+      프로토콜: <span>HTTP / HTTPS</span>
+    </div>
+    <p style="margin-top:24px; font-size:0.85rem; opacity:0.8;">
+      ALB → Target Group(S3/HTTP) 경로 라우팅(/html1*) 확인용 페이지입니다.
+    </p>
+  </div>
+</body>
+</html>

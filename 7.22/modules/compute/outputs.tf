@@ -11,11 +11,11 @@ output "public_ec2_id" {
 #   value       = aws_vpc_endpoint.std17_gw_endpoint.id
 # }
 
-output "interface_endpoint_id" {
-  description = "Interface VPC endpoint ID"
-  value       = aws_vpc_endpoint.std17_interface_endpoint.id
-}
+# output "interface_endpoint_id" {
+#   description = "Interface VPC endpoint ID"
+#   value       = aws_vpc_endpoint.std17_interface_endpoint.id
+# }
 
-output "eice_id" {
-    value = aws_ec2_instance_connect_endpoint.std17_eice.id
-}
+# output "eice_id" {
+#     value = aws_ec2_instance_connect_endpoint.std17_eice.id
+# }

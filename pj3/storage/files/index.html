@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>Main Page - nginx (EC2/ASG)</title>
+<style>
+  body {
+    margin: 0;
+    font-family: -apple-system, "Segoe UI", "Malgun Gothic", sans-serif;
+    background: linear-gradient(135deg, #1e3a5f 0%, #2c5f8a 100%);
+    color: #fff;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .card {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 16px;
+    padding: 48px 56px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+  }
+  h1 { font-size: 2rem; margin-bottom: 8px; }
+  .badge {
+    display: inline-block;
+    background: #4caf50;
+    color: #fff;
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    margin-bottom: 20px;
+  }
+  .info {
+    text-align: left;
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    padding: 16px 20px;
+    margin-top: 20px;
+    font-size: 0.9rem;
+    line-height: 1.8;
+  }
+  .info span { color: #8ecae6; font-weight: bold; }
+  code {
+    background: rgba(0,0,0,0.3);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">HTML #1 · nginx</div>
+    <h1>🖥️ Origin: EC2 / Auto Scaling Group</h1>
+    <p>이 페이지는 <b>프라이빗 서브넷</b>의 nginx 인스턴스에서 서빙됩니다.</p>
+    <div class="info">
+      경로: <span>www.domain.cloud/</span><br>
+      배포 방식: <span>ASG (min 1 / desired 2 / max 3)</span><br>
+      웹서버: <span>nginx</span><br>
+      프로토콜: <span>HTTP / HTTPS (ALB)</span>
+    </div>
+    <p style="margin-top:24px; font-size:0.85rem; opacity:0.7;">
+      ALB → Target Group(EC2) 경로 라우팅 확인용 페이지입니다.
+    </p>
+  </div>
+</body>
+</html>

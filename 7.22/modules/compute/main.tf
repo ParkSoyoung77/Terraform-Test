@@ -153,27 +153,27 @@ EOF
 #   }
 # }
 
-# Interface VPC 엔드포인트
-resource "aws_vpc_endpoint" "std17_interface_endpoint" {
-  vpc_id              = var.vpc_id
-  service_name        = "com.amazonaws.us-west-1.s3"
-  vpc_endpoint_type   = "Interface"
-  ip_address_type     = "ipv4"
+# # Interface VPC 엔드포인트
+# resource "aws_vpc_endpoint" "std17_interface_endpoint" {
+#   vpc_id              = var.vpc_id
+#   service_name        = "com.amazonaws.us-west-1.s3"
+#   vpc_endpoint_type   = "Interface"
+#   ip_address_type     = "ipv4"
 
-  subnet_ids          = var.public_subnet_ids
-  security_group_ids  = [var.security_group_id]
+#   subnet_ids          = var.public_subnet_ids
+#   security_group_ids  = [var.security_group_id]
 
-  private_dns_enabled = true
+#   private_dns_enabled = true
 
-  tags = {
-    Name = "std17-interface-endpoint"
-  }
-}
+#   tags = {
+#     Name = "std17-interface-endpoint"
+#   }
+# }
 
-# EC2 Instance Connect Endpoint
-resource "aws_ec2_instance_connect_endpoint" "std17_eice" {
-  subnet_id          = var.public_subnet_ids[0]
-  security_group_ids = [var.security_group_id]
+# # EC2 Instance Connect Endpoint
+# resource "aws_ec2_instance_connect_endpoint" "std17_eice" {
+#   subnet_id          = var.public_subnet_ids[0]
+#   security_group_ids = [var.security_group_id]
 
-  tags = { Name = "std17-eice" }
-}
+#   tags = { Name = "std17-eice" }
+# }
