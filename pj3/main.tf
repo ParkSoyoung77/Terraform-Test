@@ -49,10 +49,10 @@ module "alb" {
     public_subnet_ids  = module.network.public_subnet_ids
     security_group_id  = module.security.alb_sg_id
 
-    domain_name              = "www.sy99.cloud"
-    hosted_zone_id           = data.aws_route53_zone.std17_zone.zone_id
-    acm_certificate_arn      = data.aws_acm_certificate.std17_cert.arn
-    domain_website_endpoint  = module.storage.domain_website_endpoint
+    domain_name         = "www.sy99.cloud"
+    hosted_zone_id      = data.aws_route53_zone.std17_zone.zone_id
+    acm_certificate_arn = data.aws_acm_certificate.std17_cert.arn
+    domain_bucket_name  = "www.sy99.cloud"   # domain_website_endpoint 대신
 
     depends_on = [module.network, module.security, module.storage]
 }

@@ -24,7 +24,14 @@ variable "acm_certificate_arn" {
     type = string
 }
 
-variable "domain_website_endpoint" {
-    description = "html1.html / html2.html이 있는 S3 웹사이트 엔드포인트"
+variable "aws_region" {
+    description = "S3 REST 엔드포인트용 리전"
     type        = string
+    default     = "us-west-1"
+}
+
+variable "domain_bucket_name" {
+    description = "html1.html / html2.html이 있는 S3 버킷 이름 (www.sy99.cloud)"
+    type        = string
+    default     = "www.sy99.cloud"
 }
