@@ -8,10 +8,10 @@ variable "public_subnet_ids" {
     type        = list(string)
 }
 
-# variable "private_subnet_ids" {
-#     description = "프라이빗 서브넷 ID 리스트 (ASG, private EC2용)"
-#     type        = list(string)
-# }
+variable "private_subnet_ids" {
+    description = "프라이빗 서브넷 ID 리스트 (ASG, private EC2용)"
+    type        = list(string)
+}
 
 variable "security_group_id" {
     description = "EC2/ALB/ASG에 적용할 보안그룹 ID"
