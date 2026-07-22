@@ -8,9 +8,9 @@ output "s3_endpoint_id" {
 }
 
 output "asg_name" {
-    value = aws_autoscaling_group.std17_nginx_asg.name
+    value = aws_autoscaling_group.std17_asg.name
 }
 
 output "launch_template_id" {
-    value = aws_launch_template.std17_nginx_lt.id
+    value = aws_launch_template.std17_lt.id
 }
