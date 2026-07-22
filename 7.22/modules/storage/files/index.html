@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sy99.cloud</title>
+<meta name="description" content="박소영 — Cloud Infrastructure Engineer">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0B1120;
+    --bg-panel:#111A2E;
+    --border:#1E293B;
+    --text:#E2E8F0;
+    --text-dim:#7C8AA5;
+    --accent:#38BDF8;
+    --accent-warm:#F59E0B;
+    --ok:#34D399;
+  }
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:
+      radial-gradient(circle at 15% 0%, rgba(56,189,248,0.08), transparent 45%),
+      radial-gradient(circle at 85% 20%, rgba(245,158,11,0.05), transparent 40%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Inter', sans-serif;
+    line-height:1.6;
+    min-height:100vh;
+  }
+  a{ color:inherit; }
+
+  .wrap{
+    max-width:880px;
+    margin:0 auto;
+    padding:0 24px;
+  }
+
+  /* ---------- header ---------- */
+  header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:28px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .brand{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700;
+    font-size:15px;
+    letter-spacing:0.02em;
+  }
+  .brand .dot{ color:var(--accent); }
+  nav a{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13px;
+    text-decoration:none;
+    color:var(--text-dim);
+    margin-left:24px;
+    transition:color .15s ease;
+  }
+  nav a:hover{ color:var(--accent); }
+
+  /* ---------- hero / terminal ---------- */
+  .hero{ padding:72px 0 56px; }
+  .eyebrow{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--ok);
+    background:rgba(52,211,153,0.08);
+    border:1px solid rgba(52,211,153,0.25);
+    padding:5px 12px;
+    border-radius:100px;
+    margin-bottom:24px;
+  }
+  .eyebrow::before{
+    content:'';
+    width:6px; height:6px;
+    border-radius:50%;
+    background:var(--ok);
+    box-shadow:0 0 8px var(--ok);
+  }
+
+  h1{
+    font-family:'JetBrains Mono', monospace;
+    font-size:clamp(28px, 5vw, 44px);
+    font-weight:700;
+    line-height:1.25;
+    margin-bottom:18px;
+  }
+  h1 .hl{ color:var(--accent); }
+
+  .lede{
+    color:var(--text-dim);
+    font-size:16px;
+    max-width:520px;
+    margin-bottom:36px;
+  }
+
+  .terminal{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    overflow:hidden;
+    box-shadow:0 20px 60px -20px rgba(0,0,0,0.6);
+  }
+  .terminal-bar{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:12px 16px;
+    border-bottom:1px solid var(--border);
+    background:rgba(255,255,255,0.02);
+  }
+  .terminal-bar span{
+    width:11px; height:11px;
+    border-radius:50%;
+    background:#374151;
+  }
+  .terminal-bar .title{
+    margin-left:8px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--text-dim);
+  }
+  .terminal-body{
+    padding:22px 20px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:13.5px;
+    color:#B6C2D9;
+  }
+  .terminal-body .ln{ margin-bottom:6px; white-space:pre-wrap; }
+  .terminal-body .prompt{ color:var(--accent); }
+  .terminal-body .cmt{ color:var(--text-dim); }
+  .terminal-body .ok{ color:var(--ok); }
+  .cursor{
+    display:inline-block;
+    width:8px; height:15px;
+    background:var(--accent);
+    vertical-align:text-bottom;
+    animation:blink 1s step-start infinite;
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  /* ---------- modules (skills as tf modules) ---------- */
+  .section{ padding:56px 0; border-top:1px solid var(--border); }
+  .section-head{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:28px;
+  }
+  .section-head h2{
+    font-family:'JetBrains Mono', monospace;
+    font-size:14px;
+    color:var(--text-dim);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+  }
+  .section-head .count{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--text-dim);
+  }
+
+  .modules{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  .module{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:20px;
+    transition:border-color .15s ease, transform .15s ease;
+  }
+  .module:hover{
+    border-color:rgba(56,189,248,0.4);
+    transform:translateY(-2px);
+  }
+  .module .tag{
+    display:inline-block;
+    font-family:'JetBrains Mono', monospace;
+    font-size:11px;
+    color:var(--accent-warm);
+    margin-bottom:10px;
+  }
+  .module h3{
+    font-size:15px;
+    font-weight:600;
+    margin-bottom:8px;
+  }
+  .module p{
+    font-size:13.5px;
+    color:var(--text-dim);
+  }
+
+  /* ---------- links ---------- */
+  .links{
+    display:flex;
+    flex-wrap:wrap;
+    gap:12px;
+  }
+  .link-card{
+    flex:1 1 200px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px 18px;
+    text-decoration:none;
+    transition:border-color .15s ease;
+  }
+  .link-card:hover{ border-color:rgba(56,189,248,0.4); }
+  .link-card .icon{
+    width:34px; height:34px;
+    border-radius:8px;
+    background:rgba(56,189,248,0.1);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:var(--accent);
+    font-family:'JetBrains Mono', monospace;
+    font-size:14px;
+    font-weight:700;
+    flex-shrink:0;
+  }
+  .link-card .label{
+    font-size:13px;
+    color:var(--text-dim);
+  }
+  .link-card .value{
+    font-family:'JetBrains Mono', monospace;
+    font-size:13.5px;
+  }
+
+  footer{
+    border-top:1px solid var(--border);
+    padding:28px 0 40px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    color:var(--text-dim);
+  }
+
+  @media (max-width:600px){
+    .modules{ grid-template-columns:1fr; }
+    nav a{ margin-left:14px; }
+    footer{ flex-direction:column; gap:8px; align-items:flex-start; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="wrap">
+    <header>
+      <div class="brand">sy99<span class="dot">.</span>cloud</div>
+      <nav>
+        <a href="#stack">Stack</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="eyebrow">apply complete · region us-west-1</div>
+      <h1>안녕하세요, <span class="hl">박소영</span>입니다.<br>Cloud Infrastructure Engineer</h1>
+      <p class="lede">
+        AWS 위에서 네트워크부터 컴퓨트, 보안까지 인프라를 코드로 설계하고 운영합니다.
+        Terraform으로 재현 가능한 아키텍처를 만드는 걸 좋아합니다.
+      </p>
+
+      <div class="terminal">
+        <div class="terminal-bar">
+          <span></span><span></span><span></span>
+          <div class="title">soyoung@sy99.cloud</div>
+        </div>
+        <div class="terminal-body">
+          <div class="ln"><span class="prompt">$</span> whoami</div>
+          <div class="ln">Soyoung Park — Cloud / DevOps Engineer</div>
+          <div class="ln"><span class="prompt">$</span> terraform plan</div>
+          <div class="ln"><span class="ok">✓</span> network, security, compute, database — <span class="ok">no changes</span></div>
+          <div class="ln"><span class="prompt">$</span> echo $STATUS</div>
+          <div class="ln">building things that stay up.<span class="cursor"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="stack">
+      <div class="section-head">
+        <h2>// modules</h2>
+        <span class="count">4 active</span>
+      </div>
+      <div class="modules">
+        <div class="module">
+          <span class="tag">01 · network</span>
+          <h3>VPC & Connectivity</h3>
+          <p>Multi-AZ VPC, public/private subnet, NAT, Transit Gateway 기반 멀티 VPC 연결 설계</p>
+        </div>
+        <div class="module">
+          <span class="tag">02 · compute</span>
+          <h3>ASG & Load Balancing</h3>
+          <p>ALB + Auto Scaling Group 구성, 트래픽 기반 스케일링과 무중단 배포</p>
+        </div>
+        <div class="module">
+          <span class="tag">03 · security</span>
+          <h3>IAM & Security Group</h3>
+          <p>최소 권한 원칙 기반 접근 제어, 보안그룹 세분화</p>
+        </div>
+        <div class="module">
+          <span class="tag">04 · delivery</span>
+          <h3>CI/CD & GitOps</h3>
+          <p>GitLab CI/CD, ArgoCD 기반 배포 자동화 파이프라인 구축</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="contact">
+      <div class="section-head">
+        <h2>// contact</h2>
+      </div>
+      <div class="links">
+        <a class="link-card" href="https://github.com/ParkSoyoung77" target="_blank" rel="noopener">
+          <div class="icon">GH</div>
+          <div>
+            <div class="label">GitHub</div>
+            <div class="value">ParkSoyoung77</div>
+          </div>
+        </a>
+        <a class="link-card" href="https://gitlab.com/my4272921" target="_blank" rel="noopener">
+          <div class="icon">GL</div>
+          <div>
+            <div class="label">GitLab</div>
+            <div class="value">my4272921</div>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <footer>
+      <span>© 2026 sy99.cloud — hosted on S3</span>
+      <span>build: static · deploy: manual</span>
+    </footer>
+  </div>
+
+</body>
+</html>
