@@ -3,7 +3,7 @@ data "aws_availability_zones" "az" {
 }
 
 data "aws_acm_certificate" "std17_cert" {
-    domain      = "www.sy99.cloud"
+    domain      = "sy99.cloud"
     statuses    = ["ISSUED"]
     most_recent = true
 }
