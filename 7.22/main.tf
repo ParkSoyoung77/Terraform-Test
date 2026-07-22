@@ -27,6 +27,8 @@ module "compute" {
     security_group_id   = module.security.test_sg_id
     key_name            = var.key_name
 
+    iam_instance_profile = module.iam.instance_profile_name
+
     depends_on = [module.network, module.security]
 }
 
@@ -35,4 +37,19 @@ module "compute" {
 # ==================================================================
 module "storage" {
     source = "./modules/storage"
+}
+
+# ==================================================================
+# IAM 권한/역할
+# ==================================================================
+module "iam" {
+  source = "./modules/iam"
+
+  role_name        = "std17-s3-role"
+  role_description = "Allow Ec2 Instance to call AWS services on your behalf"
+  policy_arn        = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+
+  tags = {
+    Name = "std17-s3-role"
+  }
 }

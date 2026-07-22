@@ -41,3 +41,9 @@ variable "amazon_ami" {
     type        = string
     default     = "ami-0258f6159529e6b5b"
 }
+
+variable "iam_instance_profile" {
+  description = "IAM instance profile name to attach to EC2"
+  type        = string
+  default     = ""
+}
