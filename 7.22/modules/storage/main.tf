@@ -58,3 +58,9 @@ resource "aws_s3_object" "std17_index_html" {
 
     content_type = "text/html"
 }
+
+# imaages 디렉토리 생성
+resource "aws_s3_object" "std17_images_folder" {
+  bucket = aws_s3_bucket.std17_s3_bucket.id
+  key    = "images/"
+}
