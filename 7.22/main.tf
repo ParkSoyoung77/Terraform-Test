@@ -29,6 +29,12 @@ module "compute" {
 
     iam_instance_profile = module.iam.instance_profile_name
 
+    route_table_ids = [
+        module.network.default_rt_id,
+        module.network.public_rt_id,
+        module.network.private_rt_id
+    ]
+
     depends_on = [module.network, module.security]
 }
 

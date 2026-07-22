@@ -47,3 +47,8 @@ variable "iam_instance_profile" {
   type        = string
   default     = ""
 }
+
+variable "route_table_ids" {
+  description = "Route table IDs to associate with the S3 gateway endpoint"
+  type        = list(string)
+}

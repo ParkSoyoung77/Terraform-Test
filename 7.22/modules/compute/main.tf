@@ -72,3 +72,33 @@ EOF
 
 #   tags = { Name = "std17-amazon-ec2" }
 # }
+
+# ==================================================================
+# 엔드포인트
+# ==================================================================
+
+# S3 Gateway VPC 엔드포인트
+resource "aws_vpc_endpoint" "std17_gw_endpoint" {
+  vpc_id            = var.vpc_id
+  service_name      = "com.amazonaws.us-west-1.s3"
+  vpc_endpoint_type = "Gateway"
+
+  route_table_ids = var.route_table_ids
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Sid       = "Statement1"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = "*"
+        Resource  = "*"
+      }
+    ]
+  })
+
+  tags = {
+    Name = "std17-gw-endpoint"
+  }
+}
