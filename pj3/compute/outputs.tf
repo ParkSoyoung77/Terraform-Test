@@ -14,3 +14,7 @@ output "asg_name" {
 output "launch_template_id" {
     value = aws_launch_template.std17_lt.id
 }
+
+output "eice_id" {
+    value = aws_ec2_instance_connect_endpoint.std17_eice.id
+}
