@@ -122,7 +122,6 @@ resource "aws_secretsmanager_secret_version" "std17_db_secret_version" {
   secret_string = jsonencode({
     username = "admin"
     password = random_password.std17_db_password.result
-    host     = aws_db_instance.std17_mysql_rds.address
     port     = 3306
   })
 }
