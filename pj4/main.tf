@@ -97,25 +97,25 @@ module "storage" {
 # ==================================================================
 # 8: api (Lambda + REST API, api.sy99.cloud 전용)
 # ==================================================================
-module "api" {
-    source = "./modules/api"
+# module "api" {
+#     source = "./modules/api"
 
-    private_subnet_ids = module.network.private_subnet_ids
-    security_group_id  = module.security.test_sg_id
+#     private_subnet_ids = module.network.private_subnet_ids
+#     security_group_id  = module.security.test_sg_id
 
-    db_secret_arn      = module.database.master_user_secret_arn
-    db_proxy_endpoint  = module.database.rds_proxy_endpoint   # RDS 직결 아님, Proxy 경유
-    db_name             = var.db_name
+#     db_secret_arn      = module.database.master_user_secret_arn
+#     db_proxy_endpoint  = module.database.rds_proxy_endpoint   # RDS 직결 아님, Proxy 경유
+#     db_name             = var.db_name
 
-    lambda_role_arn   = module.iam.lambda_role_arn
-    lambda_role_name  = module.iam.lambda_role_name
+#     lambda_role_arn   = module.iam.lambda_role_arn
+#     lambda_role_name  = module.iam.lambda_role_name
 
-    api_domain_name       = var.api_domain_name
-    acm_certificate_arn   = module.acm.certificate_arn
-    hosted_zone_id         = data.aws_route53_zone.std17_zone.zone_id
+#     api_domain_name       = var.api_domain_name
+#     acm_certificate_arn   = module.acm.certificate_arn
+#     hosted_zone_id         = data.aws_route53_zone.std17_zone.zone_id
 
-    depends_on = [module.network, module.security, module.database, module.peering, module.iam, module.acm]
-}
+#     depends_on = [module.network, module.security, module.database, module.peering, module.iam, module.acm]
+# }
 
 # ==================================================================
 # 9: alb (HTTP 백엔드, www.sy99.cloud는 web_gateway가 담당)
