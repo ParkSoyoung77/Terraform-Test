@@ -1,6 +1,7 @@
 import json
 import os
 import boto3
+from botocore.config import Config
 import pymysql
 
 # 캐싱용 (Lambda 컨테이너 재사용 시 재조회 방지)
@@ -15,7 +16,11 @@ def get_secret():
     secret_name = os.environ["DB_SECRET_NAME"]
     region_name = os.environ.get("AWS_REGION", "us-west-1")
 
-    client = boto3.client("secretsmanager", region_name=region_name)
+    client = boto3.client(
+        "secretsmanager",
+        region_name=region_name,
+        config=Config(connect_timeout=3, read_timeout=3, retries={"max_attempts": 1}),
+    )
     response = client.get_secret_value(SecretId=secret_name)
     _secret_cache = json.loads(response["SecretString"])
     return _secret_cache
