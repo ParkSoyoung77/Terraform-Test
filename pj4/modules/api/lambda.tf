@@ -60,7 +60,7 @@ resource "aws_lambda_function" "std17_db_check" {
 
   handler = "db_check.lambda_handler"
   runtime = "python3.14"
-  timeout = 10
+  timeout = 30
 
   layers = [aws_lambda_layer_version.pymysql_layer.arn]
 

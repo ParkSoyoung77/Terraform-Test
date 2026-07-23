@@ -68,19 +68,19 @@ module "acm" {
 # ==================================================================
 # 6: database (network2)
 # ==================================================================
-module "database" {
-    source = "./modules/database"
+# module "database" {
+#     source = "./modules/database"
 
-    db_private_subnet_ids = module.network2.private_subnet_ids
-    security_group_id     = module.security2.db_sg_id
-    db_name                = var.db_name
-    multi_az                = true
+#     db_private_subnet_ids = module.network2.private_subnet_ids
+#     security_group_id     = module.security2.db_sg_id
+#     db_name                = var.db_name
+#     multi_az                = true
 
-    rds_proxy_role_arn   = module.iam.rds_proxy_role_arn
-    rds_proxy_role_name  = module.iam.rds_proxy_role_name
+#     rds_proxy_role_arn   = module.iam.rds_proxy_role_arn
+#     rds_proxy_role_name  = module.iam.rds_proxy_role_name
 
-    depends_on = [module.network2, module.security2, module.peering, module.iam]
-}
+#     depends_on = [module.network2, module.security2, module.peering, module.iam]
+# }
 
 # ==================================================================
 # 7: storage: S3 정적 웹사이트 (4개 버킷)
