@@ -16,8 +16,7 @@ resource "aws_security_group" "std17_db_sg" {
         from_port   = 3306
         to_port     = 3306
         protocol    = "tcp"
-        self        = true
-        description = "RDS Proxy -> RDS (self)"
+        self        = true  # RDS Proxy -> RDS (self)
     }
 
     egress {

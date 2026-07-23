@@ -40,7 +40,7 @@ resource "aws_db_instance" "std17_mysql_rds" {
 
 resource "aws_db_instance" "std17_mysql_replica" {
   identifier          = "std17-mysql-read-1"
-  replicate_source_db = aws_db_instance.std17_mysql_rds.identifier
+  replicate_source_db = aws_db_instance.std17_mysql_rds.arn
 
   instance_class     = var.instance_class
   availability_zone  = "us-west-1c"   # Replica 고정
