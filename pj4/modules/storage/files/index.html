@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>sy99.cloud | Home</title>
+<style>
+  :root{
+    --bg:#0b1020;
+    --bg-soft:#121a33;
+    --card:#161f3d;
+    --card-border:#26305a;
+    --text:#e9ecfb;
+    --muted:#9aa4cc;
+    --accent:#5b8def;
+    --accent2:#8b5cf6;
+    --accent3:#22c55e;
+    --accent4:#f59e0b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(1200px 600px at 20% -10%, rgba(91,141,239,0.25), transparent 60%),
+      radial-gradient(1000px 500px at 100% 10%, rgba(139,92,246,0.20), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    padding:64px 24px;
+  }
+  header{
+    text-align:center;
+    margin-bottom:56px;
+  }
+  header .badge{
+    display:inline-block;
+    padding:6px 14px;
+    border-radius:999px;
+    background:rgba(91,141,239,0.12);
+    border:1px solid rgba(91,141,239,0.35);
+    color:var(--accent);
+    font-size:13px;
+    letter-spacing:0.04em;
+    margin-bottom:18px;
+  }
+  header h1{
+    font-size:40px;
+    font-weight:700;
+    letter-spacing:-0.02em;
+    background:linear-gradient(90deg,#e9ecfb, #9aa4cc);
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  header p{
+    margin-top:12px;
+    color:var(--muted);
+    font-size:16px;
+  }
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(3, minmax(200px, 260px));
+    gap:24px;
+    width:100%;
+    max-width:900px;
+  }
+  @media (max-width:860px){
+    .grid{ grid-template-columns:repeat(2, minmax(200px, 260px)); max-width:600px; }
+  }
+  @media (max-width:560px){
+    .grid{ grid-template-columns:1fr; max-width:320px; }
+  }
+  .card{
+    position:relative;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    background:var(--card);
+    border:1px solid var(--card-border);
+    border-radius:18px;
+    padding:24px;
+    height:180px;
+    text-decoration:none;
+    color:var(--text);
+    overflow:hidden;
+    transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+  .card:hover{
+    transform:translateY(-4px);
+    border-color:var(--accent);
+    box-shadow:0 12px 30px rgba(91,141,239,0.18);
+  }
+  .card .glow{
+    position:absolute;
+    top:-40px;right:-40px;
+    width:120px;height:120px;
+    border-radius:50%;
+    filter:blur(30px);
+    opacity:.35;
+  }
+  .card .icon{
+    width:44px;height:44px;
+    border-radius:12px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:22px;
+    margin-bottom:12px;
+  }
+  .card h3{ font-size:19px; font-weight:600; }
+  .card span.desc{ color:var(--muted); font-size:13px; margin-top:6px; display:block; }
+  .card .arrow{
+    align-self:flex-end;
+    font-size:20px;
+    color:var(--muted);
+    transition:transform .18s ease, color .18s ease;
+  }
+  .card:hover .arrow{ transform:translateX(4px); color:var(--accent); }
+
+  .c-ubuntu .icon{ background:rgba(245,158,11,0.15); color:var(--accent4); }
+  .c-ubuntu .glow{ background:var(--accent4); }
+  .c-mysql .icon{ background:rgba(91,141,239,0.15); color:var(--accent); }
+  .c-mysql .glow{ background:var(--accent); }
+  .c-docker .icon{ background:rgba(139,92,246,0.15); color:var(--accent2); }
+  .c-docker .glow{ background:var(--accent2); }
+  .c-lambda .icon{ background:rgba(34,197,94,0.15); color:var(--accent3); }
+  .c-lambda .glow{ background:var(--accent3); }
+
+  footer{
+    margin-top:60px;
+    color:var(--muted);
+    font-size:13px;
+    text-align:center;
+  }
+  footer a{ color:var(--accent); text-decoration:none; }
+</style>
+</head>
+<body>
+
+  <header>
+    <span class="badge">sy99.cloud</span>
+    <h1>Cloud Infra Playground</h1>
+    <p>AWS 기반 하이브리드 클라우드 실습 환경</p>
+  </header>
+
+  <div class="grid">
+    <a class="card c-ubuntu" href="/ubuntu">
+      <div class="glow"></div>
+      <div class="icon">🐧</div>
+      <div>
+        <h3>Ubuntu</h3>
+        <span class="desc">EC2 · Auto Scaling Group</span>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+
+    <a class="card c-mysql" href="/mysql">
+      <div class="glow"></div>
+      <div class="icon">🗄️</div>
+      <div>
+        <h3>MySQL</h3>
+        <span class="desc">Multi-AZ DB Cluster</span>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+
+    <a class="card c-docker" href="/docker">
+      <div class="glow"></div>
+      <div class="icon">🐳</div>
+      <div>
+        <h3>Docker</h3>
+        <span class="desc">Container Runtime</span>
+      </div>
+      <span class="arrow">→</span>
+    </a>
+  </div>
+
+  <footer>
+    Served via S3 + ALB &middot; <a href="https://api.sy99.cloud">api.sy99.cloud</a>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docker | sy99.cloud</title>
+<style>
+  :root{
+    --bg:#0b1020; --card:#161f3d; --card-border:#26305a;
+    --text:#e9ecfb; --muted:#9aa4cc; --accent:#8b5cf6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(1000px 500px at 15% -10%, rgba(139,92,246,0.20), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding:40px 24px 80px;
+  }
+  .topnav{ max-width:760px; margin:0 auto 40px; }
+  .back{
+    display:inline-flex; align-items:center; gap:6px;
+    color:var(--muted); text-decoration:none; font-size:14px;
+    border:1px solid var(--card-border); padding:8px 14px; border-radius:999px;
+    transition:border-color .18s ease, color .18s ease;
+  }
+  .back:hover{ color:var(--accent); border-color:var(--accent); }
+
+  main{ max-width:760px; margin:0 auto; }
+  .hero{
+    display:flex; align-items:center; gap:18px; margin-bottom:32px;
+  }
+  .hero .icon{
+    width:60px;height:60px;border-radius:16px;
+    background:rgba(139,92,246,0.15); color:var(--accent);
+    display:flex;align-items:center;justify-content:center; font-size:30px;
+  }
+  .hero h1{ font-size:32px; font-weight:700; letter-spacing:-0.02em; }
+  .hero p{ color:var(--muted); font-size:14px; margin-top:4px; }
+
+  .card{
+    background:var(--card); border:1px solid var(--card-border);
+    border-radius:16px; padding:24px; margin-bottom:20px;
+  }
+  .card h2{ font-size:17px; margin-bottom:12px; color:var(--accent); }
+  .card p{ color:var(--muted); font-size:14px; line-height:1.7; }
+  .badges{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .badge{
+    font-size:12px; padding:6px 12px; border-radius:999px;
+    background:rgba(139,92,246,0.10); border:1px solid rgba(139,92,246,0.30);
+    color:var(--accent);
+  }
+</style>
+</head>
+<body>
+
+  <div class="topnav">
+    <a class="back" href="/">← 메인 페이지로 돌아가기</a>
+  </div>
+
+  <main>
+    <div class="hero">
+      <div class="icon">🐳</div>
+      <div>
+        <h1>Docker</h1>
+        <p>컨테이너 기반 애플리케이션 실행 환경</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>개요</h2>
+      <p>
+        Docker는 애플리케이션과 실행에 필요한 모든 의존성을 하나의 컨테이너 이미지로 패키징하여,
+        어떤 환경에서도 동일하게 실행할 수 있도록 해주는 컨테이너 플랫폼입니다.
+        가상 머신보다 가볍고 빠른 시작 속도를 제공하며, 마이크로서비스 아키텍처의 핵심 구성 요소로
+        널리 사용됩니다.
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>클라우드 환경에서의 활용</h2>
+      <p>
+        Docker 이미지는 ECR(Elastic Container Registry)에 저장되고, ECS나 EKS와 같은
+        오케스트레이션 서비스를 통해 배포됩니다. GitOps 파이프라인과 결합하면 코드 변경 사항이
+        자동으로 빌드, 배포되는 CI/CD 워크플로우를 구성할 수 있습니다.
+      </p>
+      <div class="badges">
+        <span class="badge">Containerization</span>
+        <span class="badge">Immutable Infrastructure</span>
+        <span class="badge">CI/CD</span>
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
