@@ -96,10 +96,10 @@ output "alb_dns_name" {
 }
 
 # ---------------- api ----------------
-output "api_endpoint" {
-  description = "api.sy99.cloud 최종 호출 URL"
-  value       = module.api.invoke_url
-}
+# output "api_endpoint" {
+#   description = "api.sy99.cloud 최종 호출 URL"
+#   value       = module.api.invoke_url
+# }
 
 # ---------------- 진입점 ----------------
 output "site_url" {
