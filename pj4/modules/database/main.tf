@@ -22,7 +22,7 @@ resource "aws_db_instance" "std17_mysql_rds" {
   vpc_security_group_ids = [var.security_group_id]
 
   username                    = "admin"
-  manage_master_user_password = true   # Secrets Manager가 비밀번호 자동 생성/관리
+  manage_master_user_password = random_password.std17_db_password.result
 
   publicly_accessible = false
 
@@ -67,7 +67,7 @@ resource "aws_db_proxy" "std17_rds_proxy" {
 
   auth {
     auth_scheme = "SECRETS"
-    secret_arn  = aws_db_instance.std17_mysql_rds.master_user_secret[0].secret_arn
+    secret_arn  = aws_secretsmanager_secret.std17_db_secret.arn
     iam_auth    = "DISABLED"
   }
 
@@ -99,7 +99,30 @@ resource "aws_iam_role_policy" "std17_rds_proxy_secrets_policy" {
     Statement = [{
       Effect   = "Allow"
       Action   = ["secretsmanager:GetSecretValue"]
-      Resource = [aws_db_instance.std17_mysql_rds.master_user_secret[0].secret_arn]
+      Resource = [aws_secretsmanager_secret.std17_db_secret.arn]
     }]
+  })
+}
+
+# ---------------------------------------------------------
+# Random Password
+# ---------------------------------------------------------
+resource "random_password" "std17_db_password" {
+  length  = 20
+  special = false   # RDS 비밀번호에 못 쓰는 특수문자(/,@,",공백) 회피
+}
+
+resource "aws_secretsmanager_secret" "std17_db_secret" {
+  name = "std17-mysql-rds-secret"
+}
+
+resource "aws_secretsmanager_secret_version" "std17_db_secret_version" {
+  secret_id = aws_secretsmanager_secret.std17_db_secret.id
+
+  secret_string = jsonencode({
+    username = "admin"
+    password = random_password.std17_db_password.result
+    host     = aws_db_instance.std17_mysql_rds.address
+    port     = 3306
   })
 }
