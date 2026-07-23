@@ -25,7 +25,7 @@ resource "aws_instance" "std17_private_ec2" {
   user_data = <<-EOF
 #!/bin/bash
 apt update -y
-apt install -y nginx unzip curl
+apt install -y nginx unzip curl mysql-client
 
 systemctl enable nginx
 systemctl start nginx
