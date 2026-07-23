@@ -7,14 +7,17 @@ resource "null_resource" "build_pymysql_layer" {
   }
 
   provisioner "local-exec" {
-    command = <<-EOT
-      pip install -r ${path.module}/lambda/requirements.txt \
-        -t ${path.module}/layer/python \
-        --platform manylinux2014_x86_64 \
-        --only-binary=:all: \
-        --python-version 3.14 \
-        --upgrade --no-cache-dir --break-system-packages
-    EOT
+    command = join(" ", [
+      "pip install",
+      "-r ${path.module}/lambda/requirements.txt",
+      "-t ${path.module}/layer/python",
+      "--platform manylinux2014_x86_64",
+      "--only-binary=:all:",
+      "--python-version 3.14",
+      "--upgrade",
+      "--no-cache-dir",
+      "--break-system-packages",
+    ])
   }
 }
 
