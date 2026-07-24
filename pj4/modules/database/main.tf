@@ -114,6 +114,10 @@ resource "random_password" "std17_db_password" {
 
 resource "aws_secretsmanager_secret" "std17_db_secret" {
   name = "std17-mysql-rds-secret"
+  description = "std17-mysql-rds master credentials"
+  recovery_window_in_days = 0
+
+  tags = { Name = "std17-mysql-rds-secret" }
 }
 
 resource "aws_secretsmanager_secret_version" "std17_db_secret_version" {
@@ -122,6 +126,5 @@ resource "aws_secretsmanager_secret_version" "std17_db_secret_version" {
   secret_string = jsonencode({
     username = "admin"
     password = random_password.std17_db_password.result
-    port     = 3306
   })
 }
