@@ -58,20 +58,20 @@ output "peering_connection_id" {
 }
 
 # ---------------- database ----------------
-# output "db_endpoint" {
-#   description = "RDS Writer 엔드포인트"
-#   value       = module.database.db_endpoint
-# }
+output "db_endpoint" {
+  description = "RDS Writer 엔드포인트"
+  value       = module.database.db_endpoint
+}
 
-# output "db_proxy_endpoint" {
-#   description = "RDS Proxy 엔드포인트 (Lambda 연결 대상)"
-#   value       = module.database.rds_proxy_endpoint
-# }
+output "db_proxy_endpoint" {
+  description = "RDS Proxy 엔드포인트 (Lambda 연결 대상)"
+  value       = module.database.rds_proxy_endpoint
+}
 
-# output "db_master_secret_arn" {
-#   description = "RDS 마스터 계정 Secrets Manager ARN"
-#   value       = module.database.master_user_secret_arn
-# }
+output "db_master_secret_arn" {
+  description = "RDS 마스터 계정 Secrets Manager ARN"
+  value       = module.database.master_user_secret_arn
+}
 
 # ---------------- storage ----------------
 output "ubuntu_website_endpoint" {
@@ -96,10 +96,10 @@ output "alb_dns_name" {
 }
 
 # ---------------- api ----------------
-# output "api_endpoint" {
-#   description = "api.sy99.cloud 최종 호출 URL"
-#   value       = module.api.invoke_url
-# }
+output "api_endpoint" {
+  description = "api.sy99.cloud 최종 호출 URL"
+  value       = module.api.invoke_url
+}
 
 # ---------------- 진입점 ----------------
 output "site_url" {
