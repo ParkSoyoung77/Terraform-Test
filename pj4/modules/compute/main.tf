@@ -141,9 +141,9 @@ resource "aws_autoscaling_policy" "std17_asg_policy" {
 # ==================================================================
 # EC2 Instance Connect Endpoint (private 인스턴스 SSH 접속용)
 # ==================================================================
-resource "aws_ec2_instance_connect_endpoint" "std17_eice" {
-  subnet_id          = var.private_subnet_ids[0]
-  security_group_ids = [var.security_group_id]
+# resource "aws_ec2_instance_connect_endpoint" "std17_eice" {
+#   subnet_id          = var.private_subnet_ids[0]
+#   security_group_ids = [var.security_group_id]
 
-  tags = { Name = "std17-eice" }
-}
+#   tags = { Name = "std17-eice" }
+# }
