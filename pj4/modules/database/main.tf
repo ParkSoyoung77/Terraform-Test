@@ -126,5 +126,6 @@ resource "aws_secretsmanager_secret_version" "std17_db_secret_version" {
   secret_string = jsonencode({
     username = "admin"
     password = random_password.std17_db_password.result
+    apply_immediately   = true
   })
 }
