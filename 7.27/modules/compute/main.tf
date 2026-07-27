@@ -1,7 +1,3 @@
-# ==================================================================
-# EC2 인스턴스 (Spot)
-# ==================================================================
-
 resource "aws_instance" "std17_public_ec2" {
 
   ami           = var.instance_ami
@@ -43,6 +39,20 @@ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip
 unzip awscliv2.zip
 ./aws/install
 rm -rf awscliv2.zip
+
+tee /var/www/html/index.html > /dev/null << 'HTML'
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>std17 Public EC2</title>
+</head>
+<body>
+    <h1>std17-public-ec2</h1>
+    <p>오사카 리전(ap-northeast-3) 배포 완료</p>
+</body>
+</html>
+HTML
 
 systemctl restart nginx
 EOF
