@@ -7,11 +7,11 @@ module "network" {
     azs = var.azs
 }
 
-# module "network2" {
-#     source = "./modules/network2"
+module "network2" {
+    source = "./modules/network2"
 
-#     azs = var.azs
-# }
+    azs = var.azs
+}
 
 # ==================================================================
 # 2: security (network에 의존)

@@ -8,7 +8,7 @@ resource "aws_instance" "std17_public_ec2" {
   instance_type = var.instance_type
 
   subnet_id                   = var.public_subnet_ids[0]
-  associate_public_ip_address = false
+  associate_public_ip_address = true
 
   root_block_device {
     volume_size           = 10
