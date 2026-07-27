@@ -21,7 +21,7 @@ resource "aws_default_route_table" "std17_vpc_default_rt" {
 
 # public subnets
 resource "aws_subnet" "std17_public_subnets" {
-    count                                        = 2
+    count                                        = 3
     vpc_id                                       = aws_vpc.std17_vpc.id
     cidr_block                                   = "10.0.${count.index + 1}.0/24"
     availability_zone                            = var.azs[count.index]
@@ -58,7 +58,7 @@ resource "aws_route_table" "std17_vpc_public_rt" {
 }
 
 resource "aws_route_table_association" "std17_vpc_public_rt_assoc" {
-    count          = 2
+    count          = 3
     route_table_id = aws_route_table.std17_vpc_public_rt.id
     subnet_id      = aws_subnet.std17_public_subnets[count.index].id
 }
