@@ -7,11 +7,11 @@ module "network" {
     azs = var.azs
 }
 
-module "network2" {
-    source = "./modules/network2"
+# module "network2" {
+#     source = "./modules/network2"
 
-    azs = var.azs
-}
+#     azs = var.azs
+# }
 
 # ==================================================================
 # 2: security (network에 의존)
@@ -22,11 +22,11 @@ module "security" {
     vpc_id = module.network.vpc_id
 }
 
-module "security2" {
-    source = "./modules/security2"
+# module "security2" {
+#     source = "./modules/security2"
 
-    vpc2_id = module.network2.vpc2_id
-}
+#     vpc2_id = module.network2.vpc2_id
+# }
 
 # ==================================================================
 # 3: compute (network, security에 의존)
