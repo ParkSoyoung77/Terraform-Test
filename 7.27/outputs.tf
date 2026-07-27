@@ -35,6 +35,6 @@ output "test_sg_id" {
 }
 
 # ---------------- security2 ----------------
-# output "test_sg2_id" {
-#     value = module.security2.test_sg2_id
-# }
+output "test_sg2_id" {
+    value = module.security2.test_sg2_id
+}
