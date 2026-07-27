@@ -28,5 +28,5 @@ variable "instance_type" {
 variable "instance_ami" {
     description = "EC2 인스턴스 소스 AMI (Ubuntu)"
     type        = string
-    default     = "ami-0b30f1030e2a3bfd9"
+    default     = "ami-0086ee55a149bd32e"
 }
