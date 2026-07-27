@@ -1,5 +1,5 @@
 # ==================================================================
-# EC2 인스턴스 (Golden AMI 원본)
+# EC2 인스턴스 (Spot)
 # ==================================================================
 
 resource "aws_instance" "std17_public_ec2" {
@@ -9,6 +9,15 @@ resource "aws_instance" "std17_public_ec2" {
 
   subnet_id                   = var.public_subnet_ids[0]
   associate_public_ip_address = true
+
+  instance_market_options {
+    market_type = "spot"
+
+    spot_options {
+      spot_instance_type            = "one-time"
+      instance_interruption_behavior = "terminate"
+    }
+  }
 
   root_block_device {
     volume_size           = 10
