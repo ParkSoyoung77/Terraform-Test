@@ -40,6 +40,10 @@ unzip awscliv2.zip
 ./aws/install
 rm -rf awscliv2.zip
 
+tee /etc/nginx/conf.d/charset.conf > /dev/null << 'CONF'
+charset utf-8;
+CONF
+
 tee /var/www/html/index.html > /dev/null << 'HTML'
 <!DOCTYPE html>
 <html lang="ko">
