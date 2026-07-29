@@ -22,7 +22,7 @@ variable "key_name" {
 variable "instance_type" {
     description = "EC2 인스턴스 타입"
     type        = string
-    default     = "t3.micro"
+    default     = "t3.nano"
 }
 
 variable "instance_ami" {
