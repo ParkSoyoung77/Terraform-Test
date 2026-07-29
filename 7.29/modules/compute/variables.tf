@@ -36,3 +36,8 @@ variable "iam_instance_profile" {
   type        = string
   default     = ""
 }
+
+variable "route_table_ids" {
+    description = "S3 게이트웨이 엔드포인트에 연결할 라우트테이블 ID"
+    type        = list(string)
+}
