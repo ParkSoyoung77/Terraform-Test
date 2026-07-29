@@ -39,5 +39,12 @@ module "compute" {
     security_group_id   = module.security.test_sg_id
     key_name            = var.key_name
 
-    depends_on = [module.network, module.security]
+    depends_on = [module.network, module.security, module.storage]
+}
+
+# ==================================================================
+# 4: storage: S3 (독립적, 다른 모듈과 의존관계 없음)
+# ==================================================================
+module "storage" {
+    source = "./modules/storage"
 }

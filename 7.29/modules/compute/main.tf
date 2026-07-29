@@ -39,25 +39,7 @@ curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip
 unzip awscliv2.zip
 ./aws/install
 rm -rf awscliv2.zip
-
-tee /etc/nginx/conf.d/charset.conf > /dev/null << 'CONF'
-charset utf-8;
-CONF
-
-tee /var/www/html/index.html > /dev/null << 'HTML'
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <title>std17 Public EC2</title>
-</head>
-<body>
-    <h1>std17-public-ec2</h1>
-    <p>오사카 리전(ap-northeast-3) 배포 완료</p>
-</body>
-</html>
-HTML
-
+aws s3 sync s3://std17-ex-bucket/ /var/www/html/
 systemctl restart nginx
 EOF
 
@@ -71,7 +53,7 @@ EOF
 # ==================================================================
 resource "aws_ebs_volume" "std17_extra_volume" {
   availability_zone = aws_instance.std17_public_ec2.availability_zone
-  size               = 10
+  size               = 8
   type               = "gp3"
 
   tags = { Name = "std17-public-ec2-extra" }
