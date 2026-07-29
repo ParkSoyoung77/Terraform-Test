@@ -1,4 +1,11 @@
 # ==================================================================
+# 0: iam (다른 모듈에 앞서 역할부터 생성)
+# ==================================================================
+module "iam" {
+    source = "./modules/iam"
+}
+
+# ==================================================================
 # 1: network
 # ==================================================================
 module "network" {
@@ -38,8 +45,9 @@ module "compute" {
     public_subnet_ids  = module.network.public_subnet_ids
     security_group_id   = module.security.test_sg_id
     key_name            = var.key_name
+    iam_instance_profile = module.iam.instance_profile_name
 
-    depends_on = [module.network, module.security, module.storage]
+    depends_on = [module.network, module.security, module.storage, module.iam]
 }
 
 # ==================================================================
