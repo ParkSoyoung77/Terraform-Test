@@ -1,8 +1,9 @@
 #!/bin/bash
 set -e
 
+# ===== 설치 =====
 apt update
-apt install -y nginx unzip curl
+apt install -y nginx unzip curl mysql-server
 
 systemctl enable nginx
 systemctl start nginx
@@ -14,6 +15,7 @@ rm -rf awscliv2.zip
 aws s3 sync s3://std17-ex-bucket/ /var/www/html/
 systemctl restart nginx
 
+# ===== 볼륨 마운트 =====
 DISK="/dev/nvme1n1"
 PART="${DISK}p1"
 
@@ -33,3 +35,21 @@ fi
 mkdir -p /mnt/data1
 systemctl daemon-reload
 mount -a
+
+systemctl enable mysql
+systemctl start mysql
+
+# ===== MySQL 서버 초기 설정 =====
+MYSQL_USER="std17"
+MYSQL_PASSWORD="12341234"
+
+mysql -u root <<SQL
+CREATE USER IF NOT EXISTS '${MYSQL_USER}'@'%' IDENTIFIED WITH mysql_native_password BY '${MYSQL_PASSWORD}';
+GRANT ALL PRIVILEGES ON *.* TO '${MYSQL_USER}'@'%' WITH GRANT OPTION;
+FLUSH PRIVILEGES;
+CREATE DATABASE IF NOT EXISTS testdb;
+SQL
+
+# 외부에서도 접속 테스트가 가능하도록 bind-address 개방 (필요시)
+sed -i "s/^bind-address.*/bind-address = 0.0.0.0/" /etc/mysql/mysql.conf.d/mysqld.cnf
+systemctl restart mysql
