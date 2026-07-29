@@ -42,6 +42,24 @@ unzip awscliv2.zip
 rm -rf awscliv2.zip
 aws s3 sync s3://std17-ex-bucket/ /var/www/html/
 systemctl restart nginx
+
+DISK="/dev/nvme1n1"
+PART="$${DISK}p1"
+
+if ! blkid "$$PART" >/dev/null 2>&1; then
+    echo -e "g\nn\n\n\n+5G\nw\n" | fdisk "$$DISK"
+    udevadm settle
+    mkfs -t xfs "$$PART"
+fi
+
+if ! grep -q "$$PART" /etc/fstab; then
+    UUID=$$(blkid -s UUID -o value "$$PART")
+    echo "UUID=$${UUID}    /mnt/data1    xfs    defaults,nofail    0    2" >> /etc/fstab
+fi
+
+mkdir -p /mnt/data1
+systemctl daemon-reload
+mount -a
 EOF
 
   user_data_replace_on_change = true
