@@ -28,40 +28,7 @@ resource "aws_instance" "std17_public_ec2" {
     var.security_group_id
   ]
 
-  user_data = <<-EOF
-#!/bin/bash
-apt update -y
-apt install -y nginx unzip curl
-
-systemctl enable nginx
-systemctl start nginx
-
-curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-unzip awscliv2.zip
-./aws/install
-rm -rf awscliv2.zip
-aws s3 sync s3://std17-ex-bucket/ /var/www/html/
-systemctl restart nginx
-
-DISK="/dev/nvme1n1"
-PART="$${DISK}p1"
-
-if ! blkid "$$PART" >/dev/null 2>&1; then
-    echo -e "g\nn\n\n\n+5G\nw\n" | fdisk "$$DISK"
-    udevadm settle
-    mkfs -t xfs "$$PART"
-fi
-
-if ! grep -q "$$PART" /etc/fstab; then
-    UUID=$$(blkid -s UUID -o value "$$PART")
-    echo "UUID=$${UUID}    /mnt/data1    xfs    defaults,nofail    0    2" >> /etc/fstab
-fi
-
-mkdir -p /mnt/data1
-systemctl daemon-reload
-mount -a
-EOF
-
+  user_data = file("${path.module}/scripts/user_data.sh")
   user_data_replace_on_change = true
 
   tags = { Name = "std17-public-ec2" }
