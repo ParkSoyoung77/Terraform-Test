@@ -1,7 +1,5 @@
-# EBS 마운트
+## EBS 마운트
 userdata를 이용한 환경변수 설정
-\n
-\n
-\n
-# MySQL
+
+## MySQL
 userdata를 이용한 MySQL 서버 설치
