@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>std17-public-ec2</title>
+<style>
+  :root {
+    --bg: #14110c;
+    --panel: #1b1712;
+    --amber: #ffb000;
+    --amber-dim: #a86f00;
+    --amber-faint: #5c4620;
+    --text: #f4e4c1;
+    --text-dim: #9a8a68;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: "IBM Plex Mono", "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+  }
+
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      to bottom,
+      rgba(255, 176, 0, 0.035) 0px,
+      rgba(255, 176, 0, 0.035) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    z-index: 5;
+  }
+
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.55) 100%);
+    z-index: 4;
+  }
+
+  .wrap {
+    width: min(680px, 92vw);
+    position: relative;
+    z-index: 10;
+  }
+
+  .titlebar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 14px;
+    background: #201b14;
+    border: 1px solid var(--amber-faint);
+    border-bottom: none;
+    border-radius: 6px 6px 0 0;
+  }
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--amber-faint);
+  }
+
+  .titlebar span.label {
+    margin-left: 8px;
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.04em;
+  }
+
+  .terminal {
+    background: var(--panel);
+    border: 1px solid var(--amber-faint);
+    border-radius: 0 0 6px 6px;
+    padding: 32px 30px 34px;
+    box-shadow: 0 0 40px rgba(255, 176, 0, 0.06), inset 0 0 60px rgba(255, 176, 0, 0.02);
+  }
+
+  .line {
+    font-size: 13px;
+    line-height: 1.9;
+    color: var(--text-dim);
+    opacity: 0;
+    animation: reveal 0.4s ease forwards;
+    white-space: pre-wrap;
+  }
+
+  .line .ok { color: var(--amber); }
+  .line .path { color: var(--text); }
+
+  .line:nth-child(1) { animation-delay: 0.1s; }
+  .line:nth-child(2) { animation-delay: 0.35s; }
+  .line:nth-child(3) { animation-delay: 0.6s; }
+  .line:nth-child(4) { animation-delay: 0.85s; }
+
+  @keyframes reveal {
+    from { opacity: 0; transform: translateY(2px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px dashed var(--amber-faint);
+    margin: 22px 0;
+    opacity: 0;
+    animation: reveal 0.4s ease forwards;
+    animation-delay: 1.1s;
+  }
+
+  h1 {
+    margin: 0 0 6px;
+    font-size: clamp(28px, 5vw, 40px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--amber);
+    text-shadow: 0 0 18px rgba(255, 176, 0, 0.35);
+    opacity: 0;
+    animation: reveal 0.5s ease forwards;
+    animation-delay: 1.3s;
+  }
+
+  .sub {
+    margin: 0 0 26px;
+    font-size: 14px;
+    color: var(--text-dim);
+    opacity: 0;
+    animation: reveal 0.5s ease forwards;
+    animation-delay: 1.5s;
+  }
+
+  .meta {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 24px;
+    opacity: 0;
+    animation: reveal 0.5s ease forwards;
+    animation-delay: 1.7s;
+  }
+
+  .meta div {
+    border-left: 2px solid var(--amber-faint);
+    padding-left: 10px;
+  }
+
+  .meta .k {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+
+  .meta .v {
+    font-size: 13px;
+    color: var(--text);
+  }
+
+  .cursor-line {
+    margin-top: 26px;
+    font-size: 13px;
+    color: var(--text-dim);
+    opacity: 0;
+    animation: reveal 0.5s ease forwards;
+    animation-delay: 1.95s;
+  }
+
+  .cursor {
+    display: inline-block;
+    width: 8px;
+    height: 14px;
+    background: var(--amber);
+    margin-left: 6px;
+    vertical-align: middle;
+    animation: blink 1s steps(1) infinite;
+  }
+
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .line, .divider, h1, .sub, .meta, .cursor-line {
+      animation: none;
+      opacity: 1;
+    }
+    .cursor { animation: none; }
+  }
+
+  @media (max-width: 480px) {
+    .meta { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="wrap">
+    <div class="titlebar">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <span class="label">std17@ap-northeast-3 — nginx</span>
+    </div>
+
+    <div class="terminal">
+      <div class="line">$ terraform apply <span class="path">-target=module.compute</span></div>
+      <div class="line">module.compute.aws_instance.std17_public_ec2: <span class="ok">Creation complete</span></div>
+      <div class="line">module.network.aws_vpc.std17_vpc: <span class="ok">Creation complete</span></div>
+      <div class="line">Apply complete! Resources: <span class="ok">3 added, 0 changed, 0 destroyed.</span></div>
+
+      <hr class="divider">
+
+      <h1>std17-public-ec2</h1>
+      <p class="sub">오사카 리전(ap-northeast-3) 배포 완료</p>
+
+      <div class="meta">
+        <div>
+          <span class="k">Region</span>
+          <span class="v">ap-northeast-3 (Osaka)</span>
+        </div>
+        <div>
+          <span class="k">Lifecycle</span>
+          <span class="v">spot</span>
+        </div>
+        <div>
+          <span class="k">Web server</span>
+          <span class="v">nginx</span>
+        </div>
+        <div>
+          <span class="k">Provisioned by</span>
+          <span class="v">Terraform</span>
+        </div>
+      </div>
+
+      <div class="cursor-line">status: running<span class="cursor"></span></div>
+    </div>
+  </div>
+
+</body>
+</html>
