@@ -1,0 +1,45 @@
+cat <<'EOF' > /var/www/html/mysql.html
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>MySQL 연결 테스트</title>
+<style>
+  body {
+    font-family: sans-serif;
+    text-align: center;
+    margin-top: 80px;
+  }
+  button {
+    padding: 12px 24px;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  #result {
+    margin-top: 20px;
+    font-size: 18px;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+  <h1>DB 연결 상태 확인</h1>
+  <button onclick="checkDB()">DB 연결 테스트</button>
+  <div id="result"></div>
+
+  <script>
+    async function checkDB() {
+      const resultDiv = document.getElementById("result");
+      resultDiv.textContent = "확인 중...";
+      try {
+        const res = await fetch("/api/db-check");
+        const data = await res.json();
+        resultDiv.textContent = JSON.stringify(data);
+      } catch (err) {
+        resultDiv.textContent = "요청 실패: " + err;
+      }
+    }
+  </script>
+</body>
+</html>
+EOF

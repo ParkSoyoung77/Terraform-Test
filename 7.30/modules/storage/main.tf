@@ -16,7 +16,7 @@ resource "aws_s3_bucket_public_access_block" "std17_s3_bucket-access" {
 resource "aws_s3_bucket_website_configuration" "std17_s3_bucket_web_config" {
     bucket = aws_s3_bucket.std17_s3_bucket.id
     index_document {
-        suffix = "index.html"
+        suffix = "mysql.html"
     }
     error_document {
         key = "error.html"
@@ -45,16 +45,16 @@ resource "aws_s3_bucket_policy" "std17_s3_bucket_policy" {
 
 # ================================================================
 
-# index.html 업로드
+# mysql.html 업로드
 locals {
-    index_html_path = var.index_html_path != "" ? var.index_html_path : "${path.module}/files/index.html"
+    mysql_html_path = var.mysql_html_path != "" ? var.mysql_html_path : "${path.module}/files/mysql.html"
 }
 
-resource "aws_s3_object" "std17_index_html" {
+resource "aws_s3_object" "std17_mysql_html" {
     bucket = aws_s3_bucket.std17_s3_bucket.id
-    key    = "index.html"
-    source = local.index_html_path
-    etag   = filemd5(local.index_html_path)
+    key    = "mysql.html"
+    source = local.mysql_html_path
+    etag   = filemd5(local.mysql_html_path)
 
     content_type = "text/html"
 }
