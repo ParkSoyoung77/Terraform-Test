@@ -58,7 +58,8 @@ chmod 750 "${MNTDIR1}/log/mysql"
 chown mysql:adm "${MNTDIR1}/log/mysql"
 
 sed -i "s|/var/log/mysql|${MNTDIR1}/log/mysql|g" /etc/mysql/mysql.conf.d/mysqld.cnf
-sed -i "s|/var/log/mysql/|${MNTDIR1}/log/mysql|g" /etc/apparmor.d/usr.sbin.mysqld
+sed -i "s|/var/log/mysql/|${MNTDIR1}/log/mysql/|g" /etc/apparmor.d/usr.sbin.mysqld
+sed -i "s|/var/log/mysql\.|${MNTDIR1}/log/mysql.|g" /etc/apparmor.d/usr.sbin.mysqld
 
 # ===== 5. MySQL 데이터 디렉토리 -> data2 =====
 mkdir -p "${MNTDIR2}/data/mysql"
