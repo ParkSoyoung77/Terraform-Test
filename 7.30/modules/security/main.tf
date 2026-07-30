@@ -60,6 +60,24 @@ resource "aws_security_group" "std17_test_sg" {
         description = "TCP 8080"
     }
 
+        # NFS
+    ingress {
+        from_port   = 2049
+        to_port     = 2049
+        protocol    = "tcp"
+        cidr_blocks = ["10.0.0.0/16"]
+        description = "NFS"
+    }
+
+    # TCP 8000
+    ingress {
+        from_port   = 8000
+        to_port     = 8000
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "TCP 8000"
+    }
+
     egress {
         from_port   = 0
         to_port     = 0
