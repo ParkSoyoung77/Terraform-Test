@@ -7,15 +7,6 @@ resource "aws_instance" "std17_public_ec2" {
   associate_public_ip_address = true
   iam_instance_profile        = var.iam_instance_profile
 
-  instance_market_options {
-    market_type = "spot"
-
-    spot_options {
-      spot_instance_type            = "one-time"
-      instance_interruption_behavior = "terminate"
-    }
-  }
-
   root_block_device {
     volume_size           = 10
     volume_type            = "gp3"
