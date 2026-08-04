@@ -1,9 +1,3 @@
-variable "db_name" {
-  description = "생성할 데이터베이스 이름"
-  type        = string
-  default     = "testdb"
-}
-
 variable "db_private_subnet_ids" {
   description = "DB Subnet Group에 사용할 프라이빗 서브넷 ID 리스트 (VPC2, 최소 2 AZ)"
   type        = list(string)

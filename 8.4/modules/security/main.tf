@@ -111,7 +111,3 @@ resource "aws_security_group" "std17_db_sg" {
 
   tags = { Name = "std17-db-sg" }
 }
-
-output "db_sg_id" {
-  value = aws_security_group.std17_db_sg.id
-}
