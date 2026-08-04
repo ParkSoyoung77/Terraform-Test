@@ -15,3 +15,9 @@ variable "key_name" {
     type        = string
     default     = "std17-key"
 }
+
+variable "db_name" {
+  description = "생성할 데이터베이스 이름"
+  type        = string
+  default     = "testdb"
+}
