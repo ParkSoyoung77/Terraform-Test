@@ -16,7 +16,7 @@ resource "aws_db_instance" "std17_mysql_rds" {
 
   db_name = var.db_name
 
-  multi_az           = var.multi_az   # true → Standby 자동 생성 (Writer와 다른 AZ에 자동 배치)
+  multi_az           = false
 
   db_subnet_group_name   = aws_db_subnet_group.std17_db_private_subnet_group.name
   vpc_security_group_ids = [var.security_group_id]
