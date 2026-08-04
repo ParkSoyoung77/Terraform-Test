@@ -65,45 +65,45 @@ resource "aws_route_table_association" "std17_vpc_public_rt_assoc" {
 
 # ==================================================================
 
-# # private subnets
-# resource "aws_subnet" "std17_private_subnets" {
-#     count             = 2
-#     vpc_id            = aws_vpc.std17_vpc.id
-#     cidr_block        = "10.0.${count.index + 11}.0/24"
-#     availability_zone = var.azs[count.index]
+# private subnets
+resource "aws_subnet" "std17_private_subnets" {
+    count             = 3
+    vpc_id            = aws_vpc.std17_vpc.id
+    cidr_block        = "10.0.${count.index + 11}.0/24"
+    availability_zone = var.azs[count.index]
 
-#     tags = { Name = "std17-private${count.index + 1}-subnet" }
-# }
+    tags = { Name = "std17-private${count.index + 1}-subnet" }
+}
 
-# # EIP 할당
-# resource "aws_eip" "std17_nat_eip" {
-#     domain = "vpc"
-#     tags   = { Name = "std17-nat-eip" }
-# }
+# EIP 할당
+resource "aws_eip" "std17_nat_eip" {
+    domain = "vpc"
+    tags   = { Name = "std17-nat-eip" }
+}
 
-# # NAT 게이트웨이
-# resource "aws_nat_gateway" "std17_nat" {
-#     allocation_id = aws_eip.std17_nat_eip.id
-#     subnet_id     = aws_subnet.std17_public_subnets[0].id
-#     depends_on    = [aws_internet_gateway.std17_vpc_igw]
+# NAT 게이트웨이
+resource "aws_nat_gateway" "std17_nat" {
+    allocation_id = aws_eip.std17_nat_eip.id
+    subnet_id     = aws_subnet.std17_public_subnets[0].id
+    depends_on    = [aws_internet_gateway.std17_vpc_igw]
 
-#     tags = { Name = "std17-nat" }
-# }
+    tags = { Name = "std17-nat" }
+}
 
-# # 프라이빗 라우팅 테이블
-# resource "aws_route_table" "std17_vpc_private_rt" {
-#     vpc_id = aws_vpc.std17_vpc.id
+# 프라이빗 라우팅 테이블
+resource "aws_route_table" "std17_vpc_private_rt" {
+    vpc_id = aws_vpc.std17_vpc.id
     
-#     route {
-#         cidr_block     = "0.0.0.0/0"
-#         nat_gateway_id = aws_nat_gateway.std17_nat.id
-#     }
+    route {
+        cidr_block     = "0.0.0.0/0"
+        nat_gateway_id = aws_nat_gateway.std17_nat.id
+    }
 
-#     tags = { Name = "std17-vpc-private-rt" }
-# }
+    tags = { Name = "std17-vpc-private-rt" }
+}
 
-# resource "aws_route_table_association" "std17_vpc_private_rt_assoc" {
-#     count          = 2
-#     route_table_id = aws_route_table.std17_vpc_private_rt.id
-#     subnet_id      = aws_subnet.std17_private_subnets[count.index].id
-# }
+resource "aws_route_table_association" "std17_vpc_private_rt_assoc" {
+    count          = 3
+    route_table_id = aws_route_table.std17_vpc_private_rt.id
+    subnet_id      = aws_subnet.std17_private_subnets[count.index].id
+}

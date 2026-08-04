@@ -9,3 +9,9 @@ variable "azs" {
     type        = list(string)
     default     = ["ap-northeast-3a", "ap-northeast-3b", "ap-northeast-3c"]
 }
+
+variable "aws_region" {
+  description = "S3 Gateway 엔드포인트 서비스명 구성용"
+  type        = string
+  default     = "us-west-1"
+}
