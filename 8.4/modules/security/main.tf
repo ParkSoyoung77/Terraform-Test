@@ -87,3 +87,31 @@ resource "aws_security_group" "std17_test_sg" {
 
     tags = { Name = "std17-test-sg" }
 }
+
+# db_sg
+resource "aws_security_group" "std17_db_sg" {
+  name        = "std17-db-sg"
+  vpc_id      = var.vpc_id
+  description = "RDS MySQL access from app tier"
+
+  ingress {
+    from_port       = 3306
+    to_port         = 3306
+    protocol        = "tcp"
+    security_groups = [aws_security_group.std17_test_sg.id]  # EC2 SG에서만 접근 허용
+    description     = "MySQL from EC2"
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  tags = { Name = "std17-db-sg" }
+}
+
+output "db_sg_id" {
+  value = aws_security_group.std17_db_sg.id
+}
