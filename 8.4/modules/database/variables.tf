@@ -17,7 +17,7 @@ variable "engine_version" {
 variable "instance_class" {
     description = "RDS 인스턴스 클래스"
     type        = string
-    default     = "db.t3.small"
+    default     = "db.t4g.micro"
 }
 
 variable "db_username" {
