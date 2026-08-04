@@ -42,8 +42,3 @@ output "private_rt_id" {
   description = "프라이빗 라우팅 테이블 ID"
   value       = aws_route_table.std17_vpc_private_rt.id
 }
-
-output "s3_gateway_endpoint_id" {
-  description = "S3 Gateway VPC Endpoint ID (std17-ex-bucket 내부 전용선 접근용)"
-  value       = aws_vpc_endpoint.std17_s3_gateway.id
-}
