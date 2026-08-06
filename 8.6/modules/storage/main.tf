@@ -58,3 +58,20 @@ resource "aws_s3_object" "std17_mysql_html" {
 
     content_type = "text/html"
 }
+
+# ==================================================================
+# 백업용 버킷 생성
+# ==================================================================
+resource "aws_s3_bucket" "backup_s3_bucket" {
+    bucket = var.backup_bucket_name
+    tags   = { Name = var.backup_bucket_name }
+}
+
+# 퍼블릭 액세스 관리
+resource "aws_s3_bucket_public_access_block" "backup_s3_bucket-access" {
+    bucket                  = aws_s3_bucket.backup_s3_bucket.id
+    block_public_acls       = false
+    ignore_public_acls      = false
+    block_public_policy     = false
+    restrict_public_buckets = false
+}

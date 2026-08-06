@@ -9,3 +9,9 @@ variable "mysql_html_path" {
     type        = string
     default     = ""
 }
+
+variable "backup_bucket_name" {
+    description = "S3 버킷 이름"
+    type        = string
+    default     = "std17-backup"
+}

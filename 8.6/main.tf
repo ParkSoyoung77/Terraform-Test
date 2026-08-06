@@ -33,7 +33,7 @@ module "compute" {
     public_subnet_ids  = module.network.public_subnet_ids
     security_group_id   = module.security.test_sg_id
     key_name            = var.key_name
-    iam_instance_profile = module.iam.instance_profile_name
+    iam_instance_profile = module.iam.fullaccess_instance_profile_name
 
     route_table_ids = [
         module.network.default_rt_id,
