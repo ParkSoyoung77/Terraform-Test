@@ -39,6 +39,9 @@ resource "aws_db_instance" "std17_mysql_rds" {
 
   db_subnet_group_name   = aws_db_subnet_group.std17_db_private_subnet_group.name
   vpc_security_group_ids = [var.security_group_id]
+  
+  parameter_group_name = aws_db_parameter_group.std17_mysql_params.name
+  apply_immediately       = true
 
   username = "admin"
   password = random_password.std17_db_password.result
