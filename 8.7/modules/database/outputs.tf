@@ -22,3 +22,8 @@ output "master_user_secret_arn" {
   description = "Secrets Manager ARN (Lambda DB_SECRET_NAME용)"
   value       = aws_secretsmanager_secret.std17_db_secret.arn 
 }
+
+output "db_parameter_group_name" {
+  description = "커스텀 DB 파라미터 그룹 이름"
+  value       = aws_db_parameter_group.std17_mysql_params.name
+}
