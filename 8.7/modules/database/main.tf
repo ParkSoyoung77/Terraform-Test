@@ -41,7 +41,7 @@ resource "aws_db_instance" "std17_mysql_rds" {
   vpc_security_group_ids = [var.security_group_id]
   
   parameter_group_name = aws_db_parameter_group.std17_mysql_params.name
-  apply_immediately       = true
+  apply_immediately       = true  # 파라미터 그룹 변경 즉시 반영
 
   username = "admin"
   password = random_password.std17_db_password.result
@@ -50,7 +50,6 @@ resource "aws_db_instance" "std17_mysql_rds" {
 
   backup_retention_period = 7   # Read Replica 조건: 0이면 안 됨
 
-  apply_immediately    = true   # 파라미터 그룹 변경 즉시 반영
   skip_final_snapshot = true
 
   tags = { Name = "std17-mysql-rds" }
