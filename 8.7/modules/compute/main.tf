@@ -47,6 +47,8 @@ resource "aws_eip" "std17_public_ec2_eip" {
   network_interface          = aws_network_interface.std17_public_eni.id
   associate_with_private_ip = var.primary_private_ip
 
+  depends_on = [aws_instance.std17_public_ec2]
+
   tags = { Name = "std17-public-ec2-eip" }
 }
 
