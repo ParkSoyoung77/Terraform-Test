@@ -40,6 +40,9 @@ module "compute" {
         module.network.public_rt_id
     ]
 
+    primary_private_ip   = "10.0.1.77"
+    secondary_private_ip = "10.0.1.78"
+
     depends_on = [module.network, module.security, module.storage, module.iam]
 }
 

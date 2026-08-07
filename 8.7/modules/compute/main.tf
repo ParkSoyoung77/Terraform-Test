@@ -1,28 +1,53 @@
+# ==================================================================
+# ENI (세컨더리 프라이빗 IP 부여용)
+# ==================================================================
+resource "aws_network_interface" "std17_public_eni" {
+  subnet_id       = var.public_subnet_ids[0]
+  security_groups = [var.security_group_id]
+
+  private_ips = [
+    var.primary_private_ip,
+    var.secondary_private_ip
+  ]
+
+  tags = { Name = "std17-public-eni" }
+}
+
+# ==================================================================
+# EC2
+# ==================================================================
 resource "aws_instance" "std17_public_ec2" {
 
   ami           = var.instance_ami
   instance_type = var.instance_type
 
-  subnet_id                   = var.public_subnet_ids[0]
-  associate_public_ip_address = true
-  iam_instance_profile        = var.iam_instance_profile
+  iam_instance_profile = var.iam_instance_profile
+
+  network_interface {
+    network_interface_id = aws_network_interface.std17_public_eni.id
+    device_index          = 0
+  }
 
   root_block_device {
-    volume_size           = 10
-    volume_type            = "gp3"
-    delete_on_termination  = true
+    volume_size          = 10
+    volume_type           = "gp3"
+    delete_on_termination = true
   }
 
   key_name = var.key_name
 
-  vpc_security_group_ids = [
-    var.security_group_id
-  ]
-
-  user_data = file("${path.module}/scripts/user_data.sh")
+  user_data                   = file("${path.module}/scripts/user_data.sh")
   user_data_replace_on_change = true
 
   tags = { Name = "std17-public-ec2" }
+}
+
+resource "aws_eip" "std17_public_ec2_eip" {
+  domain                    = "vpc"
+  network_interface          = aws_network_interface.std17_public_eni.id
+  associate_with_private_ip = var.primary_private_ip
+
+  tags = { Name = "std17-public-ec2-eip" }
 }
 
 # ==================================================================

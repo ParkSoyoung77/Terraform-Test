@@ -41,3 +41,15 @@ variable "route_table_ids" {
     description = "S3 게이트웨이 엔드포인트에 연결할 라우트테이블 ID"
     type        = list(string)
 }
+
+variable "primary_private_ip" {
+  description = "EC2 프라이머리 프라이빗 IP (기존 IP 고정용)"
+  type        = string
+  default     = "10.0.1.77"
+}
+
+variable "secondary_private_ip" {
+  description = "ENI에 추가할 세컨더리 프라이빗 IP"
+  type        = string
+  default     = "10.0.1.78"
+}
