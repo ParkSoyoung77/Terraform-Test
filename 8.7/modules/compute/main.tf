@@ -23,9 +23,8 @@ resource "aws_instance" "std17_public_ec2" {
 
   iam_instance_profile = var.iam_instance_profile
 
-  network_interface {
+  primary_network_interface {
     network_interface_id = aws_network_interface.std17_public_eni.id
-    device_index          = 0
   }
 
   root_block_device {
