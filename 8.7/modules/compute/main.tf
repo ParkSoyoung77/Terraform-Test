@@ -5,8 +5,9 @@ resource "aws_network_interface" "std17_public_eni" {
   subnet_id       = var.public_subnet_ids[0]
   security_groups = [var.security_group_id]
 
-  private_ips = [
-    var.primary_private_ip,
+  private_ip_list_enabled = true
+  private_ip_list = [
+    var.primary_private_ip,   # 첫 번째 = 프라이머리
     var.secondary_private_ip
   ]
 
