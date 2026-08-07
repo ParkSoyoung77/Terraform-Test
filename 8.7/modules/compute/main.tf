@@ -26,23 +26,6 @@ resource "aws_instance" "std17_public_ec2" {
 }
 
 # ==================================================================
-# 추가 EBS 볼륨 (8GB)
-# ==================================================================
-resource "aws_ebs_volume" "std17_extra_volume" {
-  availability_zone = aws_instance.std17_public_ec2.availability_zone
-  size               = 8
-  type               = "gp3"
-
-  tags = { Name = "std17-public-ec2-extra" }
-}
-
-resource "aws_volume_attachment" "std17_extra_volume_attach" {
-  device_name = "/dev/sdf"
-  volume_id   = aws_ebs_volume.std17_extra_volume.id
-  instance_id = aws_instance.std17_public_ec2.id
-}
-
-# ==================================================================
 # 엔드포인트
 # ==================================================================
 

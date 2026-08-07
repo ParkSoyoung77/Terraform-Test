@@ -1,15 +1,3 @@
-variable "readonly_role_name" {
-  description = "S3 ReadOnly IAM role name"
-  type        = string
-  default     = "std17-s3-role"
-}
-
-variable "readonly_policy_arn" {
-  description = "S3 ReadOnly에 연결할 관리형 정책 ARN"
-  type        = string
-  default     = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
-}
-
 variable "fullaccess_role_name" {
   description = "S3 FullAccess IAM role name"
   type        = string
