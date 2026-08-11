@@ -142,3 +142,37 @@ resource "aws_security_group" "std17_db_sg" {
 
   tags = { Name = "std17-db-sg" }
 }
+
+# router-sg
+resource "aws_security_group" "std17_router_sg" {
+    name        = "std17-router-sg"
+    vpc_id      = var.vpc_id
+    description = "MySQL Router - R/W(6446), Read-Only(6447)"
+
+    # MySQL Router - Read/Write (Primary)
+    ingress {
+        from_port   = 6446
+        to_port     = 6446
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "MySQL Router Write & Read"
+    }
+
+    # MySQL Router - Read Only (Secondary)
+    ingress {
+        from_port   = 6447
+        to_port     = 6447
+        protocol    = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+        description = "MySQL Router Read Only"
+    }
+
+    egress {
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    tags = { Name = "std17-router-sg" }
+}
