@@ -3,7 +3,7 @@ set -e
 
 # ===== 설치 =====
 apt update -y
-apt install -y nginx unzip curl mysql-server
+apt install -y nginx unzip curl mysql-server mysql-shell mysql-router
 systemctl enable nginx
 systemctl start nginx
 
