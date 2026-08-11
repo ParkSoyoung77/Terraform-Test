@@ -49,16 +49,3 @@ module "compute" {
 module "storage" {
     source = "./modules/storage"
 }
-
-# ==================================================================
-# 5: database
-# ==================================================================
-module "database" {
-    source = "./modules/database"
-
-    db_private_subnet_ids = module.network.private_subnet_ids
-    security_group_id     = module.security.db_sg_id
-    db_name                = var.db_name
-
-    depends_on = [module.network, module.security]
-}
