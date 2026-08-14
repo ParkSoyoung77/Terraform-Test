@@ -71,8 +71,8 @@ module "dns" {
     source = "./modules/dns"
 
     vpc_id          = module.network.vpc_id
-    nlb_dns_name    = module.loadbalancer.nlb_dns_name
-    nlb_zone_id     = module.loadbalancer.nlb_zone_id
+    nlb_dns_name    = module.nlb.nlb_dns_name
+    nlb_zone_id     = module.nlb.nlb_zone_id
     ec2_private_ip  = module.compute.private_ip
 
     depends_on = [module.nlb, module.compute]
