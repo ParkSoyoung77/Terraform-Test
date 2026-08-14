@@ -22,3 +22,8 @@ output "ssh_tg_arn" {
   description = "SSH(22) 대상그룹 ARN"
   value       = aws_lb_target_group.std17_ssh_tg.arn
 }
+
+output "nlb_zone_id" {
+  description = "NLB의 Route53 zone_id (Alias 레코드용)"
+  value       = aws_lb.std17_nlb.zone_id
+}
