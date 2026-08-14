@@ -75,5 +75,5 @@ module "dns" {
     nlb_zone_id     = module.loadbalancer.nlb_zone_id
     ec2_private_ip  = module.compute.private_ip
 
-    depends_on = [module.loadbalancer, module.compute]
+    depends_on = [module.nlb, module.compute]
 }
