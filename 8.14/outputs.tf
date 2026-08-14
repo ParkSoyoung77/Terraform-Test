@@ -26,3 +26,19 @@ output "nlb_dns_name" {
     description = "내부 NLB DNS 이름 (RDS/SSH 접속용)"
     value       = module.nlb.nlb_dns_name
 }
+
+# ---------------- dns ----------------
+output "private_zone_id" {
+    description = "Route53 프라이빗 호스팅 영역 ID"
+    value       = module.dns.zone_id
+}
+
+output "mysql_fqdn" {
+    description = "MySQL(NLB) 접근용 FQDN"
+    value       = module.dns.mysql_record_fqdn
+}
+
+output "ec2_fqdn" {
+    description = "EC2 접근용 FQDN"
+    value       = module.dns.ec2_record_fqdn
+}

@@ -63,3 +63,17 @@ module "nlb" {
 
     depends_on = [module.network, module.security, module.compute]
 }
+
+# ==================================================================
+# 6: dns (Route53 프라이빗 호스팅 영역, loadbalancer/compute에 의존)
+# ==================================================================
+module "dns" {
+    source = "./modules/dns"
+
+    vpc_id          = module.network.vpc_id
+    nlb_dns_name    = module.loadbalancer.nlb_dns_name
+    nlb_zone_id     = module.loadbalancer.nlb_zone_id
+    ec2_private_ip  = module.compute.private_ip
+
+    depends_on = [module.loadbalancer, module.compute]
+}

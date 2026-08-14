@@ -16,3 +16,8 @@ output "public_eip" {
   description = "EC2에 연결된 EIP 퍼블릭 주소"
   value       = aws_eip.std17_public_ec2_eip.public_ip
 }
+
+output "private_ip" {
+  description = "EC2의 고정 프라이빗 IP"
+  value       = aws_instance.std17_public_ec2.private_ip
+}
