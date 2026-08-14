@@ -51,7 +51,7 @@ module "storage" {
 }
 
 # ==================================================================
-# 5: loadbalancer (network, security, compute에 의존)
+# 5: nlb (network, security, compute에 의존)
 # ==================================================================
 module "nlb" {
     source = "./modules/nlb"
@@ -65,7 +65,7 @@ module "nlb" {
 }
 
 # ==================================================================
-# 6: dns (Route53 프라이빗 호스팅 영역, loadbalancer/compute에 의존)
+# 6: dns (Route53 프라이빗 호스팅 영역, nlb/compute에 의존)
 # ==================================================================
 module "dns" {
     source = "./modules/dns"
