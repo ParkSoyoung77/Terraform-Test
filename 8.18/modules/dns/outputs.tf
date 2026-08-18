@@ -14,6 +14,6 @@ output "mysql_record_fqdn" {
 }
 
 output "ec2_record_fqdn" {
-  description = "EC2 접근용 FQDN"
-  value       = aws_route53_record.std17_ec2_record.fqdn
+  description = "EC2 접근용 FQDN 리스트"
+  value       = aws_route53_record.std17_ec2_record[*].fqdn
 }
