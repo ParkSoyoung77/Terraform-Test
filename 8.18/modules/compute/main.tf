@@ -4,7 +4,7 @@
 resource "aws_network_interface" "std17_public_eni" {
   count = 3
 
-  subnet_id       = var.public_subnet_ids[0]
+  subnet_id       = var.public_subnet_ids[count.index]
   security_groups = [var.security_group_id]
 
   private_ip_list_enabled = true
