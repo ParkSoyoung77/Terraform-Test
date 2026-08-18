@@ -14,6 +14,6 @@ variable "security_group_id" {
 }
 
 variable "instance_id" {
-  description = "대상그룹에 연결할 EC2 인스턴스 ID"
-  type        = string
+  description = "NLB 타겟에 등록할 EC2 인스턴스 ID 리스트"
+  type        = list(string)
 }

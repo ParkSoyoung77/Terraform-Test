@@ -20,8 +20,10 @@ resource "aws_lb_target_group" "std17_mysql_tg" {
 }
 
 resource "aws_lb_target_group_attachment" "std17_mysql_tg_attach" {
+  count = length(var.instance_id)
+
   target_group_arn = aws_lb_target_group.std17_mysql_tg.arn
-  target_id        = var.instance_id
+  target_id        = var.instance_id[count.index]
   port             = 3306
 }
 
@@ -47,8 +49,10 @@ resource "aws_lb_target_group" "std17_ssh_tg" {
 }
 
 resource "aws_lb_target_group_attachment" "std17_ssh_tg_attach" {
+  count = length(var.instance_id)
+
   target_group_arn = aws_lb_target_group.std17_ssh_tg.arn
-  target_id        = var.instance_id
+  target_id        = var.instance_id[count.index]
   port             = 22
 }
 

@@ -152,3 +152,55 @@ resource "aws_security_group" "std17_router_sg" {
 
     tags = { Name = "std17-router-sg" }
 }
+
+# swarm-sg
+resource "aws_security_group" "std17_swarm_sg" {
+    name        = "std17-swarm-sg"
+    vpc_id      = var.vpc_id
+    description = "Docker Swarm - Cluster management, Discovery, Overlay network"
+
+    # 클러스터 관리 통신용
+    ingress {
+        from_port   = 2377
+        to_port     = 2377
+        protocol    = "tcp"
+        self        = true
+        description = "Swarm cluster management communication"
+    }
+
+    # 노드간 네트워크 발견(discovery)용 - TCP
+    ingress {
+        from_port   = 7946
+        to_port     = 7946
+        protocol    = "tcp"
+        self        = true
+        description = "Node discovery (TCP)"
+    }
+
+    # 노드간 네트워크 발견(discovery)용 - UDP
+    ingress {
+        from_port   = 7946
+        to_port     = 7946
+        protocol    = "udp"
+        self        = true
+        description = "Node discovery (UDP)"
+    }
+
+    # 오버레이 네트워크(overlay network)용 - UDP (VXLAN)
+    ingress {
+        from_port   = 4789
+        to_port     = 4789
+        protocol    = "udp"
+        self        = true
+        description = "Overlay network traffic (VXLAN)"
+    }
+
+    egress {
+        from_port   = 0
+        to_port     = 0
+        protocol    = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    tags = { Name = "std17-swarm-sg" }
+}
