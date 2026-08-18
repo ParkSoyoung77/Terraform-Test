@@ -43,7 +43,7 @@ variable "route_table_ids" {
 }
 
 variable "fixed_private_ips" {
-  description = "각 public 서브넷(AZ)에 배정할 고정 프라이빗 IP"
+  description = "각 EC2에 배정할 고정 프라이빗 IP 리스트 (3개)"
   type        = list(string)
-  default     = ["10.0.1.10"]
+  default     = ["10.0.1.10", "10.0.2.10", "10.0.3.10"]
 }
