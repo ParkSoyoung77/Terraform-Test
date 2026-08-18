@@ -31,10 +31,12 @@ resource "aws_route53_record" "std17_nlb_record" {
 # ==================================================================
 # EC2 레코드 (A) - ec2.std17.internal -> 고정 프라이빗 IP
 # ==================================================================
-resource "aws_route53_record" "std17_ec2_record" {
-  zone_id = aws_route53_zone.std17_private_zone.zone_id
-  name    = "ec2.${var.zone_name}"
+resource "aws_route53_record" "this" {
+  count = length(var.ec2_private_ip)
+
+  zone_id = var.zone_id
+  name    = "db${count.index + 1}.std17.internal"   # db1, db2, db3
   type    = "A"
   ttl     = 300
-  records = [var.ec2_private_ip]
+  records = [var.ec2_private_ip[count.index]]
 }

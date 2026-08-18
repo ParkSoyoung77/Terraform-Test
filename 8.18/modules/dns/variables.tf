@@ -20,6 +20,6 @@ variable "nlb_zone_id" {
 }
 
 variable "ec2_private_ip" {
-  description = "EC2 A 레코드로 등록할 프라이빗 IP"
-  type        = string
+  description = "Route53 private zone에 등록할 EC2 프라이빗 IP 리스트"
+  type        = list(string)
 }
