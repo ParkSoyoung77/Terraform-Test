@@ -120,7 +120,7 @@ resource "aws_ecs_task_definition" "std17_db" {
             essential = true
 
             memory    = 1024
-            
+
             portMappings = [
                 { containerPort = 3306, hostPort = 3306, protocol = "tcp" }
             ]
@@ -143,6 +143,8 @@ resource "aws_ecs_service" "std17_db" {
 
     service_registries {
         registry_arn = aws_service_discovery_service.mysql.arn
+        container_name = "mysql"
+        container_port = 3306
     }
 
     placement_constraints {
