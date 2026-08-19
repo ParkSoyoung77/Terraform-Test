@@ -96,7 +96,7 @@ resource "aws_security_group" "std17_vpce_sg" {
 # ==================================================================
 resource "aws_vpc_endpoint" "std17_ecr_api" {
     vpc_id              = var.vpc_id
-    service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.api"
+    service_name        = "com.amazonaws.${data.aws_region.current.region}.ecr.api"
     vpc_endpoint_type   = "Interface"
     subnet_ids          = var.private_subnet_ids
     security_group_ids  = [aws_security_group.std17_vpce_sg.id]
@@ -107,7 +107,7 @@ resource "aws_vpc_endpoint" "std17_ecr_api" {
 
 resource "aws_vpc_endpoint" "std17_ecr_dkr" {
     vpc_id              = var.vpc_id
-    service_name        = "com.amazonaws.${data.aws_region.current.name}.ecr.dkr"
+    service_name        = "com.amazonaws.${data.aws_region.current.region}.ecr.dkr"
     vpc_endpoint_type   = "Interface"
     subnet_ids          = var.private_subnet_ids
     security_group_ids  = [aws_security_group.std17_vpce_sg.id]

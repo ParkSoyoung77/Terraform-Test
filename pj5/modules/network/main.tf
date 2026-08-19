@@ -83,7 +83,7 @@ resource "aws_route_table_association" "std17_private_rt_assoc" {
 # S3 Gateway 엔드포인트 (ECR 이미지 레이어 저장소, 무료)
 resource "aws_vpc_endpoint" "std17_s3_gw" {
     vpc_id            = aws_vpc.std17_vpc.id
-    service_name      = "com.amazonaws.${data.aws_region.current.name}.s3"
+    service_name      = "com.amazonaws.${data.aws_region.current.region}.s3"
     vpc_endpoint_type = "Gateway"
     route_table_ids   = [aws_route_table.std17_private_rt.id]
 
