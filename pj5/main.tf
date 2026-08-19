@@ -100,3 +100,12 @@ module "dns" {
 
     depends_on = [module.alb]
 }
+
+# ==================================================================
+# 8: budget
+# ==================================================================
+module "budget" {
+    source = "./modules/budget"
+
+    alert_email = var.alert_email
+}
