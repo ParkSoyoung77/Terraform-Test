@@ -17,15 +17,15 @@ module "network" {
 # ==================================================================
 # 2: security (network에 의존)
 # ==================================================================
-module "security" {
-    source = "./modules/security"
+# module "security" {
+#     source = "./modules/security"
 
-    vpc_id              = module.network.vpc_id
-    vpc_cidr            = module.network.vpc_cidr
-    private_subnet_ids  = module.network.private_subnet_ids
+#     vpc_id              = module.network.vpc_id
+#     vpc_cidr            = module.network.vpc_cidr
+#     private_subnet_ids  = module.network.private_subnet_ids
 
-    depends_on = [module.network]
-}
+#     depends_on = [module.network]
+# }
 
 # ==================================================================
 # 3: secrets (독립적)
