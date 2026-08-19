@@ -55,6 +55,9 @@ resource "aws_ecs_task_definition" "std17_web" {
             name      = "nginx"
             image     = "${local.ecr_registry}/std17-nginx:latest"
             essential = true
+
+            memory    = 256
+
             portMappings = [
                 { containerPort = 80, hostPort = 0, protocol = "tcp" }
             ]
@@ -63,6 +66,9 @@ resource "aws_ecs_task_definition" "std17_web" {
             name      = "fastapi"
             image     = "${local.ecr_registry}/std17-fastapi:latest"
             essential = true
+
+            memory    = 512
+
             secrets = [
                 { name = "DB_HOST",     valueFrom = "${local.secret_arn}:host::" },
                 { name = "DB_PORT",     valueFrom = "${local.secret_arn}:port::" },
@@ -112,6 +118,9 @@ resource "aws_ecs_task_definition" "std17_db" {
             name      = "mysql"
             image     = "${local.ecr_registry}/std17-mysql:latest"
             essential = true
+
+            memory    = 1024
+            
             portMappings = [
                 { containerPort = 3306, hostPort = 3306, protocol = "tcp" }
             ]
