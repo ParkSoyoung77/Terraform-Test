@@ -3,7 +3,6 @@ locals {
     secret_arn   = var.mysql_credentials_secret_arn
 }
 
-# 시크릿 하나만 참조하므로 IAM 정책도 단순함
 resource "aws_iam_role_policy" "std17_task_exec_secrets" {
     name = "std17-task-exec-secrets-policy"
     role = var.execution_role_name
@@ -16,6 +15,11 @@ resource "aws_iam_role_policy" "std17_task_exec_secrets" {
             Resource = [local.secret_arn]
         }]
     })
+}
+
+resource "aws_cloudwatch_log_group" "std17_ecs" {
+    name              = "/ecs/std17"
+    retention_in_days = 7
 }
 
 # ------------------------------------------------------------
@@ -34,7 +38,7 @@ resource "aws_service_discovery_service" "mysql" {
 
         dns_records {
             ttl  = 10
-            type = "SRV"
+            type = "A"
         }
 
         routing_policy = "MULTIVALUE"
@@ -55,20 +59,31 @@ resource "aws_ecs_task_definition" "std17_web" {
             name      = "nginx"
             image     = "${local.ecr_registry}/std17/nginx:latest"
             essential = true
-
             memory    = 256
-
+            links     = ["fastapi"]
+            dependsOn = [
+                { containerName = "fastapi", condition = "START" }
+            ]
             portMappings = [
                 { containerPort = 80, hostPort = 0, protocol = "tcp" }
             ]
+            logConfiguration = {
+                logDriver = "awslogs"
+                options = {
+                    "awslogs-group"         = aws_cloudwatch_log_group.std17_ecs.name
+                    "awslogs-region"        = var.aws_region
+                    "awslogs-stream-prefix" = "nginx"
+                }
+            }
         },
         {
             name      = "fastapi"
-            image     = "${local.ecr_registry}/std17/nginx:latest"
+            image     = "${local.ecr_registry}/std17/fastapi:latest"
             essential = true
-
             memory    = 512
-
+            portMappings = [
+                { containerPort = 8000, protocol = "tcp" }
+            ]
             secrets = [
                 { name = "DB_HOST",     valueFrom = "${local.secret_arn}:host::" },
                 { name = "DB_PORT",     valueFrom = "${local.secret_arn}:port::" },
@@ -76,6 +91,14 @@ resource "aws_ecs_task_definition" "std17_web" {
                 { name = "DB_PASSWORD", valueFrom = "${local.secret_arn}:app_password::" },
                 { name = "DB_NAME",     valueFrom = "${local.secret_arn}:database::" }
             ]
+            logConfiguration = {
+                logDriver = "awslogs"
+                options = {
+                    "awslogs-group"         = aws_cloudwatch_log_group.std17_ecs.name
+                    "awslogs-region"        = var.aws_region
+                    "awslogs-stream-prefix" = "fastapi"
+                }
+            }
         }
     ])
 }
@@ -118,9 +141,7 @@ resource "aws_ecs_task_definition" "std17_db" {
             name      = "mysql"
             image     = "${local.ecr_registry}/std17/mysql:latest"
             essential = true
-
             memory    = 1024
-
             portMappings = [
                 { containerPort = 3306, hostPort = 3306, protocol = "tcp" }
             ]
@@ -130,6 +151,14 @@ resource "aws_ecs_task_definition" "std17_db" {
                 { name = "MYSQL_USER",          valueFrom = "${local.secret_arn}:app_username::" },
                 { name = "MYSQL_PASSWORD",      valueFrom = "${local.secret_arn}:app_password::" }
             ]
+            logConfiguration = {
+                logDriver = "awslogs"
+                options = {
+                    "awslogs-group"         = aws_cloudwatch_log_group.std17_ecs.name
+                    "awslogs-region"        = var.aws_region
+                    "awslogs-stream-prefix" = "mysql"
+                }
+            }
         }
     ])
 }
@@ -142,9 +171,9 @@ resource "aws_ecs_service" "std17_db" {
     launch_type     = "EC2"
 
     service_registries {
-        registry_arn = aws_service_discovery_service.mysql.arn
-        container_name = "mysql"
-        container_port = 3306
+        registry_arn    = aws_service_discovery_service.mysql.arn
+        container_name  = "mysql"
+        container_port  = 3306
     }
 
     placement_constraints {
