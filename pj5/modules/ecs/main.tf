@@ -53,7 +53,7 @@ resource "aws_ecs_task_definition" "std17_web" {
     container_definitions = jsonencode([
         {
             name      = "nginx"
-            image     = "${local.ecr_registry}/std17-nginx:latest"
+            image     = "${local.ecr_registry}/std17/nginx:latest"
             essential = true
 
             memory    = 256
@@ -64,7 +64,7 @@ resource "aws_ecs_task_definition" "std17_web" {
         },
         {
             name      = "fastapi"
-            image     = "${local.ecr_registry}/std17-fastapi:latest"
+            image     = "${local.ecr_registry}/std17/nginx:latest"
             essential = true
 
             memory    = 512
@@ -116,7 +116,7 @@ resource "aws_ecs_task_definition" "std17_db" {
     container_definitions = jsonencode([
         {
             name      = "mysql"
-            image     = "${local.ecr_registry}/std17-mysql:latest"
+            image     = "${local.ecr_registry}/std17/mysql:latest"
             essential = true
 
             memory    = 1024
