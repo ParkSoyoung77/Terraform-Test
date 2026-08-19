@@ -1,8 +1,7 @@
-output "public_ec2_id" {
-    value = aws_instance.std17_public_ec2.id
+output "cluster_name" {
+    value = aws_ecs_cluster.std17.name
 }
 
-output "s3_endpoint_id" {
-  description = "S3 Gateway VPC endpoint ID"
-  value       = aws_vpc_endpoint.std17_gw_endpoint.id
+output "db_instance_id" {
+    value = aws_instance.std17_db_node.id
 }

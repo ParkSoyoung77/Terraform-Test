@@ -1,73 +1,75 @@
-resource "aws_instance" "std17_public_ec2" {
+resource "aws_ecs_cluster" "std17" {
+    name = "std17-ecs-cluster"
 
-  ami           = var.instance_ami
-  instance_type = var.instance_type
-
-  subnet_id                   = var.public_subnet_ids[0]
-  associate_public_ip_address = true
-  iam_instance_profile        = var.iam_instance_profile
-
-  root_block_device {
-    volume_size           = 8
-    volume_type            = "gp3"
-    delete_on_termination  = true
-  }
-
-  key_name = var.key_name
-
-  vpc_security_group_ids = [
-    var.security_group_id
-  ]
-
-  user_data = file("${path.module}/scripts/user_data.sh")
-  user_data_replace_on_change = true
-
-  tags = { Name = "std17-public-ec2" }
+    tags = { Name = "std17-ecs-cluster" }
 }
 
-# ==================================================================
-# 추가 EBS 볼륨 (8GB)
-# ==================================================================
-resource "aws_ebs_volume" "std17_extra_volume" {
-  availability_zone = aws_instance.std17_public_ec2.availability_zone
-  size               = 10
-  type               = "gp3"
+# ------------------------------------------------------------
+# General 노드 (nginx+fastapi) - AZ당 1대, 고정 개수
+# ------------------------------------------------------------
+resource "aws_launch_template" "std17_general_lt" {
+    name_prefix   = "std17-general-"
+    image_id      = var.ecs_ami_id
+    instance_type = var.general_instance_type
 
-  tags = { Name = "std17-public-ec2-extra" }
+    iam_instance_profile {
+        name = var.ecs_instance_profile
+    }
+
+    vpc_security_group_ids = [var.ecs_general_sg_id]
+
+    user_data = base64encode(<<-EOF
+        #!/bin/bash
+        echo "ECS_CLUSTER=${aws_ecs_cluster.std17.name}" >> /etc/ecs/ecs.config
+        echo 'ECS_INSTANCE_ATTRIBUTES={"role":"general"}' >> /etc/ecs/ecs.config
+    EOF
+    )
+
+    tag_specifications {
+        resource_type = "instance"
+        tags          = { Name = "std17-ecs-general" }
+    }
 }
 
-resource "aws_volume_attachment" "std17_extra_volume_attach" {
-  device_name = "/dev/sdf"
-  volume_id   = aws_ebs_volume.std17_extra_volume.id
-  instance_id = aws_instance.std17_public_ec2.id
+resource "aws_autoscaling_group" "std17_general_asg" {
+    name                = "std17-general-asg"
+    min_size            = var.general_desired_count
+    max_size            = var.general_desired_count
+    desired_capacity    = var.general_desired_count
+    vpc_zone_identifier = var.private_subnet_ids
+
+    launch_template {
+        id      = aws_launch_template.std17_general_lt.id
+        version = "$Latest"
+    }
+
+    tag {
+        key                 = "Name"
+        value               = "std17-ecs-general"
+        propagate_at_launch = true
+    }
 }
 
-# ==================================================================
-# 엔드포인트
-# ==================================================================
+# ------------------------------------------------------------
+# DB 노드 (mysql) - 1대 고정, ASG 아님
+# ------------------------------------------------------------
+resource "aws_instance" "std17_db_node" {
+    ami                    = var.ecs_ami_id
+    instance_type          = var.db_instance_type
+    subnet_id              = var.private_subnet_ids[1]
+    iam_instance_profile   = var.ecs_instance_profile
+    vpc_security_group_ids = [var.ecs_db_sg_id]
 
-# S3 Gateway VPC 엔드포인트
-resource "aws_vpc_endpoint" "std17_gw_endpoint" {
-  vpc_id            = var.vpc_id
-  service_name      = "com.amazonaws.ap-northeast-3.s3"
-  vpc_endpoint_type = "Gateway"
+    root_block_device {
+        volume_size = 30
+        volume_type = "gp3"
+    }
 
-  route_table_ids = var.route_table_ids
+    user_data = <<-EOF
+        #!/bin/bash
+        echo "ECS_CLUSTER=${aws_ecs_cluster.std17.name}" >> /etc/ecs/ecs.config
+        echo 'ECS_INSTANCE_ATTRIBUTES={"role":"db"}' >> /etc/ecs/ecs.config
+    EOF
 
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Sid       = "Statement1"
-        Effect    = "Allow"
-        Principal = "*"
-        Action    = "*"
-        Resource  = "*"
-      }
-    ]
-  })
-
-  tags = {
-    Name = "std17-gw-endpoint"
-  }
+    tags = { Name = "std17-ecs-db" }
 }

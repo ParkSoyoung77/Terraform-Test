@@ -1,4 +1,12 @@
 variable "vpc_id" {
-  description = "보안그룹을 생성할 VPC ID"
-  type        = string
+    type = string
+}
+
+variable "vpc_cidr" {
+    type = string
+}
+
+variable "private_subnet_ids" {
+    description = "ECR Interface Endpoint를 붙일 private subnet 리스트"
+    type        = list(string)
 }

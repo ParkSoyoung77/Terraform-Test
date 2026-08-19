@@ -1,43 +1,35 @@
 variable "vpc_id" {
-    description = "S3 엔드포인트가 속할 VPC ID"
-    type        = string
+    type = string
 }
 
-variable "public_subnet_ids" {
-    description = "프라이빗 서브넷 ID 리스트"
-    type        = list(string)
+variable "private_subnet_ids" {
+    type = list(string)
 }
 
-variable "security_group_id" {
-    description = "EC2에 적용할 보안그룹 ID"
-    type        = string
+variable "ecs_general_sg_id" {
+    type = string
 }
 
-variable "key_name" {
-    description = "EC2 키페어 이름"
-    type        = string
-    default     = "std17-key"
+variable "ecs_db_sg_id" {
+    type = string
 }
 
-variable "instance_type" {
-    description = "EC2 인스턴스 타입"
-    type        = string
-    default     = "t3.nano"
+variable "ecs_instance_profile" {
+    type = string
 }
 
-variable "instance_ami" {
-    description = "EC2 인스턴스 소스 AMI (Ubuntu)"
-    type        = string
-    default     = "ami-0086ee55a149bd32e"
+variable "ecs_ami_id" {
+    type = string
 }
 
-variable "iam_instance_profile" {
-  description = "IAM instance profile name to attach to EC2"
-  type        = string
-  default     = ""
+variable "general_instance_type" {
+    type = string
 }
 
-variable "route_table_ids" {
-    description = "S3 게이트웨이 엔드포인트에 연결할 라우트테이블 ID"
-    type        = list(string)
+variable "db_instance_type" {
+    type = string
+}
+
+variable "general_desired_count" {
+    type = number
 }
