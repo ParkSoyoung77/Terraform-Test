@@ -19,7 +19,7 @@ resource "aws_secretsmanager_secret_version" "mysql_credentials" {
         app_username  = "std17"
         app_password  = random_password.mysql_app.result
         database      = var.db_name
-        host          = "mysql.std17.local"
+        host          = "10.0.12.10"
         port          = "3306"
     })
 }

@@ -23,29 +23,6 @@ resource "aws_cloudwatch_log_group" "std17_ecs" {
 }
 
 # ------------------------------------------------------------
-# Cloud Map - DB 노드 사설 DNS (mysql.std17.local)
-# ------------------------------------------------------------
-resource "aws_service_discovery_private_dns_namespace" "std17" {
-    name = "std17.local"
-    vpc  = var.vpc_id
-}
-
-resource "aws_service_discovery_service" "mysql" {
-    name = "mysql"
-
-    dns_config {
-        namespace_id = aws_service_discovery_private_dns_namespace.std17.id
-
-        dns_records {
-            ttl  = 10
-            type = "SRV"
-        }
-
-        routing_policy = "MULTIVALUE"
-    }
-}
-
-# ------------------------------------------------------------
 # Web Task (nginx + fastapi sidecar)
 # ------------------------------------------------------------
 resource "aws_ecs_task_definition" "std17_web" {
@@ -169,12 +146,6 @@ resource "aws_ecs_service" "std17_db" {
     task_definition = aws_ecs_task_definition.std17_db.arn
     desired_count   = 1
     launch_type     = "EC2"
-
-    service_registries {
-        registry_arn    = aws_service_discovery_service.mysql.arn
-        container_name  = "mysql"
-        container_port  = 3306
-    }
 
     placement_constraints {
         type       = "memberOf"

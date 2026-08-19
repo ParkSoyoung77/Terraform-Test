@@ -57,6 +57,7 @@ resource "aws_instance" "std17_db_node" {
     ami                    = var.ecs_ami_id
     instance_type          = var.db_instance_type
     subnet_id              = var.private_subnet_ids[1]
+    private_ip             = "10.0.12.10"
     iam_instance_profile   = var.ecs_instance_profile
     vpc_security_group_ids = [var.ecs_db_sg_id]
 
