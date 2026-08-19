@@ -17,15 +17,15 @@ module "network" {
 # ==================================================================
 # 2: security (network에 의존)
 # ==================================================================
-# module "security" {
-#     source = "./modules/security"
+module "security" {
+    source = "./modules/security"
 
-#     vpc_id              = module.network.vpc_id
-#     vpc_cidr            = module.network.vpc_cidr
-#     private_subnet_ids  = module.network.private_subnet_ids
+    vpc_id              = module.network.vpc_id
+    vpc_cidr            = module.network.vpc_cidr
+    private_subnet_ids  = module.network.private_subnet_ids
 
-#     depends_on = [module.network]
-# }
+    depends_on = [module.network]
+}
 
 # ==================================================================
 # 3: secrets (독립적)
@@ -47,7 +47,7 @@ module "alb" {
     alb_sg_id          = module.security.alb_sg_id
     domain_name        = var.domain_name
 
-    depends_on = [module.network]
+    depends_on = [module.network, module.security]
 }
 
 # ==================================================================
@@ -66,7 +66,7 @@ module "compute" {
     db_instance_type       = var.db_instance_type
     general_desired_count  = var.general_desired_count
 
-    depends_on = [module.network,module.iam]
+    depends_on = [module.network, module.security, module.iam]
 }
 
 # ==================================================================
