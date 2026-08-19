@@ -34,7 +34,7 @@ resource "aws_service_discovery_service" "mysql" {
 
         dns_records {
             ttl  = 10
-            type = "A"
+            type = "SRV"
         }
 
         routing_policy = "MULTIVALUE"
