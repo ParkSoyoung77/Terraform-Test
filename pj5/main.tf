@@ -47,7 +47,7 @@ module "alb" {
     alb_sg_id          = module.security.alb_sg_id
     domain_name        = var.domain_name
 
-    depends_on = [module.network, module.security]
+    depends_on = [module.network]
 }
 
 # ==================================================================
@@ -66,7 +66,7 @@ module "compute" {
     db_instance_type       = var.db_instance_type
     general_desired_count  = var.general_desired_count
 
-    depends_on = [module.network, module.security, module.iam]
+    depends_on = [module.network,module.iam]
 }
 
 # ==================================================================
