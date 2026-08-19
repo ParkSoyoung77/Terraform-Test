@@ -100,12 +100,3 @@ module "dns" {
 
     depends_on = [module.alb]
 }
-
-# ==================================================================
-# 8: budget - 비용 산정
-# ==================================================================
-module "budget" {
-    source = "./modules/budget"
-
-    alert_email = var.alert_email
-}
