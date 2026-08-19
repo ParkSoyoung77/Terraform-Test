@@ -32,7 +32,7 @@ resource "aws_security_group" "std17_ecs_general_sg" {
         to_port         = 65535
         protocol        = "tcp"
         security_groups = [aws_security_group.std17_alb_sg.id]
-        description     = "ALB -> ECS dynamic host port (bridge mode)"
+        description     = "ALB - ECS dynamic host port (bridge mode)"
     }
 
     egress {
