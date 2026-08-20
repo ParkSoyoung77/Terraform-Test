@@ -98,6 +98,17 @@ resource "aws_security_group" "std17_eks_node_sg" {
     tags = { Name = "std17-eks-node-sg" }
 }
 
+# 노드 -> 클러스터 API 서버 (443) : kubelet이 컨트롤플레인에 join/통신하기 위해 반드시 필요
+resource "aws_security_group_rule" "std17_cluster_from_node" {
+    type                     = "ingress"
+    from_port                = 443
+    to_port                  = 443
+    protocol                 = "tcp"
+    security_group_id        = aws_security_group.std17_eks_cluster_sg.id
+    source_security_group_id = aws_security_group.std17_eks_node_sg.id
+    description               = "node to cluster API server"
+}
+
 # 클러스터 SG -> 노드 SG (kubelet, HTTPS 등)
 resource "aws_security_group_rule" "std17_cluster_to_node" {
     type                     = "egress"
