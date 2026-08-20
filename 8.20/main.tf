@@ -42,7 +42,7 @@ module "compute" {
         module.network.public_rt_id
     ]
 
-    depends_on = [module.network, module.security, module.storage, module.iam]
+    depends_on = [module.network, module.security, module.iam]
 }
 
 # ==================================================================

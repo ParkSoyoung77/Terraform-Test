@@ -71,7 +71,7 @@ resource "aws_iam_role_policy_attachment" "std17_eks_ecr_readonly" {
 resource "aws_security_group" "std17_eks_cluster_sg" {
     name        = "std17-eks-cluster-sg"
     vpc_id      = var.vpc_id
-    description = "EKS control plane <-> node 통신용 SG"
+    description = "EKS control plane to node communication SG"
 
     egress {
         from_port   = 0
@@ -106,7 +106,7 @@ resource "aws_security_group_rule" "std17_cluster_to_node" {
     protocol                 = "tcp"
     security_group_id        = aws_security_group.std17_eks_cluster_sg.id
     source_security_group_id = aws_security_group.std17_eks_node_sg.id
-    description               = "cluster SG -> node SG"
+    description               = "cluster SG to node SG"
 }
 
 resource "aws_security_group_rule" "std17_node_from_cluster" {
@@ -116,7 +116,7 @@ resource "aws_security_group_rule" "std17_node_from_cluster" {
     protocol                 = "tcp"
     security_group_id        = aws_security_group.std17_eks_node_sg.id
     source_security_group_id = aws_security_group.std17_eks_cluster_sg.id
-    description               = "kubelet/컨테이너 통신 (cluster -> node)"
+    description               = "kubelet communication from cluster"
 }
 
 resource "aws_security_group_rule" "std17_node_https_from_cluster" {
@@ -126,7 +126,7 @@ resource "aws_security_group_rule" "std17_node_https_from_cluster" {
     protocol                 = "tcp"
     security_group_id        = aws_security_group.std17_eks_node_sg.id
     source_security_group_id = aws_security_group.std17_eks_cluster_sg.id
-    description               = "node -> cluster HTTPS 응답용"
+    description               = "HTTPS response to cluster"
 }
 
 # 노드간 통신 (self)
@@ -137,7 +137,7 @@ resource "aws_security_group_rule" "std17_node_to_node" {
     protocol          = "-1"
     security_group_id = aws_security_group.std17_eks_node_sg.id
     self              = true
-    description        = "노드간 파드 통신"
+    description        = "node to node pod communication"
 }
 
 # ==================================================================
@@ -304,18 +304,18 @@ resource "aws_eks_addon" "std17_ebs_csi" {
 # Access Entry (관리자 권한 부여, aws-auth configmap 대체)
 # ==================================================================
 resource "aws_eks_access_entry" "std17_admin_entry" {
-    for_each = toset(var.admin_principal_arns)
+    count = length(local.admin_arns)
 
     cluster_name  = aws_eks_cluster.std17_eks.name
-    principal_arn = each.value
+    principal_arn = local.admin_arns[count.index]
     type          = "STANDARD"
 }
 
 resource "aws_eks_access_policy_association" "std17_admin_policy" {
-    for_each = toset(var.admin_principal_arns)
+    count = length(local.admin_arns)
 
     cluster_name  = aws_eks_cluster.std17_eks.name
-    principal_arn = each.value
+    principal_arn = local.admin_arns[count.index]
     policy_arn    = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
 
     access_scope {
