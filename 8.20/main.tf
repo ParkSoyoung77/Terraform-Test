@@ -1,0 +1,105 @@
+# ==================================================================
+# 0: iam (다른 모듈에 앞서 역할부터 생성)
+# ==================================================================
+module "iam" {
+    source = "./modules/iam"
+}
+
+# ==================================================================
+# 1: network
+# ==================================================================
+module "network" {
+    source = "./modules/network"
+
+    azs = var.azs
+}
+
+# ==================================================================
+# 2: security (network에 의존)
+# ==================================================================
+module "security" {
+    source = "./modules/security"
+
+    vpc_id = module.network.vpc_id
+}
+
+# ==================================================================
+# 3: compute (network, security에 의존)
+# ==================================================================
+module "compute" {
+    source = "./modules/compute"
+
+    vpc_id              = module.network.vpc_id
+    public_subnet_ids  = module.network.public_subnet_ids
+    security_group_id   = module.security.test_sg_id
+    key_name            = var.key_name
+    iam_instance_profile = module.iam.fullaccess_instance_profile_name
+
+    ecr_endpoint_sg_id = module.security.ecr_endpoint_sg_id
+
+    route_table_ids = [
+        module.network.default_rt_id,
+        module.network.public_rt_id
+    ]
+
+    depends_on = [module.network, module.security, module.storage, module.iam]
+}
+
+# ==================================================================
+# 4: storage: S3 (독립적, 다른 모듈과 의존관계 없음)
+# ==================================================================
+module "storage" {
+    source = "./modules/storage"
+}
+
+# ==================================================================
+# 5: nlb (network, security, compute에 의존)
+# ==================================================================
+module "nlb" {
+    source = "./modules/nlb"
+
+    vpc_id             = module.network.vpc_id
+    subnet_ids         = module.network.public_subnet_ids
+    security_group_id  = module.security.test_sg_id
+    instance_id        = module.compute.public_ec2_id
+
+    depends_on = [module.network, module.security, module.compute]
+}
+
+# ==================================================================
+# 6: dns (Route53 프라이빗 호스팅 영역, nlb/compute에 의존)
+# ==================================================================
+module "dns" {
+    source = "./modules/dns"
+
+    vpc_id          = module.network.vpc_id
+    nlb_dns_name    = module.nlb.nlb_dns_name
+    nlb_zone_id     = module.nlb.nlb_zone_id
+    ec2_private_ip  = module.compute.private_ip
+
+    depends_on = [module.nlb, module.compute]
+}
+
+# ==================================================================
+# 7: eks (network에 의존)
+# 기존 main.tf 하단에 이 블록을 추가하세요.
+# ==================================================================
+module "eks" {
+    source = "./modules/eks"
+
+    vpc_id              = module.network.vpc_id
+    private_subnet_ids  = module.network.private_subnet_ids
+
+    # 노드그룹 설정 (아래는 variables.tf 기본값과 동일하므로 생략 가능)
+    node_group_name     = "std17-ng-t3"
+    node_instance_types = ["t3.small"]
+    node_desired_size   = 2
+    node_min_size       = 1
+    node_max_size       = 3
+
+    # 필요 시 변경
+    # cluster_version    = "1.31"
+    # admin_principal_arns = ["arn:aws:iam::<ACCOUNT_ID>:user/<YOUR_IAM_USER>"]
+
+    depends_on = [module.network]
+}
