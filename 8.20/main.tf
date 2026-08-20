@@ -46,42 +46,7 @@ module "compute" {
 }
 
 # ==================================================================
-# 4: storage: S3 (독립적, 다른 모듈과 의존관계 없음)
-# ==================================================================
-module "storage" {
-    source = "./modules/storage"
-}
-
-# ==================================================================
-# 5: nlb (network, security, compute에 의존)
-# ==================================================================
-module "nlb" {
-    source = "./modules/nlb"
-
-    vpc_id             = module.network.vpc_id
-    subnet_ids         = module.network.public_subnet_ids
-    security_group_id  = module.security.test_sg_id
-    instance_id        = module.compute.public_ec2_id
-
-    depends_on = [module.network, module.security, module.compute]
-}
-
-# ==================================================================
-# 6: dns (Route53 프라이빗 호스팅 영역, nlb/compute에 의존)
-# ==================================================================
-module "dns" {
-    source = "./modules/dns"
-
-    vpc_id          = module.network.vpc_id
-    nlb_dns_name    = module.nlb.nlb_dns_name
-    nlb_zone_id     = module.nlb.nlb_zone_id
-    ec2_private_ip  = module.compute.private_ip
-
-    depends_on = [module.nlb, module.compute]
-}
-
-# ==================================================================
-# 7: eks (network에 의존)
+# 4: eks (network에 의존)
 # 기존 main.tf 하단에 이 블록을 추가하세요.
 # ==================================================================
 module "eks" {
