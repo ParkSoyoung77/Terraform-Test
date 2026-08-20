@@ -14,5 +14,5 @@ output "swarm_sg_id" {
 
 output "ecr_endpoint_sg_id" {
     description = "ECR 엔드포인트 전용 보안그룹 ID"
-    value       = aws_security_group.std17_swarm_sg.id
+    value       = aws_security_group.std17_ecr_endpoint_sg.id
 }
