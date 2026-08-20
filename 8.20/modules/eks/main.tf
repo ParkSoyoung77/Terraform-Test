@@ -65,6 +65,12 @@ resource "aws_iam_role_policy_attachment" "std17_eks_ecr_readonly" {
     policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
 }
 
+# 디버깅용: SSM Session Manager로 노드에 접속해서 실시간 kubelet 로그 확인 가능하게 함
+resource "aws_iam_role_policy_attachment" "std17_eks_ssm_core" {
+    role       = aws_iam_role.std17_eks_node_role.name
+    policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
 # ==================================================================
 # 컨트롤플레인 <-> 노드 통신용 보안그룹
 # ==================================================================
