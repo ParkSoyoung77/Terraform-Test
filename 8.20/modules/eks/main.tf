@@ -1,4 +1,15 @@
 # ==================================================================
+# 현재 실행 계정 정보 (admin_principal_arns 미지정 시 자동 사용)
+# ==================================================================
+data "aws_caller_identity" "current" {}
+
+locals {
+    # admin_principal_arns를 지정하지 않으면 현재 apply를 실행하는 계정(IAM 사용자/역할)이
+    # 자동으로 클러스터 admin 권한을 받도록 처리 (하드코딩 방지)
+    admin_arns = length(var.admin_principal_arns) > 0 ? var.admin_principal_arns : [data.aws_caller_identity.current.arn]
+}
+
+# ==================================================================
 # EKS 클러스터 IAM 역할
 # ==================================================================
 resource "aws_iam_role" "std17_eks_cluster_role" {

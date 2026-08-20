@@ -90,16 +90,11 @@ module "eks" {
     vpc_id              = module.network.vpc_id
     private_subnet_ids  = module.network.private_subnet_ids
 
-    # 노드그룹 설정 (아래는 variables.tf 기본값과 동일하므로 생략 가능)
-    node_group_name     = "std17-ng-t3"
-    node_instance_types = ["t3.small"]
-    node_desired_size   = 2
-    node_min_size       = 1
-    node_max_size       = 3
-
-    # 필요 시 변경
-    # cluster_version    = "1.31"
-    # admin_principal_arns = ["arn:aws:iam::<ACCOUNT_ID>:user/<YOUR_IAM_USER>"]
+    # node_group_name     = "std17-ng-t3"
+    # node_instance_types = ["t3.small"]
+    # node_desired_size   = 2
+    # node_min_size       = 1
+    # node_max_size       = 3
 
     depends_on = [module.network]
 }
