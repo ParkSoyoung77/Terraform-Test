@@ -29,20 +29,17 @@ module "security" {
 module "compute" {
     source = "./modules/compute"
 
-    vpc_id              = module.network.vpc_id
+    vpc_id             = module.network.vpc_id
     public_subnet_ids  = module.network.public_subnet_ids
-    security_group_id   = module.security.test_sg_id
-    key_name            = var.key_name
-    iam_instance_profile = module.iam.fullaccess_instance_profile_name
-
     ecr_endpoint_sg_id = module.security.ecr_endpoint_sg_id
 
     route_table_ids = [
         module.network.default_rt_id,
-        module.network.public_rt_id
+        module.network.public_rt_id,
+        module.network.private_rt_id 
     ]
 
-    depends_on = [module.network, module.security, module.iam]
+    depends_on = [module.network, module.security]
 }
 
 # ==================================================================
