@@ -17,7 +17,7 @@ variable "cluster_name" {
 variable "cluster_version" {
     description = "EKS 클러스터(쿠버네티스) 버전"
     type        = string
-    default     = "1.31"
+    default     = "1.34"
 }
 
 variable "endpoint_public_access" {
