@@ -95,7 +95,7 @@ variable "addon_versions" {
 variable "enable_ebs_csi_driver" {
     description = "aws-ebs-csi-driver 애드온 설치 여부"
     type        = bool
-    default     = false
+    default     = true
 }
 
 # ==================================================================
