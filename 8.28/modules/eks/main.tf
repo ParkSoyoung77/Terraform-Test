@@ -388,3 +388,46 @@ resource "aws_eks_access_policy_association" "std17_admin_policy" {
 
     depends_on = [aws_eks_access_entry.std17_admin_entry]
 }
+
+# ==================================================================
+# external_secrets IAM 역할
+# ==================================================================
+resource "aws_iam_role" "std17_external_secrets_role" {
+    name = "std17-eks-external-secrets-role"
+
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [{
+            Effect = "Allow"
+            Principal = {
+                Federated = aws_iam_openid_connect_provider.std17_eks_oidc.arn
+            }
+            Action = "sts:AssumeRoleWithWebIdentity"
+            Condition = {
+                StringEquals = {
+                    "${replace(aws_iam_openid_connect_provider.std17_eks_oidc.url, "https://", "")}:sub" = "system:serviceaccount:external-secrets:external-secrets"
+                    "${replace(aws_iam_openid_connect_provider.std17_eks_oidc.url, "https://", "")}:aud" = "sts.amazonaws.com"
+                }
+            }
+        }]
+    })
+
+    tags = { Name = "std17-eks-external-secrets-role" }
+}
+
+resource "aws_iam_role_policy" "std17_external_secrets_policy" {
+    name = "std17-external-secrets-policy"
+    role = aws_iam_role.std17_external_secrets_role.id
+
+    policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [{
+            Effect   = "Allow"
+            Action   = [
+                "secretsmanager:GetSecretValue",
+                "secretsmanager:DescribeSecret"
+            ]
+            Resource = "*"
+        }]
+    })
+}
