@@ -98,6 +98,12 @@ variable "enable_ebs_csi_driver" {
     default     = true
 }
 
+variable "enable_efs_csi_driver" {
+    description = "aws-efs-csi-driver 애드온 설치 여부"
+    type        = bool
+    default     = true
+}
+
 # ==================================================================
 # Access Entry (aws-auth configmap 대체)
 # ==================================================================

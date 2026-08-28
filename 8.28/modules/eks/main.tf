@@ -318,6 +318,53 @@ resource "aws_eks_addon" "std17_ebs_csi" {
 }
 
 # ==================================================================
+# (옵션) EFS CSI Driver 애드온 + IRSA 역할
+# ==================================================================
+resource "aws_iam_role" "std17_efs_csi_role" {
+    count = var.enable_efs_csi_driver ? 1 : 0
+    name  = "std17-eks-efs-csi-role"
+
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [{
+            Effect = "Allow"
+            Principal = {
+                Federated = aws_iam_openid_connect_provider.std17_eks_oidc.arn
+            }
+            Action = "sts:AssumeRoleWithWebIdentity"
+            Condition = {
+                StringEquals = {
+                    "${replace(aws_iam_openid_connect_provider.std17_eks_oidc.url, "https://", "")}:sub" = "system:serviceaccount:kube-system:efs-csi-controller-sa"
+                    "${replace(aws_iam_openid_connect_provider.std17_eks_oidc.url, "https://", "")}:aud" = "sts.amazonaws.com"
+                }
+            }
+        }]
+    })
+
+    tags = { Name = "std17-eks-efs-csi-role" }
+}
+
+resource "aws_iam_role_policy_attachment" "std17_efs_csi_policy" {
+    count      = var.enable_efs_csi_driver ? 1 : 0
+    role       = aws_iam_role.std17_efs_csi_role[0].name
+    policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEFSCSIDriverPolicy"
+}
+
+resource "aws_eks_addon" "std17_efs_csi" {
+    count         = var.enable_efs_csi_driver ? 1 : 0
+    cluster_name  = aws_eks_cluster.std17_eks.name
+    addon_name    = "aws-efs-csi-driver"
+    addon_version = lookup(var.addon_versions, "aws-efs-csi-driver", null)
+
+    service_account_role_arn = aws_iam_role.std17_efs_csi_role[0].arn
+
+    resolve_conflicts_on_create = "OVERWRITE"
+    resolve_conflicts_on_update = "OVERWRITE"
+
+    depends_on = [aws_eks_node_group.std17_eks_nodegroup]
+}
+
+# ==================================================================
 # Access Entry (관리자 권한 부여, aws-auth configmap 대체)
 # ==================================================================
 resource "aws_eks_access_entry" "std17_admin_entry" {
