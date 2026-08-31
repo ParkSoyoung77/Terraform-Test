@@ -24,7 +24,7 @@ module "security" {
 }
 
 # ==================================================================
-# 3: compute (network, security에 의존)
+# 3: compute (network, security, eks에 의존)
 # ==================================================================
 module "compute" {
     source = "./modules/compute"
@@ -39,12 +39,11 @@ module "compute" {
         module.network.private_rt_id 
     ]
 
-    depends_on = [module.network, module.security, module.eks]  # module.eks 추가
+    depends_on = [module.network, module.security, module.eks]
 }
 
 # ==================================================================
-# 4: eks (network에 의존)
-# 기존 main.tf 하단에 이 블록을 추가하세요.
+# 4: eks (network, storage에 의존)
 # ==================================================================
 module "eks" {
     source = "./modules/eks"
@@ -53,7 +52,7 @@ module "eks" {
     private_subnet_ids  = module.network.private_subnet_ids
     s3_logs_bucket_arn  = module.storage.bucket_arn
 
-    depends_on = [module.network, module.compute, module.storage]
+    depends_on = [module.network, module.storage]   # module.compute 제거
 }
 
 # ==================================================================
