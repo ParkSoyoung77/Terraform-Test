@@ -12,13 +12,3 @@ variable "route_table_ids" {
     description = "S3 게이트웨이 엔드포인트에 연결할 라우트테이블 ID"
     type        = list(string)
 }
-
-variable "eks_node_role_arn" {
-  description = "S3 엔드포인트 접근을 허용할 EKS 노드 IAM Role ARN"
-  type        = string
-}
-
-variable "eks_s3_csi_role_arn" {
-  description = "S3 엔드포인트 접근을 허용할 S3 CSI 드라이버 IRSA Role ARN"
-  type        = string
-}
