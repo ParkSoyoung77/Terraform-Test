@@ -62,3 +62,19 @@ module "eks" {
 module "storage" {
     source = "./modules/storage"
 }
+
+# ==================================================================
+# ubuntu-s3-sa 쿠버네티스 ServiceAccount (IRSA 연결)
+# ==================================================================
+resource "kubernetes_service_account" "std17_ubuntu_s3_sa" {
+    metadata {
+        name      = "ubuntu-s3-sa"
+        namespace = "default"
+
+        annotations = {
+            "eks.amazonaws.com/role-arn" = module.eks.nginx_s3_role_arn
+        }
+    }
+
+    depends_on = [module.eks]
+}

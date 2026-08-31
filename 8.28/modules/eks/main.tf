@@ -553,19 +553,3 @@ resource "aws_iam_role_policy_attachment" "std17_nginx_s3_attach" {
     role       = aws_iam_role.std17_nginx_s3_role.name
     policy_arn = aws_iam_policy.std17_s3_logs_policy.arn
 }
-
-# ==================================================================
-# ubuntu-s3-sa 쿠버네티스 ServiceAccount (IRSA 연결)
-# ==================================================================
-resource "kubernetes_service_account" "std17_ubuntu_s3_sa" {
-    metadata {
-        name      = "ubuntu-s3-sa"
-        namespace = var.s3_sa_namespace
-
-        annotations = {
-            "eks.amazonaws.com/role-arn" = aws_iam_role.std17_nginx_s3_role.arn
-        }
-    }
-
-    depends_on = [aws_eks_node_group.std17_eks_nodegroup]
-}
