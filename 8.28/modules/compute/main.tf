@@ -11,9 +11,14 @@ resource "aws_vpc_endpoint" "std17_gw_endpoint" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "AllowEksNodeRole"
+        Sid       = "AllowEksRoles"
         Effect    = "Allow"
-        Principal = { AWS = var.eks_node_role_arn }
+        Principal = {
+          AWS = [
+            var.eks_node_role_arn,
+            var.eks_s3_csi_role_arn
+          ]
+        }
         Action    = "s3:*"
         Resource  = "*"
       },

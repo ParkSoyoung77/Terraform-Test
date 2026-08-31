@@ -17,3 +17,8 @@ variable "eks_node_role_arn" {
   description = "S3 엔드포인트 접근을 허용할 EKS 노드 IAM Role ARN"
   type        = string
 }
+
+variable "eks_s3_csi_role_arn" {
+  description = "S3 엔드포인트 접근을 허용할 S3 CSI 드라이버 IRSA Role ARN"
+  type        = string
+}

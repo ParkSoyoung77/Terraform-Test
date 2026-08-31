@@ -29,9 +29,10 @@ module "security" {
 module "compute" {
     source = "./modules/compute"
 
-    vpc_id             = module.network.vpc_id
-    public_subnet_ids  = module.network.public_subnet_ids
-    eks_node_role_arn  = module.eks.node_role_arn   
+    vpc_id              = module.network.vpc_id
+    public_subnet_ids   = module.network.public_subnet_ids
+    eks_node_role_arn   = module.eks.node_role_arn
+    eks_s3_csi_role_arn = module.eks.s3_csi_role_arn  
 
     route_table_ids = [
         module.network.default_rt_id,
