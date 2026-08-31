@@ -1,6 +1,8 @@
 # ==================================================================
 # 엔드포인트
 # ==================================================================
+data "aws_caller_identity" "current" {}
+
 resource "aws_vpc_endpoint" "std17_gw_endpoint" {
   vpc_id            = var.vpc_id
   service_name      = "com.amazonaws.ap-northeast-3.s3"
@@ -11,16 +13,16 @@ resource "aws_vpc_endpoint" "std17_gw_endpoint" {
     Version = "2012-10-17"
     Statement = [
       {
-        Sid       = "AllowEksRoles"
+        Sid       = "AllowAccountPrincipals"
         Effect    = "Allow"
-        Principal = {
-          AWS = [
-            var.eks_node_role_arn,
-            var.eks_s3_csi_role_arn
-          ]
-        }
+        Principal = "*"
         Action    = "s3:*"
         Resource  = "*"
+        Condition = {
+          StringEquals = {
+            "aws:PrincipalAccount" = data.aws_caller_identity.current.account_id
+          }
+        }
       },
       {
         Sid       = "AllowEcrImageLayerPull"
