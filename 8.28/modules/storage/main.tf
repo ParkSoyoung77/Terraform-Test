@@ -42,19 +42,3 @@ resource "aws_s3_bucket_policy" "std17_s3_bucket_policy" {
 
     depends_on = [aws_s3_bucket_public_access_block.std17_s3_bucket-access]
 }
-
-# ================================================================
-
-# mysql.html 업로드
-locals {
-    mysql_html_path = var.mysql_html_path != "" ? var.mysql_html_path : "${path.module}/files/mysql.html"
-}
-
-resource "aws_s3_object" "std17_mysql_html" {
-    bucket = aws_s3_bucket.std17_s3_bucket.id
-    key    = "mysql.html"
-    source = local.mysql_html_path
-    etag   = filemd5(local.mysql_html_path)
-
-    content_type = "text/html"
-}
