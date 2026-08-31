@@ -430,4 +430,56 @@ resource "aws_iam_role_policy" "std17_external_secrets_policy" {
             Resource = "*"
         }]
     })
+
+
+# ==================================================================
+# ubuntu-s3-sa 서비스어카운트용 IAM 정책 + IRSA 역할 (S3 로그 업로드용)
+# ==================================================================
+resource "aws_iam_policy" "std17_s3_logs_policy" {
+    name        = "std17-AmazonS3-Logs-Policy"
+    description = "ubuntu-s3-sa가 S3에 로그를 업로드하기 위한 정책"
+
+    policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [{
+            Effect = "Allow"
+            Action = [
+                "s3:PutObject",
+                "s3:GetObject",
+                "s3:ListBucket"
+            ]
+            Resource = [
+                var.s3_logs_bucket_arn,
+                "${var.s3_logs_bucket_arn}/*"
+            ]
+        }]
+    })
+}
+
+resource "aws_iam_role" "std17_nginx_s3_role" {
+    name = "Std17NginxS3Role"
+
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [{
+            Effect = "Allow"
+            Principal = {
+                Federated = aws_iam_openid_connect_provider.std17_eks_oidc.arn
+            }
+            Action = "sts:AssumeRoleWithWebIdentity"
+            Condition = {
+                StringEquals = {
+                    "${replace(aws_iam_openid_connect_provider.std17_eks_oidc.url, "https://", "")}:sub" = "system:serviceaccount:${var.s3_sa_namespace}:ubuntu-s3-sa"
+                    "${replace(aws_iam_openid_connect_provider.std17_eks_oidc.url, "https://", "")}:aud" = "sts.amazonaws.com"
+                }
+            }
+        }]
+    })
+
+    tags = { Name = "Std17NginxS3Role" }
+}
+
+resource "aws_iam_role_policy_attachment" "std17_nginx_s3_attach" {
+    role       = aws_iam_role.std17_nginx_s3_role.name
+    policy_arn = aws_iam_policy.std17_s3_logs_policy.arn
 }

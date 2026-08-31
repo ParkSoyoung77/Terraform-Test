@@ -57,3 +57,8 @@ output "kubeconfig_update_command" {
     description = "로컬에서 kubeconfig 갱신용 명령어"
     value       = "aws eks update-kubeconfig --region ap-northeast-3 --name ${aws_eks_cluster.std17_eks.name}"
 }
+
+output "nginx_s3_role_arn" {
+    description = "ubuntu-s3-sa 서비스어카운트에 연결할 IAM Role ARN"
+    value       = aws_iam_role.std17_nginx_s3_role.arn
+}

@@ -10,3 +10,16 @@ provider "aws" {
         }
     }
 }
+
+# ==================================================================
+# EKS 클러스터 인증 토큰 (kubernetes provider용)
+# ==================================================================
+data "aws_eks_cluster_auth" "std17_eks_auth" {
+    name = module.eks.cluster_id
+}
+
+provider "kubernetes" {
+    host                   = module.eks.cluster_endpoint
+    cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+    token                  = data.aws_eks_cluster_auth.std17_eks_auth.token
+}

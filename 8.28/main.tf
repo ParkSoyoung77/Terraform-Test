@@ -52,14 +52,9 @@ module "eks" {
 
     vpc_id              = module.network.vpc_id
     private_subnet_ids  = module.network.private_subnet_ids
+    s3_logs_bucket_arn  = module.storage.bucket_arn
 
-    # node_group_name     = "std17-ng-t3"
-    # node_instance_types = ["t3.small"]
-    # node_desired_size   = 2
-    # node_min_size       = 1
-    # node_max_size       = 3
-
-    depends_on = [module.network]
+    depends_on = [module.network, module.storage]
 }
 
 # ==================================================================

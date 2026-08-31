@@ -112,3 +112,17 @@ variable "admin_principal_arns" {
     type        = list(string)
     default     = []
 }
+
+# ==================================================================
+# s3엔드포인트
+# ==================================================================
+variable "s3_logs_bucket_arn" {
+    description = "ubuntu-s3-sa가 로그를 업로드할 S3 버킷 ARN"
+    type        = string
+}
+
+variable "s3_sa_namespace" {
+    description = "ubuntu-s3-sa 서비스어카운트가 위치한 쿠버네티스 네임스페이스"
+    type        = string
+    default     = "default"
+}
