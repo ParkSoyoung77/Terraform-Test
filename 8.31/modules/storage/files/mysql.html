@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MySQL | sy99.cloud</title>
+<style>
+  :root{
+    --bg:#0b1020; --card:#161f3d; --card-border:#26305a;
+    --text:#e9ecfb; --muted:#9aa4cc; --accent:#5b8def;
+    --ok:#22c55e; --err:#ef4444;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(1000px 500px at 15% -10%, rgba(91,141,239,0.20), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    padding:40px 24px 80px;
+  }
+  .topnav{ max-width:760px; margin:0 auto 40px; }
+  .back{
+    display:inline-flex; align-items:center; gap:6px;
+    color:var(--muted); text-decoration:none; font-size:14px;
+    border:1px solid var(--card-border); padding:8px 14px; border-radius:999px;
+    transition:border-color .18s ease, color .18s ease;
+  }
+  .back:hover{ color:var(--accent); border-color:var(--accent); }
+
+  main{ max-width:760px; margin:0 auto; }
+  .hero{
+    display:flex; align-items:center; gap:18px; margin-bottom:32px;
+  }
+  .hero .icon{
+    width:60px;height:60px;border-radius:16px;
+    background:rgba(91,141,239,0.15); color:var(--accent);
+    display:flex;align-items:center;justify-content:center; font-size:30px;
+  }
+  .hero h1{ font-size:32px; font-weight:700; letter-spacing:-0.02em; }
+  .hero p{ color:var(--muted); font-size:14px; margin-top:4px; }
+
+  .card{
+    background:var(--card); border:1px solid var(--card-border);
+    border-radius:16px; padding:24px; margin-bottom:20px;
+  }
+  .card h2{ font-size:17px; margin-bottom:12px; color:var(--accent); }
+  .card p{ color:var(--muted); font-size:14px; line-height:1.7; }
+  .badges{ display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .badge{
+    font-size:12px; padding:6px 12px; border-radius:999px;
+    background:rgba(91,141,239,0.10); border:1px solid rgba(91,141,239,0.30);
+    color:var(--accent);
+  }
+
+  .test-card{
+    display:flex; flex-direction:column; align-items:center; text-align:center;
+    padding:40px 24px;
+  }
+  .test-card h2{ color:var(--text); font-size:19px; margin-bottom:6px; }
+  .test-card p.sub{ color:var(--muted); font-size:13px; margin-bottom:24px; }
+
+  #connectBtn{
+    padding:14px 32px;
+    font-size:15px;
+    font-weight:600;
+    color:#fff;
+    background:linear-gradient(90deg,#5b8def,#8b5cf6);
+    border:none;
+    border-radius:12px;
+    cursor:pointer;
+    transition:transform .15s ease, box-shadow .15s ease, opacity .15s ease;
+    box-shadow:0 8px 20px rgba(91,141,239,0.25);
+  }
+  #connectBtn:hover{ transform:translateY(-2px); box-shadow:0 12px 26px rgba(91,141,239,0.35); }
+  #connectBtn:disabled{ opacity:.6; cursor:not-allowed; transform:none; }
+
+  #result{
+    margin-top:24px;
+    font-size:15px;
+    font-weight:600;
+    min-height:24px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  #result.ok{ color:var(--ok); }
+  #result.err{ color:var(--err); }
+  .spinner{
+    width:16px;height:16px;
+    border:2px solid rgba(255,255,255,0.2);
+    border-top-color:var(--accent);
+    border-radius:50%;
+    animation:spin .7s linear infinite;
+    display:none;
+  }
+  .spinner.show{ display:inline-block; }
+  @keyframes spin{ to{ transform:rotate(360deg); } }
+</style>
+</head>
+<body>
+
+  <div class="topnav">
+    <a class="back" href="/">← 메인 페이지로 돌아가기</a>
+  </div>
+
+  <main>
+    <div class="hero">
+      <div class="icon">🗄️</div>
+      <div>
+        <h1>MySQL</h1>
+        <p>완전 격리형 데이터베이스 VPC · Multi-AZ DB Cluster</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>인프라 구성</h2>
+      <p>
+        데이터베이스는 전용 VPC에 완전히 격리되어 배포되며, 서브넷 그룹과 AWS Systems Manager,
+        RDS Proxy를 통해 안전하게 접근 및 관리됩니다. 고가용성을 위해 3개의 인스턴스로 구성된
+        Multi-AZ DB 클러스터로 운영됩니다.
+      </p>
+      <div class="badges">
+        <span class="badge">전용 VPC (격리형)</span>
+        <span class="badge">RDS Proxy</span>
+        <span class="badge">Multi-AZ · 3 Instances</span>
+        <span class="badge">Systems Manager</span>
+      </div>
+    </div>
+
+    <div class="card test-card">
+      <h2>데이터베이스 연결 테스트</h2>
+      <p class="sub">버튼을 클릭하면 Lambda 함수(api.sy99.cloud)가 데이터베이스 연결을 시도합니다</p>
+      <button id="connectBtn">데이터베이스 연결 확인</button>
+      <div id="result">
+        <span class="spinner" id="spinner"></span>
+        <span id="resultText"></span>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    const API_ENDPOINT = "https://api.sy99.cloud";
+
+    const btn = document.getElementById("connectBtn");
+    const resultBox = document.getElementById("result");
+    const resultText = document.getElementById("resultText");
+    const spinner = document.getElementById("spinner");
+
+    btn.addEventListener("click", async () => {
+      btn.disabled = true;
+      resultBox.classList.remove("ok", "err");
+      resultText.textContent = "연결 확인 중...";
+      spinner.classList.add("show");
+
+      try {
+        const res = await fetch(API_ENDPOINT, {
+          method: "GET",
+          headers: { "Content-Type": "application/json" }
+        });
+
+        if (!res.ok) {
+          throw new Error("HTTP " + res.status);
+        }
+
+        const data = await res.json();
+
+        if (data.status === "Success") {
+          resultBox.classList.add("ok");
+          resultText.textContent = "✅ Success";
+        } else {
+          resultBox.classList.add("err");
+          resultText.textContent = "⚠️ 연결 실패: " + (data.status || "Unknown");
+        }
+      } catch (err) {
+        resultBox.classList.add("err");
+        resultText.textContent = "❌ 연결 오류: " + err.message;
+      } finally {
+        spinner.classList.remove("show");
+        btn.disabled = false;
+      }
+    });
+  </script>
+
+</body>
+</html>
