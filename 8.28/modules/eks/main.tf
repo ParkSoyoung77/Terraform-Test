@@ -100,6 +100,8 @@ resource "aws_security_group_rule" "std17_cluster_egress_all" {
     cidr_blocks       = ["0.0.0.0/0"]
     security_group_id = aws_security_group.std17_eks_cluster_sg.id
     description       = "cluster SG all outbound"
+
+    depends_on = [aws_security_group.std17_eks_cluster_sg]
 }
 
 # 노드 SG 전체 아웃바운드 허용 (인라인 egress 대신 별도 rule로 관리)
@@ -111,6 +113,8 @@ resource "aws_security_group_rule" "std17_node_egress_all" {
     cidr_blocks       = ["0.0.0.0/0"]
     security_group_id = aws_security_group.std17_eks_node_sg.id
     description       = "node SG all outbound"
+
+    depends_on = [aws_security_group.std17_eks_node_sg]
 }
 
 # 노드 -> 클러스터 API 서버 (443) : kubelet이 컨트롤플레인에 join/통신하기 위해 반드시 필요
