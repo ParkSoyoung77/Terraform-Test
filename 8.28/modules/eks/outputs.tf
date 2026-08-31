@@ -62,3 +62,8 @@ output "nginx_s3_role_arn" {
     description = "ubuntu-s3-sa 서비스어카운트에 연결할 IAM Role ARN"
     value       = aws_iam_role.std17_nginx_s3_role.arn
 }
+
+output "s3_csi_role_arn" {
+    description = "Mountpoint S3 CSI 드라이버 서비스어카운트에 연결할 IAM Role ARN"
+    value       = var.enable_s3_csi_driver ? aws_iam_role.std17_s3_csi_role[0].arn : null
+}

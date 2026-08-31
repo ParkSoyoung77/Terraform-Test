@@ -104,6 +104,18 @@ variable "enable_efs_csi_driver" {
     default     = true
 }
 
+variable "enable_s3_csi_driver" {
+    description = "aws-mountpoint-s3-csi-driver 애드온 설치 여부"
+    type        = bool
+    default     = true
+}
+
+variable "s3_csi_sa_namespace" {
+    description = "s3-csi-driver-sa 서비스어카운트가 위치한 네임스페이스"
+    type        = string
+    default     = "kube-system"
+}
+
 # ==================================================================
 # Access Entry (aws-auth configmap 대체)
 # ==================================================================
