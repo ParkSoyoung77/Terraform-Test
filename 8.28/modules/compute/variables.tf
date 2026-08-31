@@ -13,7 +13,7 @@ variable "route_table_ids" {
     type        = list(string)
 }
 
-variable "ecr_endpoint_sg_id" {
-  description = "security 모듈에서 생성한 ECR 엔드포인트용 보안그룹 ID"
+variable "eks_node_role_arn" {
+  description = "S3 엔드포인트 접근을 허용할 EKS 노드 IAM Role ARN"
   type        = string
 }
