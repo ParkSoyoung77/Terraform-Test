@@ -53,7 +53,7 @@ module "eks" {
     private_subnet_ids  = module.network.private_subnet_ids
     s3_logs_bucket_arn  = module.storage.bucket_arn
 
-    depends_on = [module.network, module.storage]
+    depends_on = [module.network, module.compute, module.storage]
 }
 
 # ==================================================================
