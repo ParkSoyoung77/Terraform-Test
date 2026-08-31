@@ -1,5 +1,5 @@
 # ==================================================================
-# 현재 실행 계정 정보 (admin_principal_arns 미지정 시 자동 사용)
+# 0. 현재 실행 계정 정보 (admin_principal_arns 미지정 시 자동 사용)
 # ==================================================================
 data "aws_caller_identity" "current" {}
 
@@ -9,9 +9,11 @@ locals {
     admin_arns = length(var.admin_principal_arns) > 0 ? var.admin_principal_arns : [data.aws_caller_identity.current.arn]
 }
 
+
 # ==================================================================
-# EKS 클러스터 IAM 역할
+# 1. IAM — EKS 클러스터 / 노드그룹 역할
 # ==================================================================
+
 resource "aws_iam_role" "std17_eks_cluster_role" {
     name = "std17-eks-cluster-role"
 
@@ -32,9 +34,6 @@ resource "aws_iam_role_policy_attachment" "std17_eks_cluster_policy" {
     policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
 }
 
-# ==================================================================
-# EKS 노드그룹 IAM 역할
-# ==================================================================
 resource "aws_iam_role" "std17_eks_node_role" {
     name = "std17-eks-node-role"
 
@@ -71,9 +70,11 @@ resource "aws_iam_role_policy_attachment" "std17_eks_ssm_core" {
     policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
 }
 
+
 # ==================================================================
-# 컨트롤플레인 <-> 노드 통신용 보안그룹
+# 2. 보안그룹 — 컨트롤플레인 <-> 노드 통신
 # ==================================================================
+
 resource "aws_security_group" "std17_eks_cluster_sg" {
     name        = "std17-eks-cluster-sg"
     vpc_id      = var.vpc_id
@@ -112,7 +113,7 @@ resource "aws_security_group_rule" "std17_cluster_from_node" {
     protocol                 = "tcp"
     security_group_id        = aws_security_group.std17_eks_cluster_sg.id
     source_security_group_id = aws_security_group.std17_eks_node_sg.id
-    description               = "node to cluster API server"
+    description              = "node to cluster API server"
 }
 
 # 클러스터 SG -> 노드 SG (kubelet, HTTPS 등)
@@ -123,7 +124,7 @@ resource "aws_security_group_rule" "std17_cluster_to_node" {
     protocol                 = "tcp"
     security_group_id        = aws_security_group.std17_eks_cluster_sg.id
     source_security_group_id = aws_security_group.std17_eks_node_sg.id
-    description               = "cluster SG to node SG"
+    description              = "cluster SG to node SG"
 }
 
 resource "aws_security_group_rule" "std17_node_from_cluster" {
@@ -133,7 +134,7 @@ resource "aws_security_group_rule" "std17_node_from_cluster" {
     protocol                 = "tcp"
     security_group_id        = aws_security_group.std17_eks_node_sg.id
     source_security_group_id = aws_security_group.std17_eks_cluster_sg.id
-    description               = "kubelet communication from cluster"
+    description              = "kubelet communication from cluster"
 }
 
 resource "aws_security_group_rule" "std17_node_https_from_cluster" {
@@ -143,7 +144,7 @@ resource "aws_security_group_rule" "std17_node_https_from_cluster" {
     protocol                 = "tcp"
     security_group_id        = aws_security_group.std17_eks_node_sg.id
     source_security_group_id = aws_security_group.std17_eks_cluster_sg.id
-    description               = "HTTPS response to cluster"
+    description              = "HTTPS response to cluster"
 }
 
 # 노드간 통신 (self)
@@ -154,12 +155,14 @@ resource "aws_security_group_rule" "std17_node_to_node" {
     protocol          = "-1"
     security_group_id = aws_security_group.std17_eks_node_sg.id
     self              = true
-    description        = "node to node pod communication"
+    description       = "node to node pod communication"
 }
 
+
 # ==================================================================
-# EKS 클러스터
+# 3. EKS 클러스터
 # ==================================================================
+
 resource "aws_eks_cluster" "std17_eks" {
     name     = var.cluster_name
     version  = var.cluster_version
@@ -187,9 +190,11 @@ resource "aws_eks_cluster" "std17_eks" {
     tags = { Name = var.cluster_name }
 }
 
+
 # ==================================================================
-# OIDC Provider (IRSA용)
+# 4. OIDC Provider (IRSA용)
 # ==================================================================
+
 data "tls_certificate" "std17_eks_oidc" {
     url = aws_eks_cluster.std17_eks.identity[0].oidc[0].issuer
 }
@@ -202,9 +207,11 @@ resource "aws_iam_openid_connect_provider" "std17_eks_oidc" {
     tags = { Name = "std17-eks-oidc" }
 }
 
+
 # ==================================================================
-# 관리형 노드그룹
+# 5. 관리형 노드그룹
 # ==================================================================
+
 resource "aws_eks_node_group" "std17_eks_nodegroup" {
     cluster_name    = aws_eks_cluster.std17_eks.name
     node_group_name = var.node_group_name
@@ -234,9 +241,11 @@ resource "aws_eks_node_group" "std17_eks_nodegroup" {
     tags = { Name = var.node_group_name }
 }
 
+
 # ==================================================================
-# 애드온 (VPC CNI, CoreDNS, kube-proxy)
+# 6. 코어 애드온 (VPC CNI, CoreDNS, kube-proxy)
 # ==================================================================
+
 resource "aws_eks_addon" "std17_vpc_cni" {
     cluster_name  = aws_eks_cluster.std17_eks.name
     addon_name    = "vpc-cni"
@@ -270,9 +279,12 @@ resource "aws_eks_addon" "std17_kube_proxy" {
     depends_on = [aws_eks_node_group.std17_eks_nodegroup]
 }
 
+
 # ==================================================================
-# (옵션) EBS CSI Driver 애드온 + IRSA 역할
+# 7. 스토리지 CSI 애드온 (EBS / EFS / S3) + IRSA
 # ==================================================================
+
+# --- 7-1. EBS CSI Driver ---
 resource "aws_iam_role" "std17_ebs_csi_role" {
     count = var.enable_ebs_csi_driver ? 1 : 0
     name  = "std17-eks-ebs-csi-role"
@@ -317,9 +329,7 @@ resource "aws_eks_addon" "std17_ebs_csi" {
     depends_on = [aws_eks_node_group.std17_eks_nodegroup]
 }
 
-# ==================================================================
-# (옵션) EFS CSI Driver 애드온 + IRSA 역할
-# ==================================================================
+# --- 7-2. EFS CSI Driver ---
 resource "aws_iam_role" "std17_efs_csi_role" {
     count = var.enable_efs_csi_driver ? 1 : 0
     name  = "std17-eks-efs-csi-role"
@@ -364,9 +374,7 @@ resource "aws_eks_addon" "std17_efs_csi" {
     depends_on = [aws_eks_node_group.std17_eks_nodegroup]
 }
 
-# ==================================================================
-# (옵션) Mountpoint for S3 CSI Driver 애드온 + IRSA 역할
-# ==================================================================
+# --- 7-3. Mountpoint for S3 CSI Driver ---
 resource "aws_iam_policy" "std17_s3_csi_policy" {
     count       = var.enable_s3_csi_driver ? 1 : 0
     name        = "std17-eks-s3-csi-policy"
@@ -403,8 +411,8 @@ resource "aws_iam_role" "std17_s3_csi_role" {
             }
             Action = "sts:AssumeRoleWithWebIdentity"
             Condition = {
-                StringEquals = {
-                    "${replace(aws_iam_openid_connect_provider.std17_eks_oidc.url, "https://", "")}:sub" = "system:serviceaccount:${var.s3_csi_sa_namespace}:s3-csi-driver-sa"
+                StringLike = {
+                    "${replace(aws_iam_openid_connect_provider.std17_eks_oidc.url, "https://", "")}:sub" = "system:serviceaccount:${var.s3_csi_sa_namespace}:s3-csi-driver-*"
                     "${replace(aws_iam_openid_connect_provider.std17_eks_oidc.url, "https://", "")}:aud" = "sts.amazonaws.com"
                 }
             }
@@ -434,9 +442,74 @@ resource "aws_eks_addon" "std17_s3_csi" {
     depends_on = [aws_eks_node_group.std17_eks_nodegroup]
 }
 
+
 # ==================================================================
-# Access Entry (관리자 권한 부여, aws-auth configmap 대체)
+# 8. 관측/운영 애드온 (CloudWatch Observability, Pod Identity Agent)
 # ==================================================================
+
+# --- 8-1. CloudWatch Observability (컨테이너 인사이트, 로그/메트릭 수집) ---
+resource "aws_iam_role" "std17_cw_observability_role" {
+    count = var.enable_cloudwatch_observability ? 1 : 0
+    name  = "std17-eks-cw-observability-role"
+
+    assume_role_policy = jsonencode({
+        Version = "2012-10-17"
+        Statement = [{
+            Effect = "Allow"
+            Principal = {
+                Federated = aws_iam_openid_connect_provider.std17_eks_oidc.arn
+            }
+            Action = "sts:AssumeRoleWithWebIdentity"
+            Condition = {
+                StringEquals = {
+                    "${replace(aws_iam_openid_connect_provider.std17_eks_oidc.url, "https://", "")}:sub" = "system:serviceaccount:amazon-cloudwatch:cloudwatch-agent"
+                    "${replace(aws_iam_openid_connect_provider.std17_eks_oidc.url, "https://", "")}:aud" = "sts.amazonaws.com"
+                }
+            }
+        }]
+    })
+
+    tags = { Name = "std17-eks-cw-observability-role" }
+}
+
+resource "aws_iam_role_policy_attachment" "std17_cw_observability_policy" {
+    count      = var.enable_cloudwatch_observability ? 1 : 0
+    role       = aws_iam_role.std17_cw_observability_role[0].name
+    policy_arn = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+}
+
+resource "aws_eks_addon" "std17_cw_observability" {
+    count         = var.enable_cloudwatch_observability ? 1 : 0
+    cluster_name  = aws_eks_cluster.std17_eks.name
+    addon_name    = "amazon-cloudwatch-observability"
+    addon_version = lookup(var.addon_versions, "amazon-cloudwatch-observability", null)
+
+    service_account_role_arn = aws_iam_role.std17_cw_observability_role[0].arn
+
+    resolve_conflicts_on_create = "OVERWRITE"
+    resolve_conflicts_on_update = "OVERWRITE"
+
+    depends_on = [aws_eks_node_group.std17_eks_nodegroup]
+}
+
+# --- 8-2. EKS Pod Identity Agent (IRSA 없이도 role 매핑 가능하게 하는 최신 방식, 노드 데몬셋이라 별도 IAM 불필요) ---
+resource "aws_eks_addon" "std17_pod_identity_agent" {
+    count         = var.enable_pod_identity_agent ? 1 : 0
+    cluster_name  = aws_eks_cluster.std17_eks.name
+    addon_name    = "eks-pod-identity-agent"
+    addon_version = lookup(var.addon_versions, "eks-pod-identity-agent", null)
+
+    resolve_conflicts_on_create = "OVERWRITE"
+    resolve_conflicts_on_update = "OVERWRITE"
+
+    depends_on = [aws_eks_node_group.std17_eks_nodegroup]
+}
+
+
+# ==================================================================
+# 9. Access Entry (관리자 권한 부여, aws-auth configmap 대체)
+# ==================================================================
+
 resource "aws_eks_access_entry" "std17_admin_entry" {
     count = length(local.admin_arns)
 
@@ -459,9 +532,12 @@ resource "aws_eks_access_policy_association" "std17_admin_policy" {
     depends_on = [aws_eks_access_entry.std17_admin_entry]
 }
 
+
 # ==================================================================
-# external_secrets IAM 역할
+# 10. 애플리케이션 IRSA 역할 (파드가 직접 사용하는 커스텀 role)
 # ==================================================================
+
+# --- 10-1. external-secrets (Secrets Manager 연동) ---
 resource "aws_iam_role" "std17_external_secrets_role" {
     name = "std17-eks-external-secrets-role"
 
@@ -502,9 +578,7 @@ resource "aws_iam_role_policy" "std17_external_secrets_policy" {
     })
 }
 
-# ==================================================================
-# ubuntu-s3-sa 서비스어카운트용 IAM 정책 + IRSA 역할 (S3 로그 업로드용)
-# ==================================================================
+# --- 10-2. ubuntu-s3-sa / nginx (S3 로그 업로드용) ---
 resource "aws_iam_policy" "std17_s3_logs_policy" {
     name        = "std17-AmazonS3-Logs-Policy"
     description = "ubuntu-s3-sa가 S3에 로그를 업로드하기 위한 정책"

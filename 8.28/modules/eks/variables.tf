@@ -1,3 +1,6 @@
+# ==================================================================
+# 1. 클러스터 기본 설정
+# ==================================================================
 variable "vpc_id" {
     description = "EKS 클러스터가 속할 VPC ID"
     type        = string
@@ -38,8 +41,9 @@ variable "enabled_cluster_log_types" {
     default     = ["api", "audit", "authenticator"]
 }
 
+
 # ==================================================================
-# 노드그룹 설정
+# 5. 노드그룹 설정
 # ==================================================================
 variable "node_group_name" {
     description = "EKS 관리형 노드그룹 이름"
@@ -83,8 +87,9 @@ variable "node_max_size" {
     default     = 3
 }
 
+
 # ==================================================================
-# 애드온
+# 6~8. 애드온 공통
 # ==================================================================
 variable "addon_versions" {
     description = "EKS 애드온별 버전 (미지정 시 most_recent 사용)"
@@ -92,6 +97,10 @@ variable "addon_versions" {
     default     = {}
 }
 
+
+# ==================================================================
+# 7. 스토리지 CSI 애드온 (EBS / EFS / S3)
+# ==================================================================
 variable "enable_ebs_csi_driver" {
     description = "aws-ebs-csi-driver 애드온 설치 여부"
     type        = bool
@@ -116,8 +125,25 @@ variable "s3_csi_sa_namespace" {
     default     = "kube-system"
 }
 
+
 # ==================================================================
-# Access Entry (aws-auth configmap 대체)
+# 8. 관측/운영 애드온 (CloudWatch Observability, Pod Identity Agent)
+# ==================================================================
+variable "enable_cloudwatch_observability" {
+    description = "amazon-cloudwatch-observability 애드온 설치 여부"
+    type        = bool
+    default     = false
+}
+
+variable "enable_pod_identity_agent" {
+    description = "eks-pod-identity-agent 애드온 설치 여부"
+    type        = bool
+    default     = false
+}
+
+
+# ==================================================================
+# 9. Access Entry (aws-auth configmap 대체)
 # ==================================================================
 variable "admin_principal_arns" {
     description = "EKS 클러스터 관리자 권한을 부여할 IAM 사용자/역할 ARN 리스트"
@@ -125,8 +151,9 @@ variable "admin_principal_arns" {
     default     = []
 }
 
+
 # ==================================================================
-# s3엔드포인트
+# 10. 애플리케이션 IRSA 역할 (ubuntu-s3-sa 등)
 # ==================================================================
 variable "s3_logs_bucket_arn" {
     description = "ubuntu-s3-sa가 로그를 업로드할 S3 버킷 ARN"
