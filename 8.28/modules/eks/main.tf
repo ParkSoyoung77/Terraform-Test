@@ -430,7 +430,7 @@ resource "aws_iam_role_policy" "std17_external_secrets_policy" {
             Resource = "*"
         }]
     })
-
+}
 
 # ==================================================================
 # ubuntu-s3-sa 서비스어카운트용 IAM 정책 + IRSA 역할 (S3 로그 업로드용)

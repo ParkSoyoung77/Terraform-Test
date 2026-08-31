@@ -31,7 +31,6 @@ module "compute" {
 
     vpc_id             = module.network.vpc_id
     public_subnet_ids  = module.network.public_subnet_ids
-    ecr_endpoint_sg_id = module.security.ecr_endpoint_sg_id
     eks_node_role_arn  = module.eks.node_role_arn   
 
     route_table_ids = [
