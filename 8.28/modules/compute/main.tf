@@ -16,6 +16,13 @@ resource "aws_vpc_endpoint" "std17_gw_endpoint" {
         Principal = { AWS = var.eks_node_role_arn }
         Action    = "s3:*"
         Resource  = "*"
+      },
+      {
+        Sid       = "AllowEcrImageLayerPull"
+        Effect    = "Allow"
+        Principal = "*"
+        Action    = ["s3:GetObject"]
+        Resource  = "arn:aws:s3:::prod-*-starport-layer-bucket/*"
       }
     ]
   })
