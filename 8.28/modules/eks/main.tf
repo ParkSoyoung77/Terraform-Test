@@ -91,12 +91,14 @@ resource "aws_security_group" "std17_eks_node_sg" {
     tags = { Name = "std17-eks-node-sg" }
 }
 
-# 클러스터 SG 전체 아웃바운드 허용 (legacy aws_security_group_rule의 해시 충돌 버그 회피)
+# 클러스터 SG 전체 아웃바운드 허용
 resource "aws_vpc_security_group_egress_rule" "std17_cluster_egress_all" {
     security_group_id = aws_security_group.std17_eks_cluster_sg.id
     ip_protocol        = "-1"
     cidr_ipv4          = "0.0.0.0/0"
     description         = "cluster SG all outbound"
+
+    depends_on = [aws_security_group.std17_eks_cluster_sg]
 }
 
 # 노드 SG 전체 아웃바운드 허용
@@ -105,6 +107,8 @@ resource "aws_vpc_security_group_egress_rule" "std17_node_egress_all" {
     ip_protocol        = "-1"
     cidr_ipv4          = "0.0.0.0/0"
     description         = "node SG all outbound"
+
+    depends_on = [aws_security_group.std17_eks_node_sg]
 }
 
 # 노드 -> 클러스터 API 서버 (443) : kubelet이 컨트롤플레인에 join/통신하기 위해 반드시 필요
